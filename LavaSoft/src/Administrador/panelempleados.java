@@ -1,5 +1,12 @@
 package Administrador;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import java.sql.SQLException;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -14,7 +21,16 @@ public class panelempleados extends javax.swing.JPanel {
     /**
      * Creates new form panelempleados
      */
+    
     public panelempleados() {
+         try (Connection conn = Conexion.getConnection()) {
+            System.out.println("Conexión exitosa:D.");
+        } catch (SQLException e) {
+            System.out.println("Error de conexión");
+            e.printStackTrace();
+            
+        }
+        
         initComponents();
     }
 
@@ -56,6 +72,8 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         BarraDeBusqueda6 = new javax.swing.JTextField();
+        BarraDeBusqueda7 = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -64,27 +82,27 @@ public class panelempleados extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Nombre (s):");
+        jLabel2.setText("Puesto:");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 120, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Apellido (s):");
+        jLabel3.setText("Nombre:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 85, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Fecha Nacimiento: ");
+        jLabel4.setText("newAttr");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 212, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Telefono: ");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 275, -1, -1));
+        jLabel5.setText("Registro:");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Dirección:");
+        jLabel6.setText("Telefono:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 165, -1, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -92,12 +110,12 @@ public class panelempleados extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Nombre", "Apellido", "Fecha Nacimiento", "Telefono", "Direccion"
+                "IdUsuario", "Nombre", "Puesto", "NewAttr", "Turno", "Registro"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 85, 340, 395));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 85, 350, 370));
 
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -219,11 +237,11 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda5.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda5.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda5.setBorder(null);
-        jPanel1.add(BarraDeBusqueda5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 250, 20));
+        jPanel1.add(BarraDeBusqueda5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, 250, 20));
 
         jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setText("________________________");
-        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, -1, -1));
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, -1, -1));
 
         jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setText("________________________");
@@ -234,7 +252,17 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda6.setBorder(null);
         jPanel1.add(BarraDeBusqueda6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 250, 20));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 480));
+        BarraDeBusqueda7.setBackground(new java.awt.Color(181, 218, 240));
+        BarraDeBusqueda7.setForeground(new java.awt.Color(0, 0, 0));
+        BarraDeBusqueda7.setBorder(null);
+        jPanel1.add(BarraDeBusqueda7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 250, 20));
+
+        jLabel16.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setText("Horario:");
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, -1));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 730, 520));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -252,9 +280,39 @@ public class panelempleados extends javax.swing.JPanel {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
+        try (Connection conn = Conexion.getConnection()){
+         String insertSql = "INSERT INTO dbo.Usuario (IdUsuario,Nombre,Puesto,Telefono,Turno,RegistroAsistencia) VALUES (?,?,?,?,?)";
+         
+         PreparedStatement stmt = conn.prepareStatement(insertSql);
+          
+        String nombre = BarraDeBusqueda1.getText();
+        String puesto = BarraDeBusqueda2.getText();
+        String telefono = BarraDeBusqueda3.getText();
+        String turno = BarraDeBusqueda4.getText();
+        String registro = BarraDeBusqueda5.getText();
+        
+        
+            stmt.setString(1, nombre);
+            stmt.setString(2, puesto);
+            stmt.setString(3, telefono);
+            stmt.setString(4, turno);
+            stmt.setString(5, registro);
+            
+            int filasAfectadas = stmt.executeUpdate();
+            
+            if (filasAfectadas > 0) {
+                System.out.println("Empleado insertado correctamente.");
+            } else {
+                System.out.println("Error al insertar el empleado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        
+        }
+     
     }//GEN-LAST:event_jButton7ActionPerformed
 
-
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BarraDeBusqueda;
     private javax.swing.JTextField BarraDeBusqueda1;
@@ -263,6 +321,7 @@ public class panelempleados extends javax.swing.JPanel {
     private javax.swing.JTextField BarraDeBusqueda4;
     private javax.swing.JTextField BarraDeBusqueda5;
     private javax.swing.JTextField BarraDeBusqueda6;
+    private javax.swing.JTextField BarraDeBusqueda7;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -274,6 +333,7 @@ public class panelempleados extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
