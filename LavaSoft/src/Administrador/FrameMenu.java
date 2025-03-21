@@ -1,6 +1,8 @@
 package Administrador;
 
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -412,7 +414,7 @@ public class FrameMenu extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws ClassNotFoundException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -437,6 +439,13 @@ public class FrameMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+         try (Connection conn = Conexion.getConnection()) {
+            System.out.println("Conexión exitosa:D.");
+        } catch (SQLException e) {
+            System.out.println("Error de conexión");
+            e.printStackTrace();
+        }
+            
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrameMenu().setVisible(true);
