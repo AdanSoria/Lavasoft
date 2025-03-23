@@ -322,7 +322,7 @@ public class FrameMenu extends javax.swing.JFrame {
         
         
          panelempleados p1 = new panelempleados();
-    p1.setSize(560, 480); // Sugerir tamaño preferido
+    p1.setSize(700, 700); // Sugerir tamaño preferido
     p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
 
     panelinicio.removeAll();
@@ -393,7 +393,7 @@ public class FrameMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
           panelop.setVisible(true);
      panelclientesadmin p1 = new panelclientesadmin();
-    p1.setSize(560, 480); // Sugerir tamaño preferido
+    p1.setSize(800, 800); // Sugerir tamaño preferido
     p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
 
     panelinicio.removeAll();

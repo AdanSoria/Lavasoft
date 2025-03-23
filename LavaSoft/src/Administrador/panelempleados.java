@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -46,11 +47,10 @@ public class panelempleados extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtbEmpleado = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         BarraDeBusqueda = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -90,11 +90,6 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel3.setText("Nombre:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 85, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("newAttr");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 212, -1, -1));
-
         jLabel5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Registro:");
@@ -105,7 +100,7 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel6.setText("Telefono:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 165, -1, -1));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtbEmpleado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -113,9 +108,9 @@ public class panelempleados extends javax.swing.JPanel {
                 "IdUsuario", "Nombre", "Puesto", "NewAttr", "Turno", "Registro"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jtbEmpleado);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 85, 350, 370));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 350, 370));
 
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -237,7 +232,7 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda5.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda5.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda5.setBorder(null);
-        jPanel1.add(BarraDeBusqueda5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, 250, 20));
+        jPanel1.add(BarraDeBusqueda5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, 130, 20));
 
         jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setText("________________________");
@@ -250,7 +245,7 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda6.setBackground(new java.awt.Color(118, 120, 237));
         BarraDeBusqueda6.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda6.setBorder(null);
-        jPanel1.add(BarraDeBusqueda6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 250, 20));
+        jPanel1.add(BarraDeBusqueda6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 130, 20));
 
         BarraDeBusqueda7.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda7.setForeground(new java.awt.Color(0, 0, 0));
@@ -280,36 +275,53 @@ public class panelempleados extends javax.swing.JPanel {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-        try (Connection conn = Conexion.getConnection()){
-         String insertSql = "INSERT INTO dbo.Usuario (IdUsuario,Nombre,Puesto,Telefono,Turno,RegistroAsistencia) VALUES (?,?,?,?,?)";
-         
-         PreparedStatement stmt = conn.prepareStatement(insertSql);
-          
-        String nombre = BarraDeBusqueda1.getText();
-        String puesto = BarraDeBusqueda2.getText();
-        String telefono = BarraDeBusqueda3.getText();
-        String turno = BarraDeBusqueda4.getText();
-        String registro = BarraDeBusqueda5.getText();
+        try (Connection conn = Conexion.getConnection()) {
+    String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno, RegistroAsistencia) VALUES (?, ?, ?, ?, ?)";
+    PreparedStatement stmt = conn.prepareStatement(insertSql);
+    
+    String nombre = BarraDeBusqueda1.getText();
+    String puesto = BarraDeBusqueda2.getText();
+    String telefono = BarraDeBusqueda3.getText();
+    String turno = BarraDeBusqueda4.getText();
+    String registro = BarraDeBusqueda5.getText();
+    
+    stmt.setString(1, nombre);
+    stmt.setString(2, puesto);
+    stmt.setString(3, telefono);
+    stmt.setString(4, turno);
+    stmt.setString(5, registro);
+    
+    int filasAfectadas = stmt.executeUpdate();
+    
+    if (filasAfectadas > 0) {
+        System.out.println("Empleado insertado correctamente.");
         
+        // Actualizar JTable
+        DefaultTableModel model = (DefaultTableModel) jtbEmpleado.getModel();
+        model.setRowCount(0); // Limpiar tabla antes de actualizar
         
-            stmt.setString(1, nombre);
-            stmt.setString(2, puesto);
-            stmt.setString(3, telefono);
-            stmt.setString(4, turno);
-            stmt.setString(5, registro);
-            
-            int filasAfectadas = stmt.executeUpdate();
-            
-            if (filasAfectadas > 0) {
-                System.out.println("Empleado insertado correctamente.");
-            } else {
-                System.out.println("Error al insertar el empleado.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        
+        String selectSql = "SELECT * FROM dbo.Usuario";
+        try (PreparedStatement selectStmt = conn.prepareStatement(selectSql); var rs = selectStmt.executeQuery()) {
+           while (rs.next()) {
+                Object[] row = {
+                rs.getInt("IdUsuario"), 
+                rs.getString("Nombre"),
+                rs.getString("Puesto"),
+                rs.getString("Telefono"),
+                rs.getString("Turno"),
+                rs.getString("RegistroAsistencia")
+                    };
+        model.addRow(row);
+    }
+
         }
-     
+    } else {
+        System.out.println("Error al insertar el empleado.");
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+
     }//GEN-LAST:event_jButton7ActionPerformed
 
         
@@ -336,7 +348,6 @@ public class panelempleados extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -344,6 +355,6 @@ public class panelempleados extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jtbEmpleado;
     // End of variables declaration//GEN-END:variables
 }
