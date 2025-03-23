@@ -1,5 +1,13 @@
 package Administrador;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -162,8 +170,41 @@ public class IniciaSesion extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         FrameMenu nv=new FrameMenu();
-        nv.setVisible(true);
-        this.dispose();
+        
+         String nombreUsuario = txtusu1.getText(); // Campo para el nombre de usuario
+    String contraseña = new String(txtpass1.getText()); // Campo para la contraseña
+
+    try (Connection conn = Conexion.getConnection()) {
+        String sql = "SELECT Puesto FROM dbo.Usuario WHERE IdUsuario = ? AND Contraseña = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, nombreUsuario);
+        stmt.setString(2, contraseña); // Asegúrate de que la contraseña esté almacenada de forma segura (hash)
+
+        var rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            String puesto = rs.getString("Puesto");
+
+            // Redirigir según el tipo de usuario
+            if ("Administrador".equals(puesto)) {
+                // Abrir el panel de administrador
+                  nv.setVisible(true);
+                     this.dispose();
+            } else if ("Empleado".equals(puesto)) {
+                // Abrir el panel de empleado
+                  nv.setVisible(true);
+                    this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Tipo de usuario no reconocido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtusu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu1ActionPerformed

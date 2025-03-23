@@ -61,9 +61,6 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda1 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        BarraDeBusqueda2 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         BarraDeBusqueda3 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -74,6 +71,7 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda6 = new javax.swing.JTextField();
         BarraDeBusqueda7 = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
+        comboBoxPuesto = new javax.swing.JComboBox<>();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -83,7 +81,7 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Puesto:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 120, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -198,19 +196,6 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel9.setText("________________________");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, -1));
 
-        BarraDeBusqueda2.setBackground(new java.awt.Color(181, 218, 240));
-        BarraDeBusqueda2.setForeground(new java.awt.Color(0, 0, 0));
-        BarraDeBusqueda2.setBorder(null);
-        jPanel1.add(BarraDeBusqueda2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 250, 20));
-
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel10.setText("________________________");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, -1, -1));
-
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel11.setText("________________________");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, -1, -1));
-
         BarraDeBusqueda3.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda3.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda3.setBorder(null);
@@ -257,6 +242,14 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel16.setText("Horario:");
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, -1));
 
+        comboBoxPuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empleado", "Administrador" }));
+        comboBoxPuesto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxPuestoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(comboBoxPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 120, -1));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 730, 520));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -280,10 +273,10 @@ public class panelempleados extends javax.swing.JPanel {
     PreparedStatement stmt = conn.prepareStatement(insertSql);
     
     String nombre = BarraDeBusqueda1.getText();
-    String puesto = BarraDeBusqueda2.getText();
+     String puesto = (String) comboBoxPuesto.getSelectedItem();
     String telefono = BarraDeBusqueda3.getText();
-    String turno = BarraDeBusqueda4.getText();
-    String registro = BarraDeBusqueda5.getText();
+    String turno = BarraDeBusqueda5.getText();
+    String registro = BarraDeBusqueda6.getText();
     
     stmt.setString(1, nombre);
     stmt.setString(2, puesto);
@@ -324,23 +317,25 @@ public class panelempleados extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void comboBoxPuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxPuestoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxPuestoActionPerformed
+
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BarraDeBusqueda;
     private javax.swing.JTextField BarraDeBusqueda1;
-    private javax.swing.JTextField BarraDeBusqueda2;
     private javax.swing.JTextField BarraDeBusqueda3;
     private javax.swing.JTextField BarraDeBusqueda4;
     private javax.swing.JTextField BarraDeBusqueda5;
     private javax.swing.JTextField BarraDeBusqueda6;
     private javax.swing.JTextField BarraDeBusqueda7;
+    private javax.swing.JComboBox<String> comboBoxPuesto;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
