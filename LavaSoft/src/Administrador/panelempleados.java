@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -269,7 +270,7 @@ public class panelempleados extends javax.swing.JPanel {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         try (Connection conn = Conexion.getConnection()) {
-    String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno, RegistroAsistencia) VALUES (?, ?, ?, ?, ?)";
+    String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno, RegistroAsistencia,Contraseña) VALUES (?, ?, ?, ?, ?,?)";
     PreparedStatement stmt = conn.prepareStatement(insertSql);
     
     String nombre = BarraDeBusqueda1.getText();
@@ -278,11 +279,14 @@ public class panelempleados extends javax.swing.JPanel {
     String turno = BarraDeBusqueda5.getText();
     String registro = BarraDeBusqueda6.getText();
     
+    String Contraseña = JOptionPane.showInputDialog("Ingresar contraseña");
+    
     stmt.setString(1, nombre);
     stmt.setString(2, puesto);
     stmt.setString(3, telefono);
     stmt.setString(4, turno);
     stmt.setString(5, registro);
+    stmt.setString(6, Contraseña);
     
     int filasAfectadas = stmt.executeUpdate();
     
