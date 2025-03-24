@@ -228,10 +228,10 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel15.setText("________________________");
         jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, -1, -1));
 
-        BarraDeBusqueda6.setBackground(new java.awt.Color(118, 120, 237));
+        BarraDeBusqueda6.setBackground(new java.awt.Color(102, 204, 255));
         BarraDeBusqueda6.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda6.setBorder(null);
-        jPanel1.add(BarraDeBusqueda6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 130, 20));
+        jPanel1.add(BarraDeBusqueda6, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 130, 20));
 
         BarraDeBusqueda7.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda7.setForeground(new java.awt.Color(0, 0, 0));
@@ -249,7 +249,7 @@ public class panelempleados extends javax.swing.JPanel {
                 comboBoxPuestoActionPerformed(evt);
             }
         });
-        jPanel1.add(comboBoxPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 120, -1));
+        jPanel1.add(comboBoxPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 122, 120, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 730, 520));
     }// </editor-fold>//GEN-END:initComponents

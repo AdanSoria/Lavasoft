@@ -14,9 +14,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=LavaSoft;encrypt=true;trustServerCertificate=true";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "12345";
+    private static final String URL = "jdbc:sqlserver://adnsoria.database.windows.net:1433;databaseName=LavaSoft;encrypt=true;trustServerCertificate=true";
+    private static final String USER = "admin1@adnsoria";
+    private static final String PASSWORD = "Ad@ncode123";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
