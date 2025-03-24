@@ -192,6 +192,7 @@ public class IniciaSesion extends javax.swing.JFrame {
                      this.dispose();
             } else if ("Empleado".equals(puesto)) {
                 // Abrir el panel de empleado
+                 nv.deshabilitarBotonesParaEmpleado();
                   nv.setVisible(true);
                     this.dispose();
             } else {

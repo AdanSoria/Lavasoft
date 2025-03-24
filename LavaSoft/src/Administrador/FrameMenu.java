@@ -410,7 +410,13 @@ public class FrameMenu extends javax.swing.JFrame {
         resetColor(jpanelb3);
 
     }//GEN-LAST:event_jpanelb4MousePressed
-
+    
+      public void deshabilitarBotonesParaEmpleado() {
+        jLabel4.setEnabled(false); // Deshabilitar botón de Empleados
+        jLabel4.setVisible(false);
+        jpanelb1.setEnabled(false);
+        jpanelb1.setVisible(false);
+    }
     /**
      * @param args the command line arguments
      */
