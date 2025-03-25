@@ -1,5 +1,14 @@
 package Administrador;
 
+import java.io.StringReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -31,36 +40,32 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jTextField8 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtblClientes = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
+        jTextCliente1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        jTextCliente2 = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        jTextCliente3 = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        jTextCliente4 = new javax.swing.JTextField();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
+        btnAgregarCliente = new javax.swing.JButton();
 
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("_________________________");
 
         jTextField8.setBackground(new java.awt.Color(118, 120, 237));
         jTextField8.setBorder(null);
-        jTextField8.setOpaque(false);
         jTextField8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField8ActionPerformed(evt);
@@ -72,31 +77,26 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(181, 218, 240));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setBackground(new java.awt.Color(51, 51, 51));
-        jTable1.setForeground(new java.awt.Color(255, 255, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtblClientes.setBackground(new java.awt.Color(51, 51, 51));
+        jtblClientes.setForeground(new java.awt.Color(255, 255, 255));
+        jtblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre", "Apellidos", "Domicilio", "Telefono", "Email"
+                "IdCliente", "Nombre", "Domicilio", "Telefono", "Correo", "FechaRegistro"
             }
         ));
-        jTable1.setGridColor(new java.awt.Color(51, 51, 51));
-        jTable1.setSelectionBackground(new java.awt.Color(51, 51, 51));
-        jScrollPane1.setViewportView(jTable1);
+        jtblClientes.setGridColor(new java.awt.Color(51, 51, 51));
+        jtblClientes.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jScrollPane1.setViewportView(jtblClientes);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 340, 380));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Nombre");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 79, 41));
-
-        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Apellidos");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 79, 41));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 79, 41));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -116,31 +116,16 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jLabel11.setBackground(new java.awt.Color(118, 120, 237));
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("________________________");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, 190, -1));
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 190, -1));
 
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel12.setText("_________________________");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 180, -1));
-
-        jTextField2.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField2.setBorder(null);
-        jTextField2.setOpaque(false);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        jTextCliente1.setBackground(new java.awt.Color(181, 218, 240));
+        jTextCliente1.setBorder(null);
+        jTextCliente1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                jTextCliente1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 180, 30));
-
-        jTextField1.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField1.setBorder(null);
-        jTextField1.setOpaque(false);
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 180, 39));
+        jPanel1.add(jTextCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 180, 30));
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -151,7 +136,6 @@ public class panelclientesadmin extends javax.swing.JPanel {
 
         jTextField6.setBackground(new java.awt.Color(181, 218, 240));
         jTextField6.setBorder(null);
-        jTextField6.setOpaque(false);
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField6ActionPerformed(evt);
@@ -181,43 +165,40 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jLabel16.setText("_________________________");
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 180, -1));
 
-        jTextField7.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField7.setBorder(null);
-        jTextField7.setOpaque(false);
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        jTextCliente2.setBackground(new java.awt.Color(181, 218, 240));
+        jTextCliente2.setBorder(null);
+        jTextCliente2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                jTextCliente2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 180, 39));
+        jPanel1.add(jTextCliente2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 180, 39));
 
         jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setText("_________________________");
         jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 180, -1));
 
-        jTextField9.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField9.setBorder(null);
-        jTextField9.setOpaque(false);
-        jTextField9.addActionListener(new java.awt.event.ActionListener() {
+        jTextCliente3.setBackground(new java.awt.Color(181, 218, 240));
+        jTextCliente3.setBorder(null);
+        jTextCliente3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField9ActionPerformed(evt);
+                jTextCliente3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 180, 39));
+        jPanel1.add(jTextCliente3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 180, 39));
 
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("_________________________");
         jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 330, 180, -1));
 
-        jTextField11.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField11.setBorder(null);
-        jTextField11.setOpaque(false);
-        jTextField11.addActionListener(new java.awt.event.ActionListener() {
+        jTextCliente4.setBackground(new java.awt.Color(181, 218, 240));
+        jTextCliente4.setBorder(null);
+        jTextCliente4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField11ActionPerformed(evt);
+                jTextCliente4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField11, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 180, 39));
+        jPanel1.add(jTextCliente4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 180, 39));
 
         jButton8.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton8.setForeground(new java.awt.Color(0, 0, 0));
@@ -249,31 +230,27 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jPanel1.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 390, 140, -1));
 
-        jButton10.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jButton10.setForeground(new java.awt.Color(0, 0, 0));
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
-        jButton10.setText("Añadir");
-        jButton10.setBorder(null);
-        jButton10.setContentAreaFilled(false);
-        jButton10.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton10.setVerifyInputWhenFocusTarget(false);
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarCliente.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        btnAgregarCliente.setForeground(new java.awt.Color(0, 0, 0));
+        btnAgregarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
+        btnAgregarCliente.setText("Añadir");
+        btnAgregarCliente.setBorder(null);
+        btnAgregarCliente.setContentAreaFilled(false);
+        btnAgregarCliente.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAgregarCliente.setVerifyInputWhenFocusTarget(false);
+        btnAgregarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                btnAgregarClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 350, 120, -1));
+        jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 350, 120, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 460));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void jTextCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextCliente1ActionPerformed
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         // TODO add your handling code here:
@@ -283,21 +260,21 @@ public class panelclientesadmin extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void jTextCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    }//GEN-LAST:event_jTextCliente2ActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField8ActionPerformed
 
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+    private void jTextCliente3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+    }//GEN-LAST:event_jTextCliente3ActionPerformed
 
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+    private void jTextCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
+    }//GEN-LAST:event_jTextCliente4ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
@@ -307,19 +284,68 @@ public class panelclientesadmin extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton9ActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
+        
+        try (Connection conn = Conexion.getConnection()) {
+    String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro) VALUES (?, ?, ?, ?, ?)";
+    PreparedStatement stmt = conn.prepareStatement(insertSql);
+    
+    String nombre = jTextCliente1.getText();
+     String direccion =jTextCliente2.getText();
+    String telefono = jTextCliente3.getText();
+    String correo = jTextCliente4.getText();
+    //Metodo para obtener contraseña actual
+    LocalDate fechaActual = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    String ftFecha= fechaActual.format(formatter);
+
+    stmt.setString(1, nombre);
+    stmt.setString(2, direccion);
+    stmt.setString(3, telefono);
+    stmt.setString(4, correo);
+    stmt.setString(5, ftFecha);
+
+    int filasAfectadas = stmt.executeUpdate();
+    
+    if (filasAfectadas > 0) {
+        System.out.println("Cliente insertado correctamente.");
+        
+        // Actualizar JTable
+        DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
+        model.setRowCount(0); // Limpiar tabla antes de actualizar
+        
+        String selectSql = "SELECT * FROM dbo.Cliente";
+        try (PreparedStatement selectStmt = conn.prepareStatement(selectSql); var rs = selectStmt.executeQuery()) {
+           while (rs.next()) {
+                Object[] row = {
+                rs.getInt("IdCliente"), 
+                rs.getString("Nombre"),
+                rs.getString("Direccion"),
+                rs.getString("Telefono"),
+                rs.getString("CorreoElectronico"),
+                rs.getString("FechaRegistro")
+                    };
+        model.addRow(row);
+    }
+
+        }
+    } else {
+        System.out.println("Error al insertar el empleado.");
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+
+    }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton10;
+    private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
@@ -332,13 +358,12 @@ public class panelclientesadmin extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextCliente1;
+    private javax.swing.JTextField jTextCliente2;
+    private javax.swing.JTextField jTextCliente3;
+    private javax.swing.JTextField jTextCliente4;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTable jtblClientes;
     // End of variables declaration//GEN-END:variables
 }
