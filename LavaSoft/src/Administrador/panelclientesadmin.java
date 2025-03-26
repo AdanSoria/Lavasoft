@@ -23,9 +23,11 @@ public class panelclientesadmin extends javax.swing.JPanel {
     /**
      * Creates new form panelclientesadmin
      */
+    
     public panelclientesadmin() {
-        initComponents();
-    }
+    initComponents();
+    actualizarTablaClientes(); // Cargar datos al iniciar
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -57,9 +59,10 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jTextCliente3 = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         jTextCliente4 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         btnAgregarCliente = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
 
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("_________________________");
@@ -189,7 +192,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
 
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("_________________________");
-        jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 330, 180, -1));
+        jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 330, 130, -1));
 
         jTextCliente4.setBackground(new java.awt.Color(181, 218, 240));
         jTextCliente4.setBorder(null);
@@ -198,37 +201,37 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jTextCliente4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextCliente4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 180, 39));
+        jPanel1.add(jTextCliente4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 130, 39));
 
-        jButton8.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jButton8.setForeground(new java.awt.Color(0, 0, 0));
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
-        jButton8.setText("Eliminar");
-        jButton8.setBorder(null);
-        jButton8.setContentAreaFilled(false);
-        jButton8.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton8.setVerifyInputWhenFocusTarget(false);
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(null);
+        btnGuardar.setContentAreaFilled(false);
+        btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnGuardar.setVerifyInputWhenFocusTarget(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, 120, 30));
+        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 410, 120, 30));
 
-        jButton9.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jButton9.setForeground(new java.awt.Color(0, 0, 0));
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar (1).png"))); // NOI18N
-        jButton9.setText("Editar");
-        jButton9.setBorder(null);
-        jButton9.setContentAreaFilled(false);
-        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton9.setVerifyInputWhenFocusTarget(false);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        btnEditar.setForeground(new java.awt.Color(0, 0, 0));
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar (1).png"))); // NOI18N
+        btnEditar.setText("Editar");
+        btnEditar.setBorder(null);
+        btnEditar.setContentAreaFilled(false);
+        btnEditar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnEditar.setVerifyInputWhenFocusTarget(false);
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 390, 140, -1));
+        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 360, 140, -1));
 
         btnAgregarCliente.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnAgregarCliente.setForeground(new java.awt.Color(0, 0, 0));
@@ -243,7 +246,22 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 btnAgregarClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 350, 120, -1));
+        jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 120, -1));
+
+        jButton9.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        jButton9.setForeground(new java.awt.Color(0, 0, 0));
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
+        jButton9.setText("Eliminar");
+        jButton9.setBorder(null);
+        jButton9.setContentAreaFilled(false);
+        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jButton9.setVerifyInputWhenFocusTarget(false);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 120, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 460));
     }// </editor-fold>//GEN-END:initComponents
@@ -276,74 +294,135 @@ public class panelclientesadmin extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextCliente4ActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+        limpiarCampos();
+        btnAgregarCliente.setText("Añadir");
+        clienteSeleccionadoId = -1;
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+        int filaSeleccionada = jtblClientes.getSelectedRow();
+    
+    if (filaSeleccionada >= 0) {
+        // Obtener los datos de la fila seleccionada
+        clienteSeleccionadoId = (int) jtblClientes.getValueAt(filaSeleccionada, 0);
+        jTextCliente1.setText(jtblClientes.getValueAt(filaSeleccionada, 1).toString());
+        jTextCliente2.setText(jtblClientes.getValueAt(filaSeleccionada, 2).toString());
+        jTextCliente3.setText(jtblClientes.getValueAt(filaSeleccionada, 3).toString());
+        jTextCliente4.setText(jtblClientes.getValueAt(filaSeleccionada, 4).toString());
+        
+        // Cambiar el texto del botón agregar para indicar que estamos editando
+        btnAgregarCliente.setText("Actualizar");
+    } else {
+        JOptionPane.showMessageDialog(this, "Por favor seleccione un cliente de la tabla", 
+                                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
         // TODO add your handling code here:
         
-        try (Connection conn = Conexion.getConnection()) {
-    String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro) VALUES (?, ?, ?, ?, ?)";
-    PreparedStatement stmt = conn.prepareStatement(insertSql);
+       String nombre = jTextCliente1.getText().trim();
+    String direccion = jTextCliente2.getText().trim();
+    String telefono = jTextCliente3.getText().trim();
+    String correo = jTextCliente4.getText().trim();
     
-    String nombre = jTextCliente1.getText();
-     String direccion =jTextCliente2.getText();
-    String telefono = jTextCliente3.getText();
-    String correo = jTextCliente4.getText();
-    //Metodo para obtener contraseña actual
-    LocalDate fechaActual = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    String ftFecha= fechaActual.format(formatter);
-
-    stmt.setString(1, nombre);
-    stmt.setString(2, direccion);
-    stmt.setString(3, telefono);
-    stmt.setString(4, correo);
-    stmt.setString(5, ftFecha);
-
-    int filasAfectadas = stmt.executeUpdate();
+    // Validación básica
+    if (nombre.isEmpty() || telefono.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Nombre y teléfono son campos obligatorios", 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
     
-    if (filasAfectadas > 0) {
-        System.out.println("Cliente insertado correctamente.");
+    try (Connection conn = Conexion.getConnection()) {
+        if (btnAgregarCliente.getText().equals("Actualizar")) {
+            // Lógica para actualizar
+            String updateSql = "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
+                stmt.setString(1, nombre);
+                stmt.setString(2, direccion);
+                stmt.setString(3, telefono);
+                stmt.setString(4, correo);
+                stmt.setInt(5, clienteSeleccionadoId);
+                
+                int filasAfectadas = stmt.executeUpdate();
+                
+                if (filasAfectadas > 0) {
+                    JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
+                    btnAgregarCliente.setText("Añadir");
+                    clienteSeleccionadoId = -1;
+                }
+            }
+        } else {
+            // Lógica para insertar (tu código existente)
+            String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(insertSql)) {
+                LocalDate fechaActual = LocalDate.now();
+                String ftFecha = fechaActual.format(DateTimeFormatter.ISO_DATE);
+                
+                stmt.setString(1, nombre);
+                stmt.setString(2, direccion);
+                stmt.setString(3, telefono);
+                stmt.setString(4, correo);
+                stmt.setString(5, ftFecha);
+                
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Cliente agregado correctamente");
+            }
+        }
         
-        // Actualizar JTable
-        DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
-        model.setRowCount(0); // Limpiar tabla antes de actualizar
+        // Actualizar la tabla en ambos casos
+        actualizarTablaClientes();
+        limpiarCampos();
         
-        String selectSql = "SELECT * FROM dbo.Cliente";
-        try (PreparedStatement selectStmt = conn.prepareStatement(selectSql); var rs = selectStmt.executeQuery()) {
-           while (rs.next()) {
-                Object[] row = {
-                rs.getInt("IdCliente"), 
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al operar con la base de datos: " + e.getMessage(), 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnAgregarClienteActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
+    
+    private void actualizarTablaClientes() {
+    DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
+    model.setRowCount(0);
+    
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM dbo.Cliente");
+         var rs = stmt.executeQuery()) {
+        
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("IdCliente"),
                 rs.getString("Nombre"),
                 rs.getString("Direccion"),
                 rs.getString("Telefono"),
                 rs.getString("CorreoElectronico"),
-                rs.getString("FechaRegistro")
-                    };
-        model.addRow(row);
-    }
-
+                rs.getDate("FechaRegistro").toString()
+            });
         }
-    } else {
-        System.out.println("Error al insertar el empleado.");
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
-} catch (SQLException e) {
-    e.printStackTrace();
 }
 
-    }//GEN-LAST:event_btnAgregarClienteActionPerformed
-
-
+private void limpiarCampos() {
+    jTextCliente1.setText("");
+    jTextCliente2.setText("");
+    jTextCliente3.setText("");
+    jTextCliente4.setText("");
+}
+    private int clienteSeleccionadoId = -1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
