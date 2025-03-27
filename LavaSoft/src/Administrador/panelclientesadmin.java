@@ -205,7 +205,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
 
         btnGuardar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/key.png"))); // NOI18N
         btnGuardar.setText("Guardar");
         btnGuardar.setBorder(null);
         btnGuardar.setContentAreaFilled(false);
