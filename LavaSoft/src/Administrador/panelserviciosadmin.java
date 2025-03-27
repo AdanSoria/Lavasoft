@@ -1,6 +1,10 @@
 package Administrador;
 
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -14,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Luis DC
  */
 public class panelserviciosadmin extends javax.swing.JPanel {
-
+    private int idServicioSeleccionado = -1;
     /**
      * Creates new form panelserviciosadmin
      */
@@ -35,10 +39,10 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         BarraDeBusqueda = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
-        TablaDePedidos = new javax.swing.JTable();
+        jtblServicios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -46,10 +50,11 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        TxtDesc = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        TxtCost = new javax.swing.JTextField();
+        btnAgregar = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -63,11 +68,10 @@ public class panelserviciosadmin extends javax.swing.JPanel {
 
         BarraDeBusqueda.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda.setBorder(null);
-        BarraDeBusqueda.setOpaque(false);
         jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 270, 30));
 
-        TablaDePedidos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        TablaDePedidos.setModel(new javax.swing.table.DefaultTableModel(
+        jtblServicios.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jtblServicios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -75,8 +79,8 @@ public class panelserviciosadmin extends javax.swing.JPanel {
                 "Servicios", "Costo por kg", "Descripcion "
             }
         ));
-        TablaDePedidos.setToolTipText("");
-        jScrollPane5.setViewportView(TablaDePedidos);
+        jtblServicios.setToolTipText("");
+        jScrollPane5.setViewportView(jtblServicios);
 
         jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, 330, 380));
 
@@ -98,15 +102,20 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         });
         jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, -1, -1));
 
-        jButton8.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jButton8.setForeground(new java.awt.Color(0, 0, 0));
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
-        jButton8.setText("Agregar");
-        jButton8.setBorder(null);
-        jButton8.setContentAreaFilled(false);
-        jButton8.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton8.setVerifyInputWhenFocusTarget(false);
-        jPanel1.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, 110, 40));
+        btnGuardar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(null);
+        btnGuardar.setContentAreaFilled(false);
+        btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnGuardar.setVerifyInputWhenFocusTarget(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 110, 40));
 
         jButton5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(0, 0, 0));
@@ -116,6 +125,11 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jButton5.setContentAreaFilled(false);
         jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jButton5.setVerifyInputWhenFocusTarget(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 360, 110, 60));
 
         jButton7.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
@@ -126,6 +140,11 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jButton7.setContentAreaFilled(false);
         jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jButton7.setVerifyInputWhenFocusTarget(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 420, 110, 40));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
@@ -152,67 +171,373 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jLabel12.setText("_________________________");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 180, -1));
 
-        jTextField2.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField2.setBorder(null);
-        jTextField2.setOpaque(false);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtNombre.setBackground(new java.awt.Color(181, 218, 240));
+        txtNombre.setBorder(null);
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtNombreActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 180, 39));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 180, 39));
 
-        jTextField1.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField1.setBorder(null);
-        jTextField1.setOpaque(false);
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        TxtDesc.setBackground(new java.awt.Color(181, 218, 240));
+        TxtDesc.setBorder(null);
+        TxtDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                TxtDescActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 180, 39));
+        jPanel1.add(TxtDesc, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 180, 39));
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_________________________");
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 180, -1));
 
-        jTextField7.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField7.setBorder(null);
-        jTextField7.setOpaque(false);
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        TxtCost.setBackground(new java.awt.Color(181, 218, 240));
+        TxtCost.setBorder(null);
+        TxtCost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                TxtCostActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 180, 39));
+        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 180, 39));
+
+        btnAgregar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnAgregar.setForeground(new java.awt.Color(0, 0, 0));
+        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
+        btnAgregar.setText("Agregar");
+        btnAgregar.setBorder(null);
+        btnAgregar.setContentAreaFilled(false);
+        btnAgregar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAgregar.setVerifyInputWhenFocusTarget(false);
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 110, 40));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 470));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+        try {
+        int ipNumber = Integer.parseInt(BarraDeBusqueda.getText().trim());
+        
+        DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
+        model.setRowCount(0);
+        
+        // Versión con corchetes (recomendada para SQL Server)
+        String sql = "SELECT [IdServicio], [TipoServicio], [Descripcion], [PrecioUnitario] " +
+                     "FROM [Servicio] " +
+                     "WHERE [IdServicio] = ?";
+        
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, ipNumber);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{
+                        rs.getInt("IdServicio"),
+                        rs.getString("TipoServicio"),
+                        rs.getString("Descripcion"),
+                        rs.getFloat("PrecioUnitario")
+                    });
+                }
+            }
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Ingrese un número válido", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error SQL: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txtNombreActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void TxtDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDescActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_TxtDescActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void TxtCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtCostActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    }//GEN-LAST:event_TxtCostActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+         String nombre = txtNombre.getText().trim();
+    String descripcion = TxtDesc.getText().trim();
+    
+    try {
+        float costo = Float.parseFloat(TxtCost.getText().trim());
+        
+        // 2. Validación básica
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre del servicio es obligatorio", 
+                                       "Error", JOptionPane.ERROR_MESSAGE);
+            txtNombre.requestFocus();
+            return;
+        }
+        
+        // 3. Determinar si es INSERT o UPDATE
+        try (Connection conn = Conexion.getConnection()) {
+            String sql;
+            boolean esActualizacion = (idServicioSeleccionado > 0);
+            
+            if (esActualizacion) {
+                sql = "UPDATE dbo.Servicio SET TipoServicio=?, Descripcion=?, PrecioUnitario=? WHERE IdServicio=?";
+            } else {
+                sql = "INSERT INTO dbo.Servicio (TipoServicio, Descripcion, PrecioUnitario) VALUES (?, ?, ?)";
+            }
+            
+            // 4. Ejecutar operación
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, nombre);
+                pstmt.setString(2, descripcion);
+                pstmt.setFloat(3, costo);
+                
+                if (esActualizacion) {
+                    pstmt.setInt(4, idServicioSeleccionado);
+                }
+                
+                int filasAfectadas = pstmt.executeUpdate();
+                
+                // 5. Manejar resultados
+                if (filasAfectadas > 0) {
+                    String mensaje = esActualizacion ? "Servicio actualizado" : "Servicio registrado";
+                    JOptionPane.showMessageDialog(this, mensaje);
+                    
+                    // 6. Resetear interfaz EXACTAMENTE como lo pides
+                    limpiarCampos();
+                    btnGuardar.setText("Guardar"); // Equivalente a tu "Añadir"
+                    idServicioSeleccionado = -1;    // Equivalente a tu clienteSeleccionadoId = -1
+                    
+                    // 7. Actualizar tabla
+                    actualizarTablaServicios();
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error en base de datos: " + ex.getMessage(), 
+                                       "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "El costo debe ser un número válido", 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+        TxtCost.requestFocus();
+    }
+        
+    
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        String nombre = txtNombre.getText().trim();       // Corresponde a TipoServicio
+    String descripcion = TxtDesc.getText().trim();    // Corresponde a Descripcion
+    
+    try {
+        float costo = Float.parseFloat(TxtCost.getText().trim());  // Corresponde a PrecioUnitario
+        
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El tipo de servicio es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                 "INSERT INTO dbo.Servicio (TipoServicio, Descripcion, PrecioUnitario) VALUES (?, ?, ?)")) {
+            
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, descripcion);
+            pstmt.setFloat(3, costo);
+            
+            if (pstmt.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Servicio registrado en dbo.Servicio");
+                limpiarCampos();
+            }
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Precio debe ser numérico", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error en BD: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    limpiarCampos();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        if (idServicioSeleccionado <= 0) {
+        JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    String nombre = txtNombre.getText().trim();
+    String descripcion = TxtDesc.getText().trim();
+    
+    try {
+        float costo = Float.parseFloat(TxtCost.getText().trim());
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                 "UPDATE dbo.Servicio SET TipoServicio=?, Descripcion=?, PrecioUnitario=? WHERE IdServicio=?")) {
+            
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, descripcion);
+            pstmt.setFloat(3, costo);
+            pstmt.setInt(4, idServicioSeleccionado);
+            
+            if (pstmt.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Servicio actualizado correctamente");
+                actualizarTablaServicios(); // Actualizar la tabla
+                limpiarCampos();
+                idServicioSeleccionado = -1; // Resetear selección
+            }
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Formato de precio inválido", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    limpiarCampos();
+    actualizarTablaServicios();
+    
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        if (idServicioSeleccionado <= 0) {
+        JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    int confirmacion = JOptionPane.showConfirmDialog(this, 
+        "¿Está seguro de eliminar este servicio permanentemente?", 
+        "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
+    
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                 "DELETE FROM dbo.Servicio WHERE IdServicio=?")) {
+            
+            pstmt.setInt(1, idServicioSeleccionado);
+            
+            if (pstmt.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Servicio eliminado exitosamente");
+                actualizarTablaServicios(); // Actualizar la tabla
+                limpiarCampos();
+                idServicioSeleccionado = -1;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } 
+    
+    limpiarCampos();
+    actualizarTablaServicios();
+    }//GEN-LAST:event_jButton5ActionPerformed
+    
+     private void actualizarTablaServicios() {
+    DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
+    model.setRowCount(0); // Limpiar tabla
+    
+    String sql = "SELECT IdServicio, TipoServicio, Descripcion, PrecioUnitario FROM dbo.Servicio";
+    
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql);
+         ResultSet rs = pstmt.executeQuery()) {
+        
+        // Llenar tabla
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("IdServicio"),
+                rs.getString("TipoServicio"),
+                rs.getString("Descripcion"),
+                String.format("$%.2f", rs.getFloat("PrecioUnitario")) // Formato monetario
+            });
+        }
+        
+        // Configurar listener para selección
+        jtblServicios.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int fila = jtblServicios.getSelectedRow();
+                if (fila >= 0) {
+                    idServicioSeleccionado = (int) jtblServicios.getValueAt(fila, 0);
+                    cargarServicioParaEdicion(idServicioSeleccionado);
+                }
+            }
+        });
+        
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al actualizar tabla:\n" + ex.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+private void cargarServicioParaEdicion(int idServicio) {
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(
+             "SELECT TipoServicio, Descripcion, PrecioUnitario FROM dbo.Servicio WHERE IdServicio=?")) {
+        
+        pstmt.setInt(1, idServicio);
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            txtNombre.setText(rs.getString("TipoServicio"));
+            TxtDesc.setText(rs.getString("Descripcion"));
+            TxtCost.setText(String.valueOf(rs.getFloat("PrecioUnitario")));
+            btnGuardar.setText("Actualizar");
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al cargar servicio: " + ex.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    private void cargarServicio(int idServicio) {
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(
+             "SELECT TipoServicio, Descripcion, PrecioUnitario FROM dbo.Servicio WHERE IdServicio=?")) {
+        
+        pstmt.setInt(1, idServicio);
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            txtNombre.setText(rs.getString("TipoServicio"));
+            TxtDesc.setText(rs.getString("Descripcion"));
+            TxtCost.setText(String.valueOf(rs.getFloat("PrecioUnitario")));
+            idServicioSeleccionado = idServicio;
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar servicio", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    // Limpiar formulario
+private void limpiarCampos() {
+    txtNombre.setText("");
+    TxtDesc.setText("");
+    TxtCost.setText("");
+    txtNombre.requestFocus();
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BarraDeBusqueda;
-    private javax.swing.JTable TablaDePedidos;
+    private javax.swing.JTextField TxtCost;
+    private javax.swing.JTextField TxtDesc;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -223,8 +548,7 @@ public class panelserviciosadmin extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTable jtblServicios;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

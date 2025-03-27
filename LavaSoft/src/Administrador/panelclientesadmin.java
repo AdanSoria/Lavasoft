@@ -62,7 +62,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
         btnGuardar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnAgregarCliente = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("_________________________");
@@ -248,20 +248,20 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 120, -1));
 
-        jButton9.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jButton9.setForeground(new java.awt.Color(0, 0, 0));
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
-        jButton9.setText("Eliminar");
-        jButton9.setBorder(null);
-        jButton9.setContentAreaFilled(false);
-        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton9.setVerifyInputWhenFocusTarget(false);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        btnEliminar.setForeground(new java.awt.Color(0, 0, 0));
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setBorder(null);
+        btnEliminar.setContentAreaFilled(false);
+        btnEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnEliminar.setVerifyInputWhenFocusTarget(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 120, 30));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 120, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 460));
     }// </editor-fold>//GEN-END:initComponents
@@ -384,9 +384,59 @@ public class panelclientesadmin extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:                                                 
+    int filaSeleccionada = jtblClientes.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Por favor seleccione un cliente de la tabla", 
+                                    "Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Obtener el ID del cliente seleccionado
+    int idCliente = (int) jtblClientes.getValueAt(filaSeleccionada, 0);
+    String nombreCliente = (String) jtblClientes.getValueAt(filaSeleccionada, 1);
+    
+    // Confirmación antes de eliminar
+    int confirmacion = JOptionPane.showConfirmDialog(
+        this, 
+        "¿Está seguro que desea eliminar al cliente:\n" +
+        "ID: " + idCliente + "\n" +
+        "Nombre: " + nombreCliente + "?", 
+        "Confirmar Eliminación", 
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+    );
+    
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        try (Connection conn = Conexion.getConnection()) {
+            String deleteSql = "DELETE FROM dbo.Cliente WHERE IdCliente = ?";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
+                stmt.setInt(1, idCliente);
+                
+                int filasAfectadas = stmt.executeUpdate();
+                
+                if (filasAfectadas > 0) {
+                    JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente");
+                    
+                    // Actualizar la tabla y limpiar selección
+                    actualizarTablaClientes();
+                    limpiarCampos();
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el cliente", 
+                                                "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al eliminar cliente: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    }//GEN-LAST:event_btnEliminarActionPerformed
     
     private void actualizarTablaClientes() {
     DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
@@ -421,9 +471,9 @@ private void limpiarCampos() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
