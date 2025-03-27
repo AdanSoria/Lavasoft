@@ -1,13 +1,13 @@
 package Administrador;
-
-
-import java.sql.Connection;
+import java.io.StringReader;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.swing.table.DefaultTableModel;
-
+import java.sql.Connection;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -18,12 +18,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Luis DC
  */
 public class panelserviciosadmin extends javax.swing.JPanel {
-    private int idServicioSeleccionado = -1;
+private int idServicioSeleccionado = -1;
     /**
      * Creates new form panelserviciosadmin
      */
     public panelserviciosadmin() {
         initComponents();
+        actualizarTablaServicios();
     }
 
     /**
@@ -41,20 +42,20 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jScrollPane5 = new javax.swing.JScrollPane();
         jtblServicios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnInsertar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        LabelNomSer = new javax.swing.JLabel();
+        LabelCostSer = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
-        TxtDesc = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
         TxtCost = new javax.swing.JTextField();
-        btnAgregar = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        TxtDesc = new javax.swing.JTextField();
+        btnGuardar = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -64,88 +65,84 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Servicio");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 80, 30));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 30));
 
         BarraDeBusqueda.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda.setBorder(null);
-        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 270, 30));
+        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 10, 120, 30));
 
         jtblServicios.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jtblServicios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null}
             },
             new String [] {
-                "Servicios", "Costo por kg", "Descripcion "
+                "ID Servicio", "Nombre", "Descripcion", "Costo"
             }
         ));
         jtblServicios.setToolTipText("");
         jScrollPane5.setViewportView(jtblServicios);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, 330, 380));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 430, 390));
 
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("_______________________________________");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 130, -1));
 
-        jButton6.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(0, 0, 0));
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
-        jButton6.setBorder(null);
-        jButton6.setContentAreaFilled(false);
-        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton6.setVerifyInputWhenFocusTarget(false);
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
+        btnBuscar.setBorder(null);
+        btnBuscar.setContentAreaFilled(false);
+        btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnBuscar.setVerifyInputWhenFocusTarget(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btnBuscarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, -1, -1));
+        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 40, 30));
 
-        btnGuardar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(null);
-        btnGuardar.setContentAreaFilled(false);
-        btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnGuardar.setVerifyInputWhenFocusTarget(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+        btnInsertar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnInsertar.setBorder(null);
+        btnInsertar.setContentAreaFilled(false);
+        btnInsertar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnInsertar.setVerifyInputWhenFocusTarget(false);
+        btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                btnInsertarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 110, 40));
+        jPanel1.add(btnInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 130, 40));
 
-        jButton5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(0, 0, 0));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
-        jButton5.setText("Eliminar");
-        jButton5.setBorder(null);
-        jButton5.setContentAreaFilled(false);
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton5.setVerifyInputWhenFocusTarget(false);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnEliminar.setForeground(new java.awt.Color(0, 0, 0));
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setBorder(null);
+        btnEliminar.setContentAreaFilled(false);
+        btnEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnEliminar.setVerifyInputWhenFocusTarget(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 360, 110, 60));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 110, 60));
 
-        jButton7.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(0, 0, 0));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar (1).png"))); // NOI18N
-        jButton7.setText("Editar");
-        jButton7.setBorder(null);
-        jButton7.setContentAreaFilled(false);
-        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton7.setVerifyInputWhenFocusTarget(false);
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnActualizar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnActualizar.setForeground(new java.awt.Color(0, 0, 0));
+        btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar (1).png"))); // NOI18N
+        btnActualizar.setText("Editar");
+        btnActualizar.setBorder(null);
+        btnActualizar.setContentAreaFilled(false);
+        btnActualizar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnActualizar.setVerifyInputWhenFocusTarget(false);
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnActualizarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 420, 110, 40));
+        jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 110, 40));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -162,14 +159,14 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         jLabel4.setText("Descripcion");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 101, 41));
 
-        jLabel11.setBackground(new java.awt.Color(118, 120, 237));
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel11.setText("________________________");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, 190, -1));
+        LabelNomSer.setBackground(new java.awt.Color(118, 120, 237));
+        LabelNomSer.setForeground(new java.awt.Color(0, 0, 0));
+        LabelNomSer.setText("________________________");
+        jPanel1.add(LabelNomSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 110, -1));
 
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel12.setText("_________________________");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 180, -1));
+        LabelCostSer.setForeground(new java.awt.Color(0, 0, 0));
+        LabelCostSer.setText("_________________________");
+        jPanel1.add(LabelCostSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 90, -1));
 
         txtNombre.setBackground(new java.awt.Color(181, 218, 240));
         txtNombre.setBorder(null);
@@ -178,20 +175,7 @@ public class panelserviciosadmin extends javax.swing.JPanel {
                 txtNombreActionPerformed(evt);
             }
         });
-        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 180, 39));
-
-        TxtDesc.setBackground(new java.awt.Color(181, 218, 240));
-        TxtDesc.setBorder(null);
-        TxtDesc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TxtDescActionPerformed(evt);
-            }
-        });
-        jPanel1.add(TxtDesc, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 180, 39));
-
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel16.setText("_________________________");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 180, -1));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 100, 39));
 
         TxtCost.setBackground(new java.awt.Color(181, 218, 240));
         TxtCost.setBorder(null);
@@ -200,28 +184,40 @@ public class panelserviciosadmin extends javax.swing.JPanel {
                 TxtCostActionPerformed(evt);
             }
         });
-        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 180, 39));
+        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 70, 39));
 
-        btnAgregar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnAgregar.setForeground(new java.awt.Color(0, 0, 0));
-        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
-        btnAgregar.setText("Agregar");
-        btnAgregar.setBorder(null);
-        btnAgregar.setContentAreaFilled(false);
-        btnAgregar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnAgregar.setVerifyInputWhenFocusTarget(false);
-        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setText("_________________________");
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 70, -1));
+
+        TxtDesc.setBackground(new java.awt.Color(181, 218, 240));
+        TxtDesc.setBorder(null);
+        TxtDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarActionPerformed(evt);
+                TxtDescActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 110, 40));
+        jPanel1.add(TxtDesc, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 180, 39));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 470));
+        btnGuardar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
+        btnGuardar.setText("Agregar");
+        btnGuardar.setBorder(null);
+        btnGuardar.setContentAreaFilled(false);
+        btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnGuardar.setVerifyInputWhenFocusTarget(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 120, 30));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 470));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
         int ipNumber = Integer.parseInt(BarraDeBusqueda.getText().trim());
         
@@ -247,6 +243,12 @@ public class panelserviciosadmin extends javax.swing.JPanel {
                         rs.getFloat("PrecioUnitario")
                     });
                 }
+              if (model.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, 
+                        "No se encontró Servicio con ID: " + ipNumber, 
+                        "Información", JOptionPane.INFORMATION_MESSAGE);
+                    actualizarTablaServicios();
+                }  
             }
         }
     } catch (NumberFormatException ex) {
@@ -255,23 +257,58 @@ public class panelserviciosadmin extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "Error SQL: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
     }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
 
-    private void TxtDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDescActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TxtDescActionPerformed
-
     private void TxtCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtCostActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtCostActionPerformed
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void TxtDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDescActionPerformed
         // TODO add your handling code here:
-         String nombre = txtNombre.getText().trim();
+    }//GEN-LAST:event_TxtDescActionPerformed
+
+    private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
+    String nombre = txtNombre.getText().trim();       // Corresponde a TipoServicio
+    String descripcion = TxtDesc.getText().trim();    // Corresponde a Descripcion
+    
+    try {
+        float costo = Float.parseFloat(TxtCost.getText().trim());  // Corresponde a PrecioUnitario
+        
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El tipo de servicio es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                 "INSERT INTO dbo.Servicio (TipoServicio, Descripcion, PrecioUnitario) VALUES (?, ?, ?)")) {
+            
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, descripcion);
+            pstmt.setFloat(3, costo);
+            
+            if (pstmt.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Servicio registrado en dbo.Servicio");
+                limpiarCampos();
+            }
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Precio debe ser numérico", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error en BD: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    limpiarCampos();
+    
+    }//GEN-LAST:event_btnInsertarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // 1. Obtener valores
+    String nombre = txtNombre.getText().trim();
     String descripcion = TxtDesc.getText().trim();
     
     try {
@@ -331,48 +368,11 @@ public class panelserviciosadmin extends javax.swing.JPanel {
                                     "Error", JOptionPane.ERROR_MESSAGE);
         TxtCost.requestFocus();
     }
-        
-    
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
-        String nombre = txtNombre.getText().trim();       // Corresponde a TipoServicio
-    String descripcion = TxtDesc.getText().trim();    // Corresponde a Descripcion
-    
-    try {
-        float costo = Float.parseFloat(TxtCost.getText().trim());  // Corresponde a PrecioUnitario
-        
-        if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El tipo de servicio es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try (Connection conn = Conexion.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(
-                 "INSERT INTO dbo.Servicio (TipoServicio, Descripcion, PrecioUnitario) VALUES (?, ?, ?)")) {
-            
-            pstmt.setString(1, nombre);
-            pstmt.setString(2, descripcion);
-            pstmt.setFloat(3, costo);
-            
-            if (pstmt.executeUpdate() > 0) {
-                JOptionPane.showMessageDialog(this, "Servicio registrado en dbo.Servicio");
-                limpiarCampos();
-            }
-        }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Precio debe ser numérico", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error en BD: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    limpiarCampos();
-    }//GEN-LAST:event_btnAgregarActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-        if (idServicioSeleccionado <= 0) {
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+       if (idServicioSeleccionado <= 0) {
         JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
@@ -408,11 +408,10 @@ public class panelserviciosadmin extends javax.swing.JPanel {
     limpiarCampos();
     actualizarTablaServicios();
     
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_btnActualizarActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        if (idServicioSeleccionado <= 0) {
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+       if (idServicioSeleccionado <= 0) {
         JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
@@ -441,9 +440,10 @@ public class panelserviciosadmin extends javax.swing.JPanel {
     
     limpiarCampos();
     actualizarTablaServicios();
-    }//GEN-LAST:event_jButton5ActionPerformed
     
-     private void actualizarTablaServicios() {
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void actualizarTablaServicios() {
     DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
     model.setRowCount(0); // Limpiar tabla
     
@@ -529,18 +529,19 @@ private void limpiarCampos() {
     txtNombre.requestFocus();
 }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BarraDeBusqueda;
+    private javax.swing.JLabel LabelCostSer;
+    private javax.swing.JLabel LabelNomSer;
     private javax.swing.JTextField TxtCost;
     private javax.swing.JTextField TxtDesc;
-    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
+    private javax.swing.JButton btnInsertar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

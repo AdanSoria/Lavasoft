@@ -60,6 +60,7 @@ public class IniciaSesion extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bub.png"))); // NOI18N
 
@@ -83,7 +84,6 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         txtusu1.setBackground(new java.awt.Color(181, 218, 240));
         txtusu1.setBorder(null);
-        txtusu1.setOpaque(false);
         txtusu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtusu1ActionPerformed(evt);
@@ -135,7 +135,7 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("Iniciar sesion");
+        jButton2.setText("iniciar sesion");
         jButton2.setBorder(null);
         jButton2.setContentAreaFilled(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -152,6 +152,20 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/key.png"))); // NOI18N
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, -1, -1));
+
+        jButton3.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(0, 0, 0));
+        jButton3.setText("¿Nuevo usuario?");
+        jButton3.setBorder(null);
+        jButton3.setContentAreaFilled(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 400, 130, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -212,6 +226,14 @@ public class IniciaSesion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtusu1ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+         this.setVisible(false);
+        Registrarse2 p=new Registrarse2();
+        p.setVisible(true);
+                
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -238,6 +260,7 @@ public class IniciaSesion extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(IniciaSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -249,6 +272,7 @@ public class IniciaSesion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

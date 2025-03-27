@@ -24,6 +24,7 @@ private int idClienteSeleccionado = -1;
      */
     public panelpedidosadmin() {
         initComponents();
+        //actualizarTablaPedidos();
     }
 
     /**
