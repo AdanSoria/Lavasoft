@@ -23,9 +23,10 @@ private int idClienteSeleccionado = -1;
      * Creates new form panelpedidos
      */
     public panelpedidosadmin() {
-        initComponents();
-        //actualizarTablaPedidos();
-    }
+    initComponents();
+    cargarServicios(); // Cargar servicios al iniciar
+    actualizarTablaPedidos();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -292,7 +293,9 @@ private int idClienteSeleccionado = -1;
 } catch (NumberFormatException e) {
     JOptionPane.showMessageDialog(this, "Por favor ingrese valores numéricos válidos", "Error", JOptionPane.ERROR_MESSAGE);
 }
-}                                                 
+}    
+    
+    
     private void actualizarTablaPedidos() {
     DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
     model.setRowCount(0); // Limpiar la tabla
@@ -415,7 +418,28 @@ private int idClienteSeleccionado = -1;
         }
     }
     }//GEN-LAST:event_btnBusquedaActionPerformed
-
+    private void cargarServicios() {
+    try (Connection conn = Conexion.getConnection()) {
+        String sql = "SELECT idServicio, Nombre FROM dbo.Servicio WHERE Estado = 1"; // Asumiendo que hay un campo Estado para servicios activos
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            
+            jComboBoxTipo.removeAllItems();
+            while (rs.next()) {
+                jComboBoxTipo.addItem(rs.getString("Nombre"));
+            }
+            
+            // Validar que hay servicios disponibles
+            if (jComboBoxTipo.getItemCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No hay servicios disponibles", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar servicios: " + e.getMessage(), 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
     private void txtusu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtusu2ActionPerformed
@@ -426,9 +450,13 @@ private int idClienteSeleccionado = -1;
 
     private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
         // TODO add your handling code here:
-        //cargarServicios();
+        //cargarServicios();                                           
+    if (jComboBoxTipo.getSelectedItem() != null) {
+        String servicioSeleccionado = jComboBoxTipo.getSelectedItem().toString();
+        // Aquí podrías actualizar el precio base o mostrar información del servicio seleccionado
+    }
     }//GEN-LAST:event_jComboBoxTipoActionPerformed
-
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBusqueda;
