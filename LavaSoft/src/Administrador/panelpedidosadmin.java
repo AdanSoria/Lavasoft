@@ -3,19 +3,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -32,81 +23,10 @@ private int idClienteSeleccionado = -1;
      * Creates new form panelpedidos
      */
     public panelpedidosadmin() {
-    initComponents();
-    cargarServicios(); // Cargar servicios al iniciar
-    //actualizarTablaPedidos();
-    //configurarTabla();
-}
-   // En el constructor o método de inicialización:
-private void inicializarComponentes() {
-    // ... otros inicializaciones ...
-    jComboBoxTipo.setModel(ServicioUtil.cargarServiciosEnModelo());
-    
-    // Listener para calcular automáticamente el total
-    jComboBoxTipo.addActionListener(e -> {
-        Servicio s = (Servicio) jComboBoxTipo.getSelectedItem();
-        if (s != null && !txtusu2.getText().isEmpty()) {
-            try {
-                double peso = Double.parseDouble(txtusu2.getText());
-                double total = peso * s.getPrecioUnitario();
-                txtusu5.setText(String.format("%.2f", total));
-            } catch (NumberFormatException ex) {
-                // Ignorar error, se manejará al guardar
-            }
-        }
-    });
-    
-    txtusu2.getDocument().addDocumentListener(new DocumentListener() {
-        public void changedUpdate(DocumentEvent e) { calcularTotal(); }
-        public void removeUpdate(DocumentEvent e) { calcularTotal(); }
-        public void insertUpdate(DocumentEvent e) { calcularTotal(); }
-        
-        private void calcularTotal() {
-            Servicio s = (Servicio) jComboBoxTipo.getSelectedItem();
-            if (s != null && !txtusu2.getText().isEmpty()) {
-                try {
-                    double peso = Double.parseDouble( txtusu2.getText());
-                    double total = peso * s.getPrecioUnitario();
-                     txtusu5.setText(String.format("%.2f", total));
-                } catch (NumberFormatException ex) {
-                     txtusu5.setText("");
-                }
-            }
-        }
-    });
-} 
-   
-private void cargarServiciosEnComboBox() {
-    // 1. Crear el modelo con el tipo genérico correcto
-    DefaultComboBoxModel<Servicio> model = new DefaultComboBoxModel<>();
-    // En el método initComponents():
-    jComboBoxTipo = new JComboBox<Servicio>();
-    try (Connection conn = Conexion.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(
-             "SELECT IdServicio, TipoServicio, Descripcion, PrecioUnitario FROM Servicio");
-         ResultSet rs = stmt.executeQuery()) {
-        
-        // 2. Llenar el modelo
-        while (rs.next()) {
-            Servicio servicio = new Servicio(
-                rs.getInt("IdServicio"),
-                rs.getString("TipoServicio"),
-                rs.getString("Descripcion"),
-                rs.getFloat("PrecioUnitario")
-            );
-            model.addElement(servicio);
-        }
-        
-        // 3. Asignar el modelo al ComboBox (versión segura)
-        jComboBoxTipo.setModel(model);
-        
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar servicios: " + e.getMessage(),
-            "Error", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
+        initComponents();
+        actualizarTablaPedidos();
     }
-}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -124,10 +44,10 @@ private void cargarServiciosEnComboBox() {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        txtusu1 = new javax.swing.JTextField();
+        txtNomCliente = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        txtusu3 = new javax.swing.JTextField();
+        txtConsultaPedido = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         btnEditar = new javax.swing.JButton();
         btnRealizarPedido = new javax.swing.JButton();
@@ -135,20 +55,19 @@ private void cargarServiciosEnComboBox() {
         btnEliminar = new javax.swing.JButton();
         btnBusqueda = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        txtusu2 = new javax.swing.JTextField();
+        txtPeso = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jComboBoxTipo = new javax.swing.JComboBox<>();
-        txtusu5 = new javax.swing.JTextField();
+        txtTotal = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        txtusu4 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        txtPeso1 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
 
-        jPanel1.setMinimumSize(new java.awt.Dimension(600, 600));
+        jPanel1.setMinimumSize(new java.awt.Dimension(750, 750));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel4.setBackground(new java.awt.Color(181, 218, 240));
-        jPanel4.setMinimumSize(new java.awt.Dimension(600, 600));
-        jPanel4.setPreferredSize(new java.awt.Dimension(600, 600));
+        jPanel4.setMinimumSize(new java.awt.Dimension(750, 750));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
@@ -159,55 +78,55 @@ private void cargarServiciosEnComboBox() {
         jLabel5.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Fecha Estimada");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, 20));
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, -1, 20));
 
         jLabel6.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Total");
-        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 60, -1));
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 60, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Cliente", "Fecha", "Fecha del pedido", "Fecha de entrega", "Estado", "Peso", "Total"
+                "ID", "Cliente", "Servicio", "Fecha del pedido", "Fecha Estimada", "EstadoPedido", "CostoTotal", "Peso", "Detalles Pedido"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 490, 370));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 460, 380));
 
         jLabel3.setBackground(new java.awt.Color(181, 218, 240));
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("______________");
-        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, 120, 20));
+        jLabel3.setText("_________________");
+        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 120, 20));
 
-        txtusu1.setBackground(new java.awt.Color(181, 218, 240));
-        txtusu1.setBorder(null);
-        jPanel4.add(txtusu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 100, 20));
+        txtNomCliente.setBackground(new java.awt.Color(181, 218, 240));
+        txtNomCliente.setBorder(null);
+        jPanel4.add(txtNomCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 100, 20));
 
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel11.setText("______________");
-        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, 100, -1));
+        jLabel11.setText("__________________");
+        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 190, 100, -1));
 
         jLabel8.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Pedido");
         jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, -1, -1));
 
-        txtusu3.setBackground(new java.awt.Color(181, 218, 240));
-        txtusu3.setBorder(null);
-        txtusu3.addActionListener(new java.awt.event.ActionListener() {
+        txtConsultaPedido.setBackground(new java.awt.Color(181, 218, 240));
+        txtConsultaPedido.setBorder(null);
+        txtConsultaPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtusu3ActionPerformed(evt);
+                txtConsultaPedidoActionPerformed(evt);
             }
         });
-        jPanel4.add(txtusu3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 30, 470, 30));
+        jPanel4.add(txtConsultaPedido, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 390, -1));
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel16.setText("____________________________________________________________________________________________________");
-        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 480, -1));
+        jLabel16.setText("_______________________________________________________________________________");
+        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 400, -1));
 
         btnEditar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(0, 0, 0));
@@ -281,70 +200,77 @@ private void cargarServiciosEnComboBox() {
                 btnBusquedaActionPerformed(evt);
             }
         });
-        jPanel4.add(btnBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, -1, -1));
+        jPanel4.add(btnBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Peso");
-        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 50, 20));
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 50, 20));
 
-        txtusu2.setBackground(new java.awt.Color(181, 218, 240));
-        txtusu2.setBorder(null);
-        txtusu2.addActionListener(new java.awt.event.ActionListener() {
+        txtPeso.setBackground(new java.awt.Color(181, 218, 240));
+        txtPeso.setBorder(null);
+        txtPeso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtusu2ActionPerformed(evt);
+                txtPesoActionPerformed(evt);
             }
         });
-        jPanel4.add(txtusu2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 100, 20));
+        jPanel4.add(txtPeso, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, 100, 20));
 
         jLabel12.setBackground(new java.awt.Color(181, 218, 240));
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel12.setText("______________");
-        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 100, -1));
+        jLabel12.setText("__________________");
+        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 110, -1));
 
-        jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
+        jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
+        jComboBoxTipo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBoxTipoMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jComboBoxTipoMouseEntered(evt);
+            }
+        });
         jComboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxTipoActionPerformed(evt);
             }
         });
-        jPanel4.add(jComboBoxTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, -1, -1));
+        jPanel4.add(jComboBoxTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, -1, -1));
 
-        txtusu5.setBackground(new java.awt.Color(181, 218, 240));
-        txtusu5.setBorder(null);
-        txtusu5.addActionListener(new java.awt.event.ActionListener() {
+        txtTotal.setBackground(new java.awt.Color(181, 218, 240));
+        txtTotal.setBorder(null);
+        txtTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtusu5ActionPerformed(evt);
+                txtTotalActionPerformed(evt);
             }
         });
-        jPanel4.add(txtusu5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 100, 20));
+        jPanel4.add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, 100, 20));
 
         jLabel9.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Servicio");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, 20));
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, 20));
 
-        txtusu4.setBackground(new java.awt.Color(181, 218, 240));
-        txtusu4.setBorder(null);
-        txtusu4.addActionListener(new java.awt.event.ActionListener() {
+        txtPeso1.setBackground(new java.awt.Color(181, 218, 240));
+        txtPeso1.setBorder(null);
+        txtPeso1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtusu4ActionPerformed(evt);
+                txtPeso1ActionPerformed(evt);
             }
         });
-        jPanel4.add(txtusu4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 100, 20));
+        jPanel4.add(txtPeso1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 100, 20));
 
-        jLabel4.setBackground(new java.awt.Color(181, 218, 240));
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("______________");
-        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 120, 20));
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setText("__________________");
+        jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 100, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 760, 470));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 520));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,141 +278,98 @@ private void cargarServiciosEnComboBox() {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtusu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu3ActionPerformed
+    private void txtConsultaPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConsultaPedidoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtusu3ActionPerformed
+    }//GEN-LAST:event_txtConsultaPedidoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnEditarActionPerformed
 
-    private void btnRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRealizarPedidoActionPerformed
-          Servicio servicioSeleccionado = (Servicio) jComboBoxTipo.getSelectedItem();
-        if (servicioSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione un servicio", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
+    private void btnRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         try {
-            double peso = Double.parseDouble(txtusu2.getText());
-            double total = peso * servicioSeleccionado.getPrecioUnitario();
-            
-            // Resto de la lógica para guardar el pedido...
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Peso debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    int cliente = Integer.parseInt(txtusu1.getText());
+    int idServicio = Integer.parseInt(jComboBoxTipo.getSelectedItem().toString());
+    int peso = Integer.parseInt(txtusu2.getText());
+    int total = Integer.parseInt(txtusu5.getText());
 
-        if (idClienteSeleccionado <= 0) {
-        JOptionPane.showMessageDialog(this, "Seleccione un cliente", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    if (jComboBoxTipo.getSelectedItem() == null) {
-        JOptionPane.showMessageDialog(this, "Seleccione un servicio", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    try {
-        // Obtener datos del formulario
-        Servicio servicio = (Servicio) jComboBoxTipo.getSelectedItem();
-        int peso = Integer.parseInt(txtusu2.getText());
-        Date fechaEntrega = new SimpleDateFormat("dd/MM/yyyy").parse(txtusu4.getText());
-        
-        // Calcular costo total
-        double costoTotal = calcularCostoTotal(servicio.getIdServicio(), peso);
-        
-        // Insertar en base de datos
-        try (Connection conn = Conexion.getConnection()) {
-            String sql = "INSERT INTO dbo.Pedido (" +
-                         "IdCliente, IdUsuario, IdServicio, " +
-                         "FechaCreacion, FechaEntrega, EstadoPedido, " +
-                         "Peso, CostoTotal) " +
-                         "VALUES (?, ?, ?, GETDATE(), ?, 1, ?, ?)";
+    try (Connection conn = Conexion.getConnection()) {
+        String sql = "INSERT INTO dbo.Pedido (idCliente, idServicio, FechaCreacion, Peso, CostoTotal) " +
+                     "VALUES (?, ?, GETDATE(), ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, cliente);
+            stmt.setInt(2, idServicio);
+            stmt.setDouble(3, peso);
+            stmt.setDouble(4, total);
             
-            try (PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                stmt.setInt(1, idClienteSeleccionado);
-                stmt.setInt(2, idUsuarioActual);
-                stmt.setInt(3, servicio.getIdServicio());
-                stmt.setDate(4, new java.sql.Date(fechaEntrega.getTime()));
-                stmt.setInt(5, peso);
-                stmt.setDouble(6, costoTotal);
-                
-                int affectedRows = stmt.executeUpdate();
-                
-                if (affectedRows > 0) {
-                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            int idPedido = generatedKeys.getInt(1);
-                            JOptionPane.showMessageDialog(this, 
-                                "Pedido creado exitosamente\nID: " + idPedido, 
-                                "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                            actualizarTablaPedidos();
-                            limpiarFormulario();
-                        }
+            int affectedRows = stmt.executeUpdate();
+            
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int idPedido = generatedKeys.getInt(1);
+                        JOptionPane.showMessageDialog(this, "Pedido realizado con éxito. ID: " + idPedido);
+                        actualizarTablaPedidos();
                     }
                 }
             }
         }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "El peso debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (ParseException e) {
-        JOptionPane.showMessageDialog(this, "Formato de fecha incorrecto (dd/MM/yyyy)", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(this, "Error al realizar pedido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(this, "Por favor ingrese valores numéricos válidos", "Error", JOptionPane.ERROR_MESSAGE);
+}
+}                                                 
+        
+                             
+    
+    private void limpiarCampos() {
+    txtPeso.setText("");
+    txtTotal.setText("");
+    jComboBoxTipo.setSelectedIndex(0);
+}
+    
+    private void actualizarTablaPedidos() {
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0);
+    
+    try (Connection conn = Conexion.getConnection()) {
+        // USAR EL NOMBRE CORRECTO: FechaEntregaEstimada
+        String sql = "SELECT p.idPedido, c.Nombre AS Cliente, s.Descripcion AS Servicio, " +
+                     "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal " +
+                     "FROM dbo.Pedido p " +
+                     "JOIN dbo.Cliente c ON p.idCliente = c.idCliente " +
+                     "JOIN dbo.Servicio s ON p.idServicio = s.idServicio " +
+                     "ORDER BY p.FechaCreacion DESC";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("idPedido"),
+                    rs.getString("Cliente"),
+                    rs.getString("Servicio"),
+                    dateFormat.format(rs.getTimestamp("FechaCreacion")),
+                    // USAR EL NOMBRE CORRECTO AQUÍ TAMBIÉN
+                    dateFormat.format(rs.getTimestamp("FechaEntregaEstimada")),
+                    rs.getDouble("Peso"),
+                    rs.getDouble("CostoTotal")
+                });
+            }
+        }
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error al crear pedido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Error al cargar pedidos: " + e.getMessage(), 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
 }
 
-private double calcularCostoTotal(int idServicio, int peso) {
-    double costoBase = 0;
-    double costoPorKilo = 0;
-    
-    try (Connection conn = Conexion.getConnection()) {
-        String sql = "SELECT CostoBase, CostoPorKilo FROM dbo.Servicio WHERE IdServicio = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idServicio);
-            ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                costoBase = rs.getDouble("CostoBase");
-                costoPorKilo = rs.getDouble("CostoPorKilo");
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return costoBase + (peso * costoPorKilo);
-}
-   
-           
-    
-/*private double calcularTotal(int idServicio, double peso) {
-    // Aquí implementa la lógica para calcular el total basado en el servicio y peso
-    // Esto es un ejemplo - debes adaptarlo a tu modelo de negocio
-    double precioBase = 0;
-    double precioPorKilo = 0;
-    
-    // Obtener información del servicio de la base de datos
-    try (Connection conn = Conexion.getConnection()) {
-        String sql = "SELECT PrecioBase, PrecioPorKilo FROM dbo.Servicio WHERE idServicio = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idServicio);
-            ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                precioBase = rs.getDouble("PrecioBase");
-                precioPorKilo = rs.getDouble("PrecioPorKilo");
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return precioBase + (peso * precioPorKilo);
-
-    }//GEN-LAST:event_btnRealizarPedidoActionPerformed
-*/
     private void btnGenerarTicketPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarTicketPActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnGenerarTicketPActionPerformed
@@ -496,7 +379,7 @@ private double calcularCostoTotal(int idServicio, int peso) {
      
     }//GEN-LAST:event_btnEliminarActionPerformed
     // En el constructor o un método de inicialización
-/*private void cargarServicios() {
+private void cargarServicios() {
     try (Connection conn = Conexion.getConnection()) {
         String sql = "SELECT idServicio, Descripcion FROM dbo.Servicio";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -510,70 +393,6 @@ private double calcularCostoTotal(int idServicio, int peso) {
             }
         }
     } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}*/
-    private void actualizarTablaPedidos() {
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    model.setRowCount(0); // Limpiar la tabla
-    
-    try (Connection conn = Conexion.getConnection()) {
-        // Consulta SQL mejorada con JOINs para obtener nombres en lugar de IDs
-        String sql = "SELECT " +
-                     "p.IdPedido, " +
-                     "c.Nombre AS Cliente, " +
-                     "p.FechaCreacion, " +
-                     "p.FechaEntrega, " +
-                     "s.TipoServicio AS Servicio, " +
-                     "p.EstadoPedido, " +
-                     "p.Peso, " +
-                     "p.CostoTotal " +
-                     "FROM dbo.Pedido p " +
-                     "INNER JOIN dbo.Cliente c ON p.IdCliente = c.IdCliente " +
-                     "INNER JOIN dbo.Servicio s ON p.IdServicio = s.IdServicio " +
-                     "WHERE p.IdUsuario = ? " +  // Filtro por usuario logueado
-                     "ORDER BY p.FechaCreacion DESC";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idUsuarioActual); // Asume que tienes esta variable
-            ResultSet rs = stmt.executeQuery();
-            
-            // Formateador de fechas
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            
-            while (rs.next()) {
-                // Obtener y formatear fechas
-                Date fechaCreacion = rs.getDate("FechaCreacion");
-                Date fechaEntrega = rs.getDate("FechaEntrega");
-                
-                String strFechaCreacion = fechaCreacion != null ? dateFormat.format(fechaCreacion) : "N/A";
-                String strFechaEntrega = fechaEntrega != null ? dateFormat.format(fechaEntrega) : "N/A";
-                
-                // Determinar estado
-                boolean estado = rs.getBoolean("EstadoPedido");
-                String strEstado = estado ? "Activo" : "Inactivo";
-                
-                // Formatear valores numéricos
-                String strPeso = String.format("%.2f kg", rs.getDouble("Peso"));
-                String strTotal = String.format("$%.2f", rs.getDouble("CostoTotal"));
-                
-                // Agregar fila a la tabla
-                model.addRow(new Object[]{
-                    rs.getInt("IdPedido"),
-                    rs.getString("Cliente"),
-                    strFechaCreacion,
-                    strFechaEntrega,
-                    rs.getString("Servicio"),
-                    strEstado,
-                    strPeso,
-                    strTotal
-                });
-            }
-        }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar pedidos:\n" + e.getMessage(),
-            "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
 }
@@ -600,7 +419,7 @@ private double calcularCostoTotal(int idServicio, int peso) {
                 
                 if (rs.next()) {
                     idClienteSeleccionado = rs.getInt("IdCliente");
-                    txtusu1.setText(rs.getString("Nombre"));
+                    txtNomCliente.setText(rs.getString("Nombre"));
                 } else {
                     JOptionPane.showMessageDialog(this, "Cliente no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -612,135 +431,34 @@ private double calcularCostoTotal(int idServicio, int peso) {
         }
     }
     }//GEN-LAST:event_btnBusquedaActionPerformed
-    
-    /*
-    private void jButtonGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {                                                     
-    String rutaArchivo = "reporte_pedidos.csv";
-    
-    try (PrintWriter writer = new PrintWriter(new File(rutaArchivo))) {
-        writer.println("ID Pedido, Cliente, Producto, Cantidad, Precio");
-        
-        // Aquí deberías obtener los datos de tu tabla o base de datos.
-        // Simulamos algunos datos:
-        writer.println("1, Juan Pérez, Laptop, 2, 15000");
-        writer.println("2, María López, Teléfono, 1, 8000");
-        writer.println("3, Carlos Gómez, Tablet, 3, 5000");
 
-        writer.flush();
-        JOptionPane.showMessageDialog(this, "Reporte generado exitosamente: " + rutaArchivo);
-        
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al generar el reporte: " + e.getMessage());
-    }
-}
-
-    */
-    
-    
-    private void txtusu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu2ActionPerformed
+    private void txtPesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtusu2ActionPerformed
+    }//GEN-LAST:event_txtPesoActionPerformed
 
-    private void txtusu5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu5ActionPerformed
+    private void txtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtusu5ActionPerformed
+    }//GEN-LAST:event_txtTotalActionPerformed
 
     private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
         // TODO add your handling code here:
-        //cargarServicios();                                           
-    if (jComboBoxTipo.getSelectedItem() != null) {
-        String servicioSeleccionado = jComboBoxTipo.getSelectedItem().toString();
-        // Aquí podrías actualizar el precio base o mostrar información del servicio seleccionado
-    }
+        //cargarServicios();
     }//GEN-LAST:event_jComboBoxTipoActionPerformed
 
-    private void txtusu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu4ActionPerformed
+    private void jComboBoxTipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxTipoMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtusu4ActionPerformed
-    // En tu clase panelpedidosadmin
-private void cargarServicios() {
-    try (Connection conn = Conexion.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(
-             "SELECT IdServicio, Nombre FROM dbo.Servicio WHERE Estado = 1");
-         ResultSet rs = stmt.executeQuery()) {
-        
-        jComboBoxTipo.removeAllItems();
-        
-        // Opcional: agregar elemento por defecto
-        jComboBoxTipo.addItem(new Servicio(-1, "Seleccione un servicio"));
-        
-        while (rs.next()) {
-            int id = rs.getInt("IdServicio");
-            if (rs.wasNull()) continue;  // Saltar si el ID es nulo
-            
-            String nombre = rs.getString("Nombre");
-            if (nombre == null) nombre = "Servicio " + id;
-            
-            jComboBoxTipo.addItem(new Servicio(id, nombre));
-        }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar servicios: " + e.getMessage(),
-            "Error", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
+        //cargarServicios();
+    }//GEN-LAST:event_jComboBoxTipoMouseClicked
 
-    }
+    private void jComboBoxTipoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxTipoMouseEntered
+        // TODO add your handling code here:
+        cargarServicios();
+    }//GEN-LAST:event_jComboBoxTipoMouseEntered
 
-    private Servicio obtenerServicioSeleccionado() {
-    try {
-        Object selected = jComboBoxTipo.getSelectedItem();
-        if (selected instanceof Servicio) {
-            return (Servicio) selected;
-        }
-        return null;
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this,
-            "Error al obtener servicio seleccionado: " + e.getMessage(),
-            "Error", JOptionPane.ERROR_MESSAGE);
-        return null;
-    }
-}
-    
-    
-    private void limpiarFormulario() {
-    txtusu2.setText("");
-    txtusu4.setText("");
-    txtusu5.setText("");
-}
+    private void txtPeso1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPeso1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPeso1ActionPerformed
 
-private void mostrarDetallePedido(int idPedido) {
-    try (Connection conn = Conexion.getConnection()) {
-        String sql = "SELECT p.*, c.Nombre AS Cliente, s.Nombre AS Servicio " +
-                     "FROM dbo.Pedido p " +
-                     "JOIN dbo.Cliente c ON p.IdCliente = c.IdCliente " +
-                     "JOIN dbo.Servicio s ON p.IdServicio = s.IdServicio " +
-                     "WHERE p.IdPedido = ?";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idPedido);
-            ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                String mensaje = "Detalle del Pedido:\n" +
-                                 "ID: " + rs.getInt("IdPedido") + "\n" +
-                                 "Cliente: " + rs.getString("Cliente") + "\n" +
-                                 "Servicio: " + rs.getString("Servicio") + "\n" +
-                                 "Fecha Creación: " + sdf.format(rs.getDate("FechaCreacion")) + "\n" +
-                                 "Fecha Entrega: " + sdf.format(rs.getDate("FechaEntrega")) + "\n" +
-                                 "Peso: " + rs.getInt("Peso") + " kg\n" +
-                                 "Total: $" + String.format("%.2f", rs.getDouble("CostoTotal"));
-                
-                JOptionPane.showMessageDialog(this, mensaje, "Detalle del Pedido", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error al obtener detalle: " + e.getMessage(), 
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBusqueda;
@@ -752,9 +470,9 @@ private void mostrarDetallePedido(int idPedido) {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -764,10 +482,10 @@ private void mostrarDetallePedido(int idPedido) {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField txtusu1;
-    private javax.swing.JTextField txtusu2;
-    private javax.swing.JTextField txtusu3;
-    private javax.swing.JTextField txtusu4;
-    private javax.swing.JTextField txtusu5;
+    private javax.swing.JTextField txtConsultaPedido;
+    private javax.swing.JTextField txtNomCliente;
+    private javax.swing.JTextField txtPeso;
+    private javax.swing.JTextField txtPeso1;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

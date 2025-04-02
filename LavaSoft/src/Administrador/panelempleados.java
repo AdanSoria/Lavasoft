@@ -36,8 +36,8 @@ public class panelempleados extends javax.swing.JPanel {
         
         initComponents();
         cargarTablaAlAbrir(); // Llama a la función para cargar la tabla
-         agregarListenerBusqueda(); // Llama al método que agrega el listener para la barra de búsqueda
-
+        agregarListenerBusqueda(); // Llama al método que agrega el listener para la barra de búsqueda
+        
     }
 
     /**
@@ -320,14 +320,14 @@ public class panelempleados extends javax.swing.JPanel {
             String idEmpleado = jtbEmpleado.getValueAt(filaSeleccionada, 0).toString();
 
             // Definir la consulta de actualización
-            String updateSql = "UPDATE dbo.Usuario SET Nombre = ?, Puesto = ?, Telefono = ?, Turno = ?, RegistroAsistencia = ? WHERE IdUsuario = ?";
+            String updateSql = "UPDATE dbo.Usuario SET Nombre = ?, Puesto = ?, Telefono = ?, Turno = ? WHERE IdUsuario = ?";
             
             PreparedStatement stmt = conn.prepareStatement(updateSql);
             stmt.setString(1, BarraDeBusqueda1.getText());
             stmt.setString(2, (String) comboBoxPuesto.getSelectedItem());
             stmt.setString(3, BarraDeBusqueda3.getText());
             stmt.setString(4, txthorario.getText());
-            stmt.setString(6, idEmpleado);  // Establecer el ID del empleado que estamos actualizando
+            stmt.setString(5, idEmpleado);  // Establecer el ID del empleado que estamos actualizando
 
             int filasActualizadas = stmt.executeUpdate();
             
@@ -381,7 +381,7 @@ private void actualizarTabla() {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         try (Connection conn = Conexion.getConnection()) {
-    String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno,Contraseña) VALUES (?, ?, ?, ?, ?,?)";
+    String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno,Contraseña) VALUES (?, ?, ?, ?, ?)";
     PreparedStatement stmt = conn.prepareStatement(insertSql);
     
     String nombre = BarraDeBusqueda1.getText();

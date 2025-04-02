@@ -59,7 +59,6 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jTextCliente3 = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         jTextCliente4 = new javax.swing.JTextField();
-        btnGuardar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnAgregarCliente = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -203,21 +202,6 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jPanel1.add(jTextCliente4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 130, 39));
 
-        btnGuardar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/key.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(null);
-        btnGuardar.setContentAreaFilled(false);
-        btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnGuardar.setVerifyInputWhenFocusTarget(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 410, 120, 30));
-
         btnEditar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(0, 0, 0));
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar (1).png"))); // NOI18N
@@ -261,7 +245,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 120, 30));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 410, 120, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 460));
     }// </editor-fold>//GEN-END:initComponents
@@ -293,13 +277,6 @@ public class panelclientesadmin extends javax.swing.JPanel {
     private void jTextCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextCliente4ActionPerformed
-
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-        limpiarCampos();
-        btnAgregarCliente.setText("Añadir");
-        clienteSeleccionadoId = -1;
-    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
@@ -472,7 +449,6 @@ private void limpiarCampos() {
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
