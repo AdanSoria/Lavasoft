@@ -1,5 +1,5 @@
 package Administrador;
-import java.awt.Font;
+//import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
@@ -15,7 +15,24 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.Document;
+//import javax.swing.text.Document;
+
+// Importaciones esenciales para iText
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Chunk;
+
+// Otras importaciones necesarias
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.sql.*;
+import javax.swing.*;
+import java.text.SimpleDateFormat;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
