@@ -22,12 +22,14 @@ public class ServicioItem {
     }
 
     public int getId() { return id; }
+    public String getDescripcion() { return descripcion; }
     public double getPrecioBase() { return precioBase; }
     public double getPrecioPorKilo() { return precioPorKilo; }
     
-    @Override
-    public String toString() {
-        return descripcion + " ($" + String.format("%.2f", precioBase) + " + $" + 
-               String.format("%.2f", precioPorKilo) + "/kg)";
-    }
+   @Override
+public String toString() {
+    return descripcion + " ($" + String.format("%.2f", precioBase) + " + $" + 
+           String.format("%.2f", precioPorKilo) + "/kg)";
+}
+
 }

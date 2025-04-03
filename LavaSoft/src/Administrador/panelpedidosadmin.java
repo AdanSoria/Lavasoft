@@ -1,12 +1,21 @@
 package Administrador;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.Document;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -17,14 +26,44 @@ import javax.swing.table.DefaultTableModel;
  * @author Luis DC
  */
 public class panelpedidosadmin extends javax.swing.JPanel {
+     public static Connection getConexion() {
+    String conexionUrl = "jdbc:sqlserver://adnsoria.database.windows.net:1433;"
+            + "database=LavaSoft;"
+            + "user=admin1@adnsoria;"
+            + "password=Ad@ncode123;"
+            + "loginTimeout=30;"
+            + "TrustServerCertificate=True;";
+
+    try {
+        con = DriverManager.getConnection(conexionUrl);  
+       // System.out.println("Conectado");
+        return con;
+    } catch (SQLException ex) {
+        System.out.println(ex.toString());
+        return null;
+    }
+}
 private int idClienteSeleccionado = -1;
    private int idUsuarioActual;
     /**
      * Creates new form panelpedidos
      */
+     private Statement stm;
+    private static Connection con;
+    private DefaultTableModel m;
     public panelpedidosadmin() {
         initComponents();
+        m=(DefaultTableModel) tblPedido.getModel();
+        getConexion();
+        cargarServicios();
         actualizarTablaPedidos();
+        
+        txtConsultaPedido.addKeyListener(new KeyAdapter() { //Anonima
+    public void keyPressed(KeyEvent evt) {
+        String busqueda = txtConsultaPedido.getText(); 
+        buscarPedidos(busqueda);
+            }
+        });
     }
 
     /**
@@ -42,7 +81,7 @@ private int idClienteSeleccionado = -1;
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblPedido = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         txtNomCliente = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
@@ -57,11 +96,13 @@ private int idClienteSeleccionado = -1;
         jLabel7 = new javax.swing.JLabel();
         txtPeso = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jComboBoxTipo = new javax.swing.JComboBox<>();
+        jcbServicios = new javax.swing.JComboBox<>();
         txtTotal = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        txtPeso1 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
+        jcbEstado = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        jcbFechaE = new com.toedter.calendar.JDateChooser();
 
         jPanel1.setMinimumSize(new java.awt.Dimension(750, 750));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -78,14 +119,14 @@ private int idClienteSeleccionado = -1;
         jLabel5.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Fecha Estimada");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, -1, 20));
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, 20));
 
         jLabel6.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Total");
         jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 60, -1));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblPedido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -93,7 +134,12 @@ private int idClienteSeleccionado = -1;
                 "ID", "Cliente", "Servicio", "Fecha del pedido", "Fecha Estimada", "EstadoPedido", "CostoTotal", "Peso", "Detalles Pedido"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblPedido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPedidoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblPedido);
 
         jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 460, 380));
 
@@ -108,7 +154,7 @@ private int idClienteSeleccionado = -1;
 
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("__________________");
-        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 190, 100, -1));
+        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 100, -1));
 
         jLabel8.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
@@ -221,21 +267,21 @@ private int idClienteSeleccionado = -1;
         jLabel12.setText("__________________");
         jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 110, -1));
 
-        jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
-        jComboBoxTipo.addMouseListener(new java.awt.event.MouseAdapter() {
+        jcbServicios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
+        jcbServicios.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jComboBoxTipoMouseClicked(evt);
+                jcbServiciosMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jComboBoxTipoMouseEntered(evt);
+                jcbServiciosMouseEntered(evt);
             }
         });
-        jComboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
+        jcbServicios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxTipoActionPerformed(evt);
+                jcbServiciosActionPerformed(evt);
             }
         });
-        jPanel4.add(jComboBoxTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, -1, -1));
+        jPanel4.add(jcbServicios, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, -1, -1));
 
         txtTotal.setBackground(new java.awt.Color(181, 218, 240));
         txtTotal.setBorder(null);
@@ -248,21 +294,34 @@ private int idClienteSeleccionado = -1;
 
         jLabel9.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Servicio");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, 20));
-
-        txtPeso1.setBackground(new java.awt.Color(181, 218, 240));
-        txtPeso1.setBorder(null);
-        txtPeso1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPeso1ActionPerformed(evt);
-            }
-        });
-        jPanel4.add(txtPeso1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 100, 20));
+        jLabel9.setText("Estado");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
 
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("__________________");
         jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 100, -1));
+
+        jcbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Pendiente", "Proceso", "Listo" }));
+        jcbEstado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jcbEstadoMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jcbEstadoMouseEntered(evt);
+            }
+        });
+        jcbEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbEstadoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jcbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, -1, -1));
+
+        jLabel10.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel10.setText("Servicio");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, 20));
+        jPanel4.add(jcbFechaE, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, -1, -1));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 520));
 
@@ -285,43 +344,79 @@ private int idClienteSeleccionado = -1;
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnEditarActionPerformed
+     private void buscarPedidos(String busqueda) {
+    try {
+        stm = con.createStatement();
+        String query = "SELECT P.idPedido, C.idCliente, C.Nombre, U.Nombre AS usuario, " +
+                       "P.FechaCreacion, P.FechaEntregaEstimada, S.TipoServicio AS servicio, P.CostoTotal, P.Peso,P.EstadoPedido " +
+                       "FROM Cliente C " +
+                       "INNER JOIN Pedido P ON C.idCliente = P.idCliente " +
+                       "INNER JOIN Usuario U ON P.idUsuario = U.idUsuario " +
+                       "INNER JOIN Servicio S ON P.idServicio = S.idServicio " +
+                       "WHERE C.Nombre LIKE '%" + busqueda + "%' OR " +
+                       "P.FechaCreacion LIKE '%" + busqueda + "%' OR " +
+                       "P.EstadoPedido LIKE '%" + busqueda + "%' OR " +
+                       "S.TipoServicio LIKE '%" + busqueda + "%'";
+        
+        ResultSet res = stm.executeQuery(query);
+        m.setRowCount(0);  
+        
+        if (!res.isBeforeFirst()) {  
+            return;  
+        }
+
+        while (res.next()) {
+            Object[] fila = {
+                res.getInt("idPedido"),
+                res.getString("Nombre"),
+                res.getString("Servicio"),  
+                res.getDate("FechaCreacion").toString(),
+                res.getDate("FechaEntregaEstimada").toString(),
+                res.getFloat("CostoTotal"),
+                res.getInt("Peso"),
+                res.getString("EstadoPedido")
+            };
+            m.addRow(fila); 
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al buscar los pedidos: " + ex.getMessage());
+    }
+}
 
     private void btnRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        try {
-    int cliente = Integer.parseInt(txtusu1.getText());
-    int idServicio = Integer.parseInt(jComboBoxTipo.getSelectedItem().toString());
-    int peso = Integer.parseInt(txtusu2.getText());
-    int total = Integer.parseInt(txtusu5.getText());
+      String id = txtNomCliente.getText();
+String peso = txtPeso.getText();
+String total = txtTotal.getText();
+Date fecha = jcbFechaE.getDate(); 
+String ser = jcbServicios.getSelectedItem().toString(); 
+String es = jcbEstado.getSelectedItem().toString(); 
 
-    try (Connection conn = Conexion.getConnection()) {
-        String sql = "INSERT INTO dbo.Pedido (idCliente, idServicio, FechaCreacion, Peso, CostoTotal) " +
-                     "VALUES (?, ?, GETDATE(), ?, ?)";
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String fec = sdf.format(fecha);
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, cliente);
-            stmt.setInt(2, idServicio);
-            stmt.setDouble(3, peso);
-            stmt.setDouble(4, total);
-            
-            int affectedRows = stmt.executeUpdate();
-            
-            if (affectedRows > 0) {
-                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        int idPedido = generatedKeys.getInt(1);
-                        JOptionPane.showMessageDialog(this, "Pedido realizado con éxito. ID: " + idPedido);
-                        actualizarTablaPedidos();
-                    }
-                }
-            }
-        }
+    int idServicio = Integer.parseInt(ser.split(" - ")[0]); // Obtener el ID del servicio
+
+    if (idServicio != -1) {
+    try {
+        Statement stm = con.createStatement();
+        String query = "INSERT INTO Pedido (IdCliente, FechaCreacion, IdServicio, Peso, CostoTotal,EstadoPedido) " +
+                       "VALUES ('" + id + "', '" + fec + "', " + idServicio + ", " + peso + ", " + total + ", '" + es + "')";
+        
+        System.out.println(query);  // Para depuración
+        stm.executeUpdate(query);
+
+        JOptionPane.showMessageDialog(this, "Pedido registrado con éxito.");
+    } catch (SQLException ex) {
+        System.out.println("Error al registrar el pedido: " + ex.getMessage());
+        JOptionPane.showMessageDialog(this, "Error al registrar el pedido. Intenta de nuevo.");
     }
-} catch (SQLException e) {
-    JOptionPane.showMessageDialog(this, "Error al realizar pedido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    e.printStackTrace();
-} catch (NumberFormatException e) {
-    JOptionPane.showMessageDialog(this, "Por favor ingrese valores numéricos válidos", "Error", JOptionPane.ERROR_MESSAGE);
+} else {
+    JOptionPane.showMessageDialog(this, "Servicio no encontrado.");
 }
+    
+    actualizarTablaPedidos();
+            limpiarCampos();
+
 }                                                 
         
                              
@@ -329,17 +424,17 @@ private int idClienteSeleccionado = -1;
     private void limpiarCampos() {
     txtPeso.setText("");
     txtTotal.setText("");
-    jComboBoxTipo.setSelectedIndex(0);
+    jcbServicios.setSelectedIndex(0);
 }
     
     private void actualizarTablaPedidos() {
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+     DefaultTableModel model = (DefaultTableModel) tblPedido.getModel();
     model.setRowCount(0);
     
     try (Connection conn = Conexion.getConnection()) {
         // USAR EL NOMBRE CORRECTO: FechaEntregaEstimada
         String sql = "SELECT p.idPedido, c.Nombre AS Cliente, s.Descripcion AS Servicio, " +
-                     "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal " +
+                     "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal, p.EstadoPedido " +
                      "FROM dbo.Pedido p " +
                      "JOIN dbo.Cliente c ON p.idCliente = c.idCliente " +
                      "JOIN dbo.Servicio s ON p.idServicio = s.idServicio " +
@@ -359,7 +454,8 @@ private int idClienteSeleccionado = -1;
                     // USAR EL NOMBRE CORRECTO AQUÍ TAMBIÉN
                     dateFormat.format(rs.getTimestamp("FechaEntregaEstimada")),
                     rs.getDouble("Peso"),
-                    rs.getDouble("CostoTotal")
+                    rs.getDouble("CostoTotal"),
+                    rs.getString("EstadoPedido")
                 });
             }
         }
@@ -372,29 +468,129 @@ private int idClienteSeleccionado = -1;
 
     private void btnGenerarTicketPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarTicketPActionPerformed
         // TODO add your handling code here:
+        int filaSeleccionada = tblPedido.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Selecciona un pedido para generar el ticket.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try (Connection conn = Conexion.getConnection()) {
+        // Obtener el ID del pedido seleccionado
+        int idPedido = (int) tblPedido.getValueAt(filaSeleccionada, 0);
+
+        // Consulta para obtener los datos completos del pedido
+        String sql = "SELECT p.idPedido, c.Nombre AS Cliente, s.Descripcion AS Servicio, " +
+                     "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal " +
+                     "FROM Pedido p " +
+                     "JOIN Cliente c ON p.idCliente = c.idCliente " +
+                     "JOIN Servicio s ON p.idServicio = s.idServicio " +
+                     "WHERE p.idPedido = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Obtener los datos del pedido
+                String cliente = rs.getString("Cliente");
+                String servicio = rs.getString("Servicio");
+                double peso = rs.getDouble("Peso");
+                double costoTotal = rs.getDouble("CostoTotal");
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String fechaCreacion = sdf.format(rs.getTimestamp("FechaCreacion"));
+                String fechaEntrega = sdf.format(rs.getTimestamp("FechaEntregaEstimada"));
+
+                // Crear el documento PDF
+                Document document = new Document();
+                String fileName = "ticket_pedido_" + idPedido + ".pdf";
+                PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                document.open();  
+
+                Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
+                Paragraph title = new Paragraph("LavaSoft", titleFont);
+                title.setAlignment(Element.ALIGN_CENTER);
+                document.add(title);
+                document.add(new Paragraph("****************************************************", titleFont)); 
+                document.add(Chunk.NEWLINE);  
+
+                Paragraph text = new Paragraph("Recibo de Pedido\n", titleFont);
+                text.setAlignment(Element.ALIGN_CENTER);
+                document.add(text);
+
+                Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                Paragraph content = new Paragraph(
+                    "Pedido ID: " + idPedido + "\n" +
+                    "Cliente: " + cliente + "\n" +
+                    "Servicio: " + servicio + "\n" +
+                    "Peso: " + peso + " kg\n" +
+                    "Costo Total: $" + costoTotal + "\n" +
+                    "Fecha de Creación: " + fechaCreacion + "\n" +
+                    "Fecha de Entrega Estimada: " + fechaEntrega + "\n", 
+                    normalFont);
+                content.setAlignment(Element.ALIGN_CENTER);
+                document.add(content);
+                document.add(Chunk.NEWLINE);  
+                document.add(new Paragraph("****************************************************", titleFont));
+
+                document.close();
+
+                JOptionPane.showMessageDialog(this, "Ticket generado exitosamente: " + fileName);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró información del pedido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    } catch (SQLException | DocumentException | FileNotFoundException ex) {
+        JOptionPane.showMessageDialog(this, "Error al generar el ticket: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
     }//GEN-LAST:event_btnGenerarTicketPActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
+      int r  = tblPedido.getSelectedRow();
+        if (r == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un Pedido para eliminar.");
+            return;
+        }
+        int idPedido = (Integer) tblPedido.getValueAt(r, 0);
+    String query = "DELETE FROM Pedido WHERE IdPedido = '" + idPedido + "'";
+    try (Statement stmt = con.createStatement()) {
+        int filasAfectadas = stmt.executeUpdate(query);
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "Servicio borrado exitosamente.");
+            txtNomCliente.setText("");
+        } else {
+            JOptionPane.showMessageDialog(this, "Servicio no encontrado.");
+            txtPeso.setText("");
+            txtTotal.setText("");
+            jcbServicios.setSelectedIndex(0);
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error de base de datos: " + ex.getMessage());
+    }
+    actualizarTablaPedidos();
+            limpiarCampos();
      
     }//GEN-LAST:event_btnEliminarActionPerformed
     // En el constructor o un método de inicialización
-private void cargarServicios() {
-    try (Connection conn = Conexion.getConnection()) {
-        String sql = "SELECT idServicio, Descripcion FROM dbo.Servicio";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
-            
-            jComboBoxTipo.removeAllItems();
-            while (rs.next()) {
-                jComboBoxTipo.addItem(rs.getString("Descripcion"));
-                // Opcional: guardar el idServicio como valor del item
-                // jComboBoxTipo.addItem(new ServicioItem(rs.getInt("idServicio"), rs.getString("Descripcion")));
-            }
+ private void cargarServicios() {
+    try {
+        Statement stm = con.createStatement();
+        String query = "SELECT  IdServicio, TipoServicio FROM Servicio"; 
+        ResultSet res = stm.executeQuery(query);
+        
+       jcbServicios.removeAllItems();
+        jcbServicios.addItem("Selecciona servicio");  
+        while (res.next()) {
+            jcbServicios.addItem(res.getInt("IdServicio")+ " -  " + res.getString("TipoServicio"));
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+    } catch (SQLException ex) {
+        System.out.println("Error al cargar servicios: " + ex.getMessage());
     }
+    
+     
 }
     private void btnBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaActionPerformed
         // TODO add your handling code here:
@@ -440,24 +636,66 @@ private void cargarServicios() {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalActionPerformed
 
-    private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
+    private void jcbServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbServiciosActionPerformed
         // TODO add your handling code here:
         //cargarServicios();
-    }//GEN-LAST:event_jComboBoxTipoActionPerformed
+    }//GEN-LAST:event_jcbServiciosActionPerformed
 
-    private void jComboBoxTipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxTipoMouseClicked
+    private void jcbServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbServiciosMouseClicked
         // TODO add your handling code here:
         //cargarServicios();
-    }//GEN-LAST:event_jComboBoxTipoMouseClicked
+    }//GEN-LAST:event_jcbServiciosMouseClicked
 
-    private void jComboBoxTipoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxTipoMouseEntered
+    private void jcbServiciosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbServiciosMouseEntered
         // TODO add your handling code here:
         cargarServicios();
-    }//GEN-LAST:event_jComboBoxTipoMouseEntered
+    }//GEN-LAST:event_jcbServiciosMouseEntered
 
-    private void txtPeso1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPeso1ActionPerformed
+    private void jcbEstadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbEstadoMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPeso1ActionPerformed
+    }//GEN-LAST:event_jcbEstadoMouseClicked
+
+    private void jcbEstadoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbEstadoMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbEstadoMouseEntered
+
+    private void jcbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbEstadoActionPerformed
+    
+    private void tblPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPedidoMouseClicked
+        // TODO add your handling code here:
+        int r = tblPedido.getSelectedRow();
+    txtNomCliente.setText(tblPedido.getValueAt(r, 0).toString());
+
+    String Servicio = tblPedido.getValueAt(r, 2).toString();
+    jcbServicios.setSelectedItem(Servicio);
+    
+   try {
+    Object objFecha = tblPedido.getValueAt(r, 3);
+    if (objFecha != null) {
+        String fechaStr = objFecha.toString();
+        
+        SimpleDateFormat formatoEntrada;
+        if (fechaStr.contains("/")) {
+            formatoEntrada = new SimpleDateFormat("dd/MM/yyyy HH:mm"); 
+        } else {
+            formatoEntrada = new SimpleDateFormat("yyyy-MM-dd");
+        }
+
+        Date fecha = formatoEntrada.parse(fechaStr);
+        jcbFechaE.setDate(fecha); 
+    } else {
+        jcbFechaE.setDate(null); 
+    }
+} catch (Exception e) {
+    System.out.println("Error al convertir la fecha: " + e.getMessage());
+}
+   
+      txtTotal.setText(tblPedido.getValueAt(r, 5).toString());
+      
+    txtPeso.setText(tblPedido.getValueAt(r, 6).toString());
+    }//GEN-LAST:event_tblPedidoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -466,8 +704,8 @@ private void cargarServicios() {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGenerarTicketP;
     private javax.swing.JButton btnRealizarPedido;
-    private javax.swing.JComboBox<String> jComboBoxTipo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -481,11 +719,13 @@ private void cargarServicios() {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JComboBox<String> jcbEstado;
+    private com.toedter.calendar.JDateChooser jcbFechaE;
+    private javax.swing.JComboBox<String> jcbServicios;
+    private javax.swing.JTable tblPedido;
     private javax.swing.JTextField txtConsultaPedido;
     private javax.swing.JTextField txtNomCliente;
     private javax.swing.JTextField txtPeso;
-    private javax.swing.JTextField txtPeso1;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }
