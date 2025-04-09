@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 /*
@@ -182,44 +183,59 @@ public class IniciaSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioSesionActionPerformed
-        // TODO add your handling code here:
-        FrameMenu nv=new FrameMenu();
-        
-         String nombreUsuario = txtusu1.getText(); // Campo para el nombre de usuario
-    String contraseña = new String(txtpass1.getText()); // Campo para la contraseña
+       FrameMenu nv = new FrameMenu();
+    String nombreUsuario = txtusu1.getText();
+    String contraseña = new String(txtpass1.getText());
 
     try (Connection conn = Conexion.getConnection()) {
-        String sql = "SELECT Puesto FROM dbo.Usuario WHERE IdUsuario = ? AND Contraseña = ?";
+        // Modificamos la consulta para obtener también el nombre del usuario
+        String sql = "SELECT Puesto, Nombre FROM dbo.Usuario WHERE IdUsuario = ? AND Contraseña = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, nombreUsuario);
-        stmt.setString(2, contraseña); // Asegúrate de que la contraseña esté almacenada de forma segura (hash)
+        stmt.setString(2, contraseña);
 
         var rs = stmt.executeQuery();
 
         if (rs.next()) {
             String puesto = rs.getString("Puesto");
+            String nombreCompleto = rs.getString("Nombre"); // Obtenemos el nombre del usuario
+
+            // Mostramos mensaje de bienvenida personalizado
+            JOptionPane.showMessageDialog(this, 
+                "Bienvenido/a: " + nombreCompleto + "\n" +
+                "Rol: " + puesto,
+                "Inicio de sesión exitoso",
+                JOptionPane.INFORMATION_MESSAGE);
 
             // Redirigir según el tipo de usuario
             if ("Administrador".equals(puesto)) {
-                // Abrir el panel de administrador
-                  nv.setVisible(true);
-                     this.dispose();
+                nv.setVisible(true);
+                this.dispose();
             } else if ("Empleado".equals(puesto)) {
-                // Abrir el panel de empleado
-                 nv.deshabilitarBotonesParaEmpleado();
-                  nv.setVisible(true);
-                    this.dispose();
+                nv.deshabilitarBotonesParaEmpleado();
+                nv.setVisible(true);
+                this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Tipo de usuario no reconocido.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "Tipo de usuario no reconocido.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Usuario o contraseña incorrectos.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
         }
+        
+        // Limpiar el array de contraseña por seguridad
     } catch (SQLException e) {
         e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, 
+            "Error al conectar con la base de datos: " + e.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
     }
-
     }//GEN-LAST:event_btnInicioSesionActionPerformed
 
     private void txtusu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusu1ActionPerformed

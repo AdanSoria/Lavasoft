@@ -83,7 +83,7 @@ private int idServicioSeleccionado = -1;
         jtblServicios.setToolTipText("");
         jScrollPane5.setViewportView(jtblServicios);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 430, 390));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 50, 430, 390));
 
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("_______________________________________");
@@ -214,7 +214,7 @@ private int idServicioSeleccionado = -1;
         });
         jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 120, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 470));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 470));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed

@@ -5,8 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.text.AbstractDocument.Content;
 
 /*
@@ -20,21 +27,106 @@ import javax.swing.text.AbstractDocument.Content;
  */
 public class FrameMenu extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrameMenu
-     */
+    // Colores para el diseño minimalista
+    private final Color COLOR_FONDO = new Color(245, 247, 250);
+    private final Color COLOR_MENU = new Color(255, 255, 255);
+    private final Color COLOR_ACTIVO = new Color(74, 111, 165);
+    private final Color COLOR_TEXTO = new Color(60, 60, 60);
+    private final Color COLOR_TEXTO_ACTIVO = new Color(255, 255, 255);
+    private final Color COLOR_BORDE = new Color(230, 230, 230);
+    
+    
     public FrameMenu() {
         initComponents();
-     
+        aplicarEstiloMinimalista();
+    ajustarTamañoPanel();
     }
-     void setColor(JPanel jpanelb){
+    // Añade este método a tu clase FrameMenu:
+public void ajustarTamañoPanel() {
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    int ancho = screenSize.width - 170; // Restamos el ancho del menú
+    int alto = screenSize.height;
+    
+    paneli.setPreferredSize(new Dimension(ancho, alto));
+    paneli.revalidate();
+}
+
+// Llama a este método después de inicializar los componentes:
+    private void aplicarEstiloMinimalista() {
+        // Fondo principal
+        getContentPane().setBackground(COLOR_FONDO);
+        
+        // Panel del menú
+        panelop.setBackground(COLOR_MENU);
+        panelop.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, COLOR_BORDE));
+        
+        // Estilo para los botones del menú
+        estiloBotonMenu(jpanelb1, jLabel4);
+        estiloBotonMenu(jpanelb2, jLabel7);
+        estiloBotonMenu(jpanelb3, jLabel9);
+        estiloBotonMenu(jpanelb4, jLabel10);
+        
+        // Títulos
+        jLabel3.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        jLabel3.setForeground(COLOR_TEXTO);
+        jLabel14.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        jLabel14.setForeground(new Color(120, 120, 120));
+        
+        // Botón de cerrar sesión
+        jButton4.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        jButton4.setForeground(new Color(100, 100, 100));
+        jButton4.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        jButton4.setHorizontalAlignment(SwingConstants.LEFT);
+        
+        // Panel de contenido
+        paneli.setBackground(COLOR_FONDO);
+        paneli.setBackground(COLOR_FONDO);
+        
+        // Logo/Imagen central
+        jLabel12.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
+    }
+
+    private void estiloBotonMenu(JPanel panel, JLabel label) {
+        panel.setBackground(COLOR_MENU);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        label.setForeground(COLOR_TEXTO);
+        label.setIconTextGap(15);
+        
+        panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    // Métodos setColor y resetColor actualizados
+    void setColor(JPanel jpanelb) {
+        jpanelb.setBackground(COLOR_ACTIVO);
+        for (Component comp : jpanelb.getComponents()) {
+            if (comp instanceof JLabel) {
+                JLabel label = (JLabel) comp;
+                label.setForeground(COLOR_TEXTO_ACTIVO);
+            }
+        }
+    }
+    
+    void resetColor(JPanel jpanelb) {
+        jpanelb.setBackground(COLOR_MENU);
+        for (Component comp : jpanelb.getComponents()) {
+            if (comp instanceof JLabel) {
+                JLabel label = (JLabel) comp;
+                label.setForeground(COLOR_TEXTO);
+            }
+        }
+    }
+ 
+    
+     /*void setColor(JPanel jpanelb){
     jpanelb.setBackground(new Color(181,218,240));
     }
     
     void resetColor(JPanel jpanelb){
     jpanelb.setBackground(new Color(255,255,255));
     } 
-
+*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,8 +140,8 @@ public class FrameMenu extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        panelinicio = new javax.swing.JPanel();
         panelop = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -62,7 +154,7 @@ public class FrameMenu extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jpanelb4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        panelinicio = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
         paneli = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -97,22 +189,27 @@ public class FrameMenu extends javax.swing.JFrame {
 
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Imagen_de_WhatsApp_2024-11-21_a_las_16.51.39_2c052284-removebg-preview.png"))); // NOI18N
 
+        panelinicio.setBackground(new java.awt.Color(118, 120, 237));
+
+        javax.swing.GroupLayout panelinicioLayout = new javax.swing.GroupLayout(panelinicio);
+        panelinicio.setLayout(panelinicioLayout);
+        panelinicioLayout.setHorizontalGroup(
+            panelinicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 560, Short.MAX_VALUE)
+        );
+        panelinicioLayout.setVerticalGroup(
+            panelinicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 480, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelop.setBackground(new java.awt.Color(255, 255, 255));
         panelop.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Administrador");
-        panelop.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 110, 20));
-
         jLabel2.setBackground(new java.awt.Color(118, 120, 237));
         jLabel2.setForeground(new java.awt.Color(118, 120, 237));
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Luis DC\\Downloads\\user_8763547.png")); // NOI18N
         panelop.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -120,7 +217,7 @@ public class FrameMenu extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Bienvenido");
-        panelop.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 110, 20));
+        panelop.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 110, 20));
         panelop.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 60, -1));
 
         jButton4.setFont(new java.awt.Font("Roboto Bk", 1, 14)); // NOI18N
@@ -136,7 +233,7 @@ public class FrameMenu extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        panelop.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 170, 60));
+        panelop.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 170, 60));
 
         jpanelb1.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -159,8 +256,8 @@ public class FrameMenu extends javax.swing.JFrame {
             jpanelb1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addComponent(jLabel4)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jpanelb1Layout.setVerticalGroup(
             jpanelb1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,20 +288,20 @@ public class FrameMenu extends javax.swing.JFrame {
         jpanelb2.setLayout(jpanelb2Layout);
         jpanelb2Layout.setHorizontalGroup(
             jpanelb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpanelb2Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpanelb2Layout.createSequentialGroup()
+                .addContainerGap(27, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
         jpanelb2Layout.setVerticalGroup(
             jpanelb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(14, 14, 14)
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(14, 14, 14))
         );
 
-        panelop.add(jpanelb2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 170, 60));
+        panelop.add(jpanelb2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 170, 60));
 
         jpanelb3.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb3.setForeground(new java.awt.Color(0, 0, 0));
@@ -275,36 +372,45 @@ public class FrameMenu extends javax.swing.JFrame {
 
         panelop.add(jpanelb4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, -1, 50));
 
-        getContentPane().add(panelop, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 480));
+        jLabel14.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel14.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Administrador");
+        panelop.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 110, 20));
 
-        panelinicio.setBackground(new java.awt.Color(118, 120, 237));
+        getContentPane().add(panelop, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 500));
 
         paneli.setBackground(new java.awt.Color(181, 218, 240));
-        paneli.setPreferredSize(new java.awt.Dimension(560, 480));
-        paneli.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        paneli.setMinimumSize(new java.awt.Dimension(800, 700));
+        paneli.setPreferredSize(new java.awt.Dimension(700, 700));
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Imagen_de_WhatsApp_2024-11-21_a_las_16.51.39_2c052284-removebg-preview.png"))); // NOI18N
-        paneli.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 444, -1));
 
-        jLabel13.setIcon(new javax.swing.ImageIcon("C:\\Users\\Luis DC\\Downloads\\pngwing.com (1).png")); // NOI18N
-        paneli.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, -1, -1));
-
-        javax.swing.GroupLayout panelinicioLayout = new javax.swing.GroupLayout(panelinicio);
-        panelinicio.setLayout(panelinicioLayout);
-        panelinicioLayout.setHorizontalGroup(
-            panelinicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelinicioLayout.createSequentialGroup()
-                .addComponent(paneli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        javax.swing.GroupLayout paneliLayout = new javax.swing.GroupLayout(paneli);
+        paneli.setLayout(paneliLayout);
+        paneliLayout.setHorizontalGroup(
+            paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneliLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jLabel13)
+                .addGap(750, 750, 750))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneliLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157))
         );
-        panelinicioLayout.setVerticalGroup(
-            panelinicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelinicioLayout.createSequentialGroup()
-                .addComponent(paneli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        paneliLayout.setVerticalGroup(
+            paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneliLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel13)
+                .addGap(138, 138, 138)
+                .addComponent(jLabel12)
+                .addContainerGap())
         );
 
-        getContentPane().add(panelinicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 0, 560, 480));
+        getContentPane().add(paneli, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 800, 490));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -325,10 +431,10 @@ public class FrameMenu extends javax.swing.JFrame {
     p1.setSize(700, 700); // Sugerir tamaño preferido
     p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
 
-    panelinicio.removeAll();
-    panelinicio.setLayout(new BorderLayout());
-    panelinicio.add(p1, BorderLayout.CENTER);
-    panelinicio.revalidate();
+    paneli.removeAll();
+    paneli.setLayout(new BorderLayout());
+    paneli.add(p1, BorderLayout.CENTER);
+    paneli.revalidate();
         
        
     }//GEN-LAST:event_jpanelb1MouseClicked
@@ -350,10 +456,10 @@ public class FrameMenu extends javax.swing.JFrame {
     p1.setSize(560, 480); // Sugerir tamaño preferido
     p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
 
-    panelinicio.removeAll();
-    panelinicio.setLayout(new BorderLayout());
-    panelinicio.add(p1, BorderLayout.CENTER);
-    panelinicio.revalidate();
+    paneli.removeAll();
+    paneli.setLayout(new BorderLayout());
+    paneli.add(p1, BorderLayout.CENTER);
+    paneli.revalidate();
     }//GEN-LAST:event_jpanelb2MouseClicked
 
     private void jpanelb2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb2MousePressed
@@ -374,10 +480,10 @@ public class FrameMenu extends javax.swing.JFrame {
     p1.setSize(560, 480); // Sugerir tamaño preferido
     p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
 
-    panelinicio.removeAll();
-    panelinicio.setLayout(new BorderLayout());
-    panelinicio.add(p1, BorderLayout.CENTER);
-    panelinicio.revalidate();
+    paneli.removeAll();
+    paneli.setLayout(new BorderLayout());
+    paneli.add(p1, BorderLayout.CENTER);
+    paneli.revalidate();
     }//GEN-LAST:event_jpanelb3MouseClicked
 
     private void jpanelb3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb3MousePressed
@@ -396,10 +502,10 @@ public class FrameMenu extends javax.swing.JFrame {
     p1.setSize(800, 800); // Sugerir tamaño preferido
     p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
 
-    panelinicio.removeAll();
-    panelinicio.setLayout(new BorderLayout());
-    panelinicio.add(p1, BorderLayout.CENTER);
-    panelinicio.revalidate();
+    paneli.removeAll();
+    paneli.setLayout(new BorderLayout());
+    paneli.add(p1, BorderLayout.CENTER);
+    paneli.revalidate();
     }//GEN-LAST:event_jpanelb4MouseClicked
 
     private void jpanelb4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb4MousePressed
@@ -461,11 +567,11 @@ public class FrameMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

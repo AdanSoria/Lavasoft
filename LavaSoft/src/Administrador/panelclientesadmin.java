@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -28,7 +29,6 @@ public class panelclientesadmin extends javax.swing.JPanel {
     initComponents();
     actualizarTablaClientes(); // Cargar datos al iniciar
 }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,9 +50,9 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         jTextCliente1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        BarraDeBusqueda = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
+        Busqueda = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jTextCliente2 = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
@@ -91,9 +91,14 @@ public class panelclientesadmin extends javax.swing.JPanel {
         ));
         jtblClientes.setGridColor(new java.awt.Color(51, 51, 51));
         jtblClientes.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jtblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtblClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtblClientes);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 340, 380));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 530, 380));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -136,32 +141,32 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jLabel6.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 190, 30));
 
-        jTextField6.setBackground(new java.awt.Color(181, 218, 240));
-        jTextField6.setBorder(null);
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        BarraDeBusqueda.setBackground(new java.awt.Color(181, 218, 240));
+        BarraDeBusqueda.setBorder(null);
+        BarraDeBusqueda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                BarraDeBusquedaActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 350, 30));
+        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 350, 30));
 
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("_________________________________________________");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 350, -1));
 
-        jButton7.setFont(new java.awt.Font("Roboto Bk", 0, 18)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(0, 0, 0));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
-        jButton7.setBorder(null);
-        jButton7.setContentAreaFilled(false);
-        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton7.setVerifyInputWhenFocusTarget(false);
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        Busqueda.setFont(new java.awt.Font("Roboto Bk", 0, 18)); // NOI18N
+        Busqueda.setForeground(new java.awt.Color(0, 0, 0));
+        Busqueda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
+        Busqueda.setBorder(null);
+        Busqueda.setContentAreaFilled(false);
+        Busqueda.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        Busqueda.setVerifyInputWhenFocusTarget(false);
+        Busqueda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                BusquedaActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 30, -1, -1));
+        jPanel1.add(Busqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 30, -1, -1));
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_________________________");
@@ -245,23 +250,60 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 410, 120, 30));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 120, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 460));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextCliente1ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void BarraDeBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BarraDeBusquedaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_BarraDeBusquedaActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+    private void BusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BusquedaActionPerformed
+       try {
+    String nombreBusqueda = BarraDeBusqueda.getText().trim();
 
+    DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
+    model.setRowCount(0);
+
+    // Consulta SQL para buscar clientes por nombre (usando LIKE para búsquedas parciales)
+    String sql = "SELECT [IdCliente], [Nombre], [Direccion], [Telefono], [CorreoElectronico], [FechaRegistro] FROM Cliente WHERE [Nombre] LIKE ?";
+
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, "%" + nombreBusqueda + "%"); // Busca coincidencias parciales en el nombre
+
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("IdCliente"),
+                    rs.getString("Nombre"),
+                    rs.getString("Direccion"),
+                    rs.getInt("Telefono"),
+                    rs.getString("CorreoElectronico"),
+                    rs.getString("FechaRegistro")
+                });
+            }
+
+            if (model.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "No se encontró Cliente con nombre: " + nombreBusqueda, 
+                    "Información", JOptionPane.INFORMATION_MESSAGE);
+                actualizarTablaClientes(); // Mostrar todos los clientes si no hay coincidencias
+            }
+        }
+    }
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(this, "Error SQL: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    ex.printStackTrace();
+}
+    }//GEN-LAST:event_BusquedaActionPerformed
+   
     private void jTextCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextCliente2ActionPerformed
@@ -279,25 +321,81 @@ public class panelclientesadmin extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextCliente4ActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
-        int filaSeleccionada = jtblClientes.getSelectedRow();
-    
-    if (filaSeleccionada >= 0) {
-        // Obtener los datos de la fila seleccionada
-        clienteSeleccionadoId = (int) jtblClientes.getValueAt(filaSeleccionada, 0);
-        jTextCliente1.setText(jtblClientes.getValueAt(filaSeleccionada, 1).toString());
-        jTextCliente2.setText(jtblClientes.getValueAt(filaSeleccionada, 2).toString());
-        jTextCliente3.setText(jtblClientes.getValueAt(filaSeleccionada, 3).toString());
-        jTextCliente4.setText(jtblClientes.getValueAt(filaSeleccionada, 4).toString());
-        
-        // Cambiar el texto del botón agregar para indicar que estamos editando
-        btnAgregarCliente.setText("Actualizar");
-    } else {
-        JOptionPane.showMessageDialog(this, "Por favor seleccione un cliente de la tabla", 
-                                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+      if ( clienteSeleccionadoId <= 0) {
+        JOptionPane.showMessageDialog(this, "Seleccione un cliente de la tabla primero", 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Obtener los datos de los JTextField
+    String nombre = jTextCliente1.getText().trim();
+    String direccion = jTextCliente2.getText().trim();
+    String telefono = jTextCliente3.getText().trim();
+    String correo = jTextCliente4.getText().trim();
+
+    // **Validaciones**
+    if (nombre.isEmpty() || telefono.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Nombre y teléfono son campos obligatorios", 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (!esSoloLetras(nombre)) {
+        JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras y espacios", 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (!esSoloNumeros(telefono)) {
+        JOptionPane.showMessageDialog(this, "El teléfono solo debe contener números", 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (!correo.isEmpty() && !contieneArroba(correo)) {
+        JOptionPane.showMessageDialog(this, "El correo debe contener un '@'", 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        int telefonoInt = Integer.parseInt(telefono); // Convertir a número
+
+        try (Connection conn = Conexion.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                 "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?")) {
+
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, direccion);
+            pstmt.setInt(3, telefonoInt);
+            pstmt.setString(4, correo);
+            pstmt.setInt(5, clienteSeleccionadoId);
+
+            if (pstmt.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
+                actualizarTablaClientes(); // Refrescar la tabla
+                limpiarCampos();
+                clienteSeleccionadoId = -1; // Resetear selección
+            }
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Formato de teléfono inválido", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnEditarActionPerformed
+    // 1. Verifica si solo contiene letras (mayúsculas y minúsculas)
+  public static boolean esSoloLetras(String texto) {
+    return texto.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+");
+}
+  
+     // 2. Verifica si solo contiene números
+    public static boolean esSoloNumeros(String texto) {
+        return texto.matches("\\d+");
+    }
 
+    // 3. Verifica si contiene al menos un arroba (@)
+    public static boolean contieneArroba(String texto) {
+        return texto.contains("@");
+    }
+    
     private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
         // TODO add your handling code here:
         
@@ -308,10 +406,25 @@ public class panelclientesadmin extends javax.swing.JPanel {
     
     // Validación básica
     if (nombre.isEmpty() || telefono.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Nombre y teléfono son campos obligatorios", 
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+            JOptionPane.showMessageDialog(this, "Nombre y teléfono son campos obligatorios", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!esSoloLetras(nombre)) {
+            JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!esSoloNumeros(telefono)) {
+            JOptionPane.showMessageDialog(this, "El teléfono solo debe contener números", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!correo.isEmpty() && !contieneArroba(correo)) {
+            JOptionPane.showMessageDialog(this, "El correo debe contener un '@'", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     
     try (Connection conn = Conexion.getConnection()) {
         if (btnAgregarCliente.getText().equals("Actualizar")) {
@@ -361,20 +474,50 @@ public class panelclientesadmin extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:                                                 
-    int filaSeleccionada = jtblClientes.getSelectedRow();
     
+   private boolean tienePedidosActivos(int idCliente) {
+    String sql = "SELECT COUNT(*) FROM dbo.Pedido WHERE IdCliente = ? AND EstadoPedido IN ('Pendiente', 'Proceso', 'Listo')";
+
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setInt(1, idCliente);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                int cantidadPedidos = rs.getInt(1);
+                return cantidadPedidos > 0; // Retorna true si hay pedidos activos
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al verificar pedidos del cliente: " + e.getMessage(),
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return false;
+}
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int filaSeleccionada = jtblClientes.getSelectedRow();
+
     if (filaSeleccionada == -1) {
         JOptionPane.showMessageDialog(this, "Por favor seleccione un cliente de la tabla", 
                                     "Error", JOptionPane.WARNING_MESSAGE);
         return;
     }
-    
+
     // Obtener el ID del cliente seleccionado
     int idCliente = (int) jtblClientes.getValueAt(filaSeleccionada, 0);
     String nombreCliente = (String) jtblClientes.getValueAt(filaSeleccionada, 1);
-    
+
+    // **Validación: Verificar si el cliente tiene pedidos activos**
+    if (tienePedidosActivos(idCliente)) {
+        JOptionPane.showMessageDialog(this, 
+            "No se puede eliminar el cliente porque tiene PEDIDOS en servicio.", 
+            "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
     // Confirmación antes de eliminar
     int confirmacion = JOptionPane.showConfirmDialog(
         this, 
@@ -385,20 +528,17 @@ public class panelclientesadmin extends javax.swing.JPanel {
         JOptionPane.YES_NO_OPTION,
         JOptionPane.WARNING_MESSAGE
     );
-    
+
     if (confirmacion == JOptionPane.YES_OPTION) {
         try (Connection conn = Conexion.getConnection()) {
             String deleteSql = "DELETE FROM dbo.Cliente WHERE IdCliente = ?";
-            
             try (PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
                 stmt.setInt(1, idCliente);
-                
+
                 int filasAfectadas = stmt.executeUpdate();
-                
+
                 if (filasAfectadas > 0) {
                     JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente");
-                    
-                    // Actualizar la tabla y limpiar selección
                     actualizarTablaClientes();
                     limpiarCampos();
                 } else {
@@ -412,8 +552,21 @@ public class panelclientesadmin extends javax.swing.JPanel {
                                         "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void jtblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblClientesMouseClicked
+        int fila = jtblClientes.getSelectedRow(); // Obtiene la fila seleccionada
+    if (fila >= 0) {
+        // Obtiene los valores de la fila seleccionada y los muestra en los JTextField
+         clienteSeleccionadoId = Integer.parseInt(jtblClientes.getValueAt(fila, 0).toString());
+         jTextCliente1.setText(jtblClientes.getValueAt(fila, 1).toString());
+        jTextCliente2.setText(jtblClientes.getValueAt(fila, 2).toString());
+         jTextCliente3.setText(jtblClientes.getValueAt(fila, 3).toString());
+         jTextCliente4.setText(jtblClientes.getValueAt(fila, 4).toString());
+
+        btnEditar.setText("Actualizar"); // Cambia el botón para indicar que es una edición
+    }
+    }//GEN-LAST:event_jtblClientesMouseClicked
     
     private void actualizarTablaClientes() {
     DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
@@ -438,6 +591,57 @@ public class panelclientesadmin extends javax.swing.JPanel {
     }
 }
 
+    
+    private void cargarClienteParaEdicion(int idCliente) {
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(
+             "SELECT Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro FROM dbo.Cliente WHERE IdCliente=?")) {
+        
+        pstmt.setInt(1, idCliente);
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+           jTextCliente1.setText(rs.getString("Nombre"));
+            jTextCliente2.setText(rs.getString("Direccion"));
+            jTextCliente3.setText(String.valueOf(rs.getInt("Telefono")));
+            jTextCliente4.setText(rs.getString("CorreoElectronico"));
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al cargar cliente: " + ex.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+}
+
+    
+    private void cargarCliente(int idCliente) {
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(
+             "SELECT Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro FROM dbo.Cliente WHERE IdCliente=?")) {
+        
+        pstmt.setInt(1, idCliente);
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+             jTextCliente1.setText(rs.getString("Nombre"));
+             jTextCliente2.setText(rs.getString("Direccion"));
+             jTextCliente3.setText(String.valueOf(rs.getInt("Telefono")));
+             jTextCliente4.setText(rs.getString("CorreoElectronico"));
+            
+            clienteSeleccionadoId = idCliente; // Guarda el ID del cliente seleccionado
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el cliente con ID: " + idCliente, 
+                                          "Información", JOptionPane.INFORMATION_MESSAGE);
+            limpiarCampos();
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar cliente: " + ex.getMessage(), 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
+}
+    
 private void limpiarCampos() {
     jTextCliente1.setText("");
     jTextCliente2.setText("");
@@ -446,10 +650,11 @@ private void limpiarCampos() {
 }
     private int clienteSeleccionadoId = -1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField BarraDeBusqueda;
+    private javax.swing.JButton Busqueda;
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -467,7 +672,6 @@ private void limpiarCampos() {
     private javax.swing.JTextField jTextCliente2;
     private javax.swing.JTextField jTextCliente3;
     private javax.swing.JTextField jTextCliente4;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTable jtblClientes;
     // End of variables declaration//GEN-END:variables

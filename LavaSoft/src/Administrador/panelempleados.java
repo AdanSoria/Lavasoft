@@ -242,7 +242,7 @@ public class panelempleados extends javax.swing.JPanel {
         });
         jPanel1.add(comboBoxPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 120, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 730, 520));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     

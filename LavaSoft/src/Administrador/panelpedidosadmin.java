@@ -33,6 +33,8 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -68,20 +70,60 @@ private int idClienteSeleccionado = -1;
      private Statement stm;
     private static Connection con;
     private DefaultTableModel m;
-    public panelpedidosadmin() {
-        initComponents();
-        m=(DefaultTableModel) tblPedido.getModel();
-        getConexion();
-        cargarServicios();
-        actualizarTablaPedidos();
+   public panelpedidosadmin() {
+    initComponents();
+    m=(DefaultTableModel) tblPedido.getModel();
+    getConexion();
+    cargarServicios();
+    actualizarTablaPedidos();
+    
+    // Agregar listeners para el cálculo automático
+    txtPeso.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) { calcularTotalAutomatico(); }
+        public void removeUpdate(DocumentEvent e) { calcularTotalAutomatico(); }
+        public void changedUpdate(DocumentEvent e) { calcularTotalAutomatico(); }
+    });
+    
+    jcbServicios.addActionListener(e -> calcularTotalAutomatico());
+    
+    txtConsultaPedido.addKeyListener(new KeyAdapter() {
+        public void keyPressed(KeyEvent evt) {
+            String busqueda = txtConsultaPedido.getText(); 
+            buscarPedidos(busqueda);
+        }
+    });
+}
+   private void calcularTotalAutomatico() {
+    try {
+        // Verificar que haya un servicio seleccionado y peso válido
+        if (jcbServicios.getSelectedIndex() <= 0 || txtPeso.getText().trim().isEmpty()) {
+            txtTotal.setText("");
+            return;
+        }
         
-        txtConsultaPedido.addKeyListener(new KeyAdapter() { //Anonima
-    public void keyPressed(KeyEvent evt) {
-        String busqueda = txtConsultaPedido.getText(); 
-        buscarPedidos(busqueda);
-            }
-        });
+        // Obtener el precio del servicio seleccionado
+        String servicioSeleccionado = jcbServicios.getSelectedItem().toString();
+        String[] partes = servicioSeleccionado.split(" - ");
+        String precioStr = partes[partes.length - 1].replaceAll("[^0-9.]", "");
+        double precioPorKilo = Double.parseDouble(precioStr);
+        
+        // Obtener el peso ingresado
+        double peso = Double.parseDouble(txtPeso.getText().trim());
+        
+        // Calcular el total
+        double total = precioPorKilo * peso;
+        
+        // Mostrar el total formateado
+        txtTotal.setText(String.format("%.2f", total));
+        
+    } catch (NumberFormatException ex) {
+        txtTotal.setText("");
+    } catch (Exception ex) {
+        System.out.println("Error al calcular total: " + ex.getMessage());
+        txtTotal.setText("");
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -121,11 +163,15 @@ private int idClienteSeleccionado = -1;
         jLabel10 = new javax.swing.JLabel();
         jcbFechaE = new com.toedter.calendar.JDateChooser();
 
+        setPreferredSize(new java.awt.Dimension(750, 700));
+
         jPanel1.setMinimumSize(new java.awt.Dimension(750, 750));
+        jPanel1.setPreferredSize(new java.awt.Dimension(790, 500));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel4.setBackground(new java.awt.Color(181, 218, 240));
-        jPanel4.setMinimumSize(new java.awt.Dimension(750, 750));
+        jPanel4.setMinimumSize(new java.awt.Dimension(1200, 1200));
+        jPanel4.setPreferredSize(new java.awt.Dimension(700, 700));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
@@ -298,7 +344,7 @@ private int idClienteSeleccionado = -1;
                 jcbServiciosActionPerformed(evt);
             }
         });
-        jPanel4.add(jcbServicios, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, -1, -1));
+        jPanel4.add(jcbServicios, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 90, -1));
 
         txtTotal.setBackground(new java.awt.Color(181, 218, 240));
         txtTotal.setBorder(null);
@@ -332,7 +378,7 @@ private int idClienteSeleccionado = -1;
                 jcbEstadoActionPerformed(evt);
             }
         });
-        jPanel4.add(jcbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, -1, -1));
+        jPanel4.add(jcbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, -1, -1));
 
         jLabel10.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(0, 0, 0));
@@ -340,7 +386,7 @@ private int idClienteSeleccionado = -1;
         jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, 20));
         jPanel4.add(jcbFechaE, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, -1, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 520));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 520));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -595,19 +641,19 @@ String es = jcbEstado.getSelectedItem().toString();
  private void cargarServicios() {
     try {
         Statement stm = con.createStatement();
-        String query = "SELECT  IdServicio, TipoServicio FROM Servicio"; 
+        String query = "SELECT IdServicio, TipoServicio, PrecioUnitario FROM Servicio"; 
         ResultSet res = stm.executeQuery(query);
         
-       jcbServicios.removeAllItems();
+        jcbServicios.removeAllItems();
         jcbServicios.addItem("Selecciona servicio");  
         while (res.next()) {
-            jcbServicios.addItem(res.getInt("IdServicio")+ " -  " + res.getString("TipoServicio"));
+            jcbServicios.addItem(res.getInt("IdServicio") + " - " + 
+                               res.getString("TipoServicio") + 
+                               " - $" + res.getDouble("PrecioUnitario"));
         }
     } catch (SQLException ex) {
         System.out.println("Error al cargar servicios: " + ex.getMessage());
     }
-    
-     
 }
     private void btnBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaActionPerformed
         // TODO add your handling code here:
