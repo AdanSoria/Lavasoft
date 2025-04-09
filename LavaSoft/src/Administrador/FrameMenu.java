@@ -26,7 +26,7 @@ import javax.swing.text.AbstractDocument.Content;
  * @author Luis DC
  */
 public class FrameMenu extends javax.swing.JFrame {
-
+    private int idUsuarioActual;
     // Colores para el diseño minimalista
     private final Color COLOR_FONDO = new Color(245, 247, 250);
     private final Color COLOR_MENU = new Color(255, 255, 255);
@@ -35,6 +35,9 @@ public class FrameMenu extends javax.swing.JFrame {
     private final Color COLOR_TEXTO_ACTIVO = new Color(255, 255, 255);
     private final Color COLOR_BORDE = new Color(230, 230, 230);
     
+    public void setIdUsuarioActual(int idUsuario) {
+        this.idUsuarioActual = idUsuario;
+    }
     
     public FrameMenu() {
         initComponents();

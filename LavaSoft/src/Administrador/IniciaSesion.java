@@ -183,58 +183,74 @@ public class IniciaSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioSesionActionPerformed
-       FrameMenu nv = new FrameMenu();
-    String nombreUsuario = txtusu1.getText();
+     FrameMenu nv = new FrameMenu();
+    String credencial = txtusu1.getText().trim();
     String contraseña = new String(txtpass1.getText());
+    
+    if (credencial.isEmpty() || contraseña.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Por favor ingrese sus credenciales completas", 
+            "Campos vacíos", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
     try (Connection conn = Conexion.getConnection()) {
-        // Modificamos la consulta para obtener también el nombre del usuario
-        String sql = "SELECT Puesto, Nombre FROM dbo.Usuario WHERE IdUsuario = ? AND Contraseña = ?";
+        // Consulta modificada para manejar correctamente los tipos de datos
+        String sql = "SELECT Puesto, Nombre, IdUsuario FROM dbo.Usuario WHERE " +
+                     "(CONVERT(VARCHAR, IdUsuario) = ? OR Nombre = ?) AND Contraseña = ?";
+        
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, nombreUsuario);
-        stmt.setString(2, contraseña);
+        
+        // Usamos el mismo valor para ambas comparaciones (ID como texto o nombre)
+        stmt.setString(1, credencial); // CONVERT(VARCHAR, IdUsuario) permite comparar como texto
+        stmt.setString(2, credencial); // Para búsqueda por nombre
+        stmt.setString(3, contraseña);
 
         var rs = stmt.executeQuery();
 
         if (rs.next()) {
             String puesto = rs.getString("Puesto");
-            String nombreCompleto = rs.getString("Nombre"); // Obtenemos el nombre del usuario
-
-            // Mostramos mensaje de bienvenida personalizado
+            String nombreCompleto = rs.getString("Nombre");
+            int idUsuario = rs.getInt("IdUsuario");
+            
+            // Mensaje de bienvenida
             JOptionPane.showMessageDialog(this, 
-                "Bienvenido/a: " + nombreCompleto + "\n" +
-                "Rol: " + puesto,
+                "<html><b>Bienvenido/a:</b> " + nombreCompleto + "<br>" +
+                "<b>ID Usuario:</b> " + idUsuario + "<br>" +
+                "<b>Rol:</b> " + puesto + "</html>",
                 "Inicio de sesión exitoso",
                 JOptionPane.INFORMATION_MESSAGE);
 
-            // Redirigir según el tipo de usuario
-            if ("Administrador".equals(puesto)) {
+            nv.setIdUsuarioActual(idUsuario);
+            
+            if ("Administrador".equalsIgnoreCase(puesto)) {
                 nv.setVisible(true);
-                this.dispose();
-            } else if ("Empleado".equals(puesto)) {
+            } else if ("Empleado".equalsIgnoreCase(puesto)) {
                 nv.deshabilitarBotonesParaEmpleado();
                 nv.setVisible(true);
-                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, 
-                    "Tipo de usuario no reconocido.", 
+                    "Rol de usuario no reconocido: " + puesto, 
                     "Error", 
                     JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, 
-                "Usuario o contraseña incorrectos.", 
-                "Error", 
+                "Credenciales incorrectas. Intente nuevamente.", 
+                "Error de autenticación", 
                 JOptionPane.ERROR_MESSAGE);
         }
-        
-        // Limpiar el array de contraseña por seguridad
     } catch (SQLException e) {
-        e.printStackTrace();
         JOptionPane.showMessageDialog(this, 
-            "Error al conectar con la base de datos: " + e.getMessage(), 
+            "Error de conexión: " + e.getMessage(), 
             "Error", 
             JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    } finally {
+        txtpass1.setText("");
     }
     }//GEN-LAST:event_btnInicioSesionActionPerformed
 
