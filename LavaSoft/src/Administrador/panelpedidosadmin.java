@@ -26,6 +26,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Chunk;
+import java.awt.Color;
 
 // Otras importaciones necesarias
 import java.io.FileOutputStream;
@@ -136,14 +137,13 @@ private int idClienteSeleccionado = -1;
 
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lblCliente = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPedido = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         txtNomCliente = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         txtConsultaPedido = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
@@ -152,15 +152,15 @@ private int idClienteSeleccionado = -1;
         btnGenerarTicketP = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnBusqueda = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
+        lblPeso = new javax.swing.JLabel();
         txtPeso = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jcbServicios = new javax.swing.JComboBox<>();
         txtTotal = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jcbEstado = new javax.swing.JComboBox<>();
-        jLabel10 = new javax.swing.JLabel();
+        lblServicio = new javax.swing.JLabel();
         jcbFechaE = new com.toedter.calendar.JDateChooser();
 
         setPreferredSize(new java.awt.Dimension(750, 700));
@@ -174,27 +174,27 @@ private int idClienteSeleccionado = -1;
         jPanel4.setPreferredSize(new java.awt.Dimension(700, 700));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Cliente");
-        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 60, 24));
+        lblCliente.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblCliente.setForeground(new java.awt.Color(0, 0, 0));
+        lblCliente.setText("Cliente");
+        jPanel4.add(lblCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 60, 24));
 
-        jLabel5.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Fecha Estimada");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, 20));
+        lblFecha.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblFecha.setForeground(new java.awt.Color(0, 0, 0));
+        lblFecha.setText("Fecha Entrega Estimada");
+        jPanel4.add(lblFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 20));
 
-        jLabel6.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Total");
-        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 60, -1));
+        lblTotal.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(0, 0, 0));
+        lblTotal.setText("Total");
+        jPanel4.add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 60, -1));
 
         tblPedido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Cliente", "Servicio", "Fecha del pedido", "Fecha Estimada", "EstadoPedido", "CostoTotal", "Peso", "Detalles Pedido"
+                "ID", "Cliente", "Servicio", "Fecha del pedido", "Fecha Estimada", "CostoTotal", "Peso", "EstadoPedido", "Detalles Pedido"
             }
         ));
         tblPedido.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -204,7 +204,7 @@ private int idClienteSeleccionado = -1;
         });
         jScrollPane1.setViewportView(tblPedido);
 
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 460, 380));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 590, 380));
 
         jLabel3.setBackground(new java.awt.Color(181, 218, 240));
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -214,10 +214,6 @@ private int idClienteSeleccionado = -1;
         txtNomCliente.setBackground(new java.awt.Color(181, 218, 240));
         txtNomCliente.setBorder(null);
         jPanel4.add(txtNomCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 100, 20));
-
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel11.setText("__________________");
-        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 100, -1));
 
         jLabel8.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
@@ -311,10 +307,10 @@ private int idClienteSeleccionado = -1;
         });
         jPanel4.add(btnBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Peso");
-        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 50, 20));
+        lblPeso.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblPeso.setForeground(new java.awt.Color(0, 0, 0));
+        lblPeso.setText("Unidad");
+        jPanel4.add(lblPeso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 50, 20));
 
         txtPeso.setBackground(new java.awt.Color(181, 218, 240));
         txtPeso.setBorder(null);
@@ -344,7 +340,7 @@ private int idClienteSeleccionado = -1;
                 jcbServiciosActionPerformed(evt);
             }
         });
-        jPanel4.add(jcbServicios, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 90, -1));
+        jPanel4.add(jcbServicios, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 170, -1));
 
         txtTotal.setBackground(new java.awt.Color(181, 218, 240));
         txtTotal.setBorder(null);
@@ -355,10 +351,10 @@ private int idClienteSeleccionado = -1;
         });
         jPanel4.add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, 100, 20));
 
-        jLabel9.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Estado");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
+        lblEstado.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblEstado.setForeground(new java.awt.Color(0, 0, 0));
+        lblEstado.setText("Estado");
+        jPanel4.add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
 
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("__________________");
@@ -378,21 +374,21 @@ private int idClienteSeleccionado = -1;
                 jcbEstadoActionPerformed(evt);
             }
         });
-        jPanel4.add(jcbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, -1, -1));
+        jPanel4.add(jcbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, 110, -1));
 
-        jLabel10.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel10.setText("Servicio");
-        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, 20));
-        jPanel4.add(jcbFechaE, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, -1, -1));
+        lblServicio.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblServicio.setForeground(new java.awt.Color(0, 0, 0));
+        lblServicio.setText("Servicio");
+        jPanel4.add(lblServicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 190, -1, 20));
+        jPanel4.add(jcbFechaE, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 130, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 520));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 510));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -406,6 +402,83 @@ private int idClienteSeleccionado = -1;
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
+                                           
+     int r = tblPedido.getSelectedRow();
+if (r == -1) {
+    JOptionPane.showMessageDialog(this, "Debe seleccionar un pedido para editar.");
+    return;
+}
+
+if (JOptionPane.showConfirmDialog(this, "¿Seguro que deseas editar este pedido?") == 0) {
+    try {
+        // Obtener datos del formulario
+       /* int idCliente = Integer.parseInt(txtNomCliente.getText());
+        int peso = Integer.parseInt(txtPeso.getText());
+        int total = Integer.parseInt(txtTotal.getText());*/
+        Date fecha = jcbFechaE.getDate();
+        String ser = (String) jcbServicios.getSelectedItem();
+        String es = (String) jcbEstado.getSelectedItem();
+
+        // Validar fecha
+        if (fecha == null) {
+            JOptionPane.showMessageDialog(this, "Falta seleccionar una Fecha.");
+            lblFecha.setForeground(Color.red);
+            jcbFechaE.requestFocus();
+            return;
+        } else {
+            lblFecha.setForeground(Color.black);
+        }
+
+        // Validar servicio
+        if (jcbServicios.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Falta seleccionar Servicio.");
+            lblServicio.setForeground(Color.red);
+            jcbServicios.requestFocus();
+            return;
+        }
+
+        // Validar estado
+        if (jcbEstado.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Falta seleccionar Estado.");
+            lblEstado.setForeground(Color.red);
+            jcbEstado.requestFocus();
+            return;
+        }
+
+        // Convertir fecha
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fec = sdf.format(fecha);
+
+        // Obtener el ID del servicio
+        int idServicio = Integer.parseInt(ser.split(" - ")[0]);
+
+        String idPedido = tblPedido.getValueAt(r, 0).toString();// Obtener ID del pedido desde la tabla
+        Statement stm = con.createStatement();
+        String query = "UPDATE Pedido SET FechaEntregaEstimada = '" + fec + 
+                       "', IdServicio = " + idServicio + 
+                       ", EstadoPedido = '" + es + 
+                       "' WHERE IdPedido = '" + idPedido + "'";
+         
+        stm.executeUpdate(query);
+String s=jcbServicios.getSelectedItem().toString();
+
+        // Actualizar la tabla
+        m.setValueAt(s, r, 2);
+        m.setValueAt(fec, r, 4);
+        m.setValueAt(es, r, 7);
+
+        JOptionPane.showMessageDialog(this, "Pedido editado con exito.");
+    } catch (NumberFormatException nfe) {
+        JOptionPane.showMessageDialog(this, "Error numerico. Verifica los datos ingresados.");
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al editar el pedido. Intenta de nuevo.");
+        System.out.println("Error al ejecutar el query: " + ex.getMessage());
+    }
+}
+
+        
+        
+        
     }//GEN-LAST:event_btnEditarActionPerformed
      private void buscarPedidos(String busqueda) {
     try {
@@ -447,43 +520,187 @@ private int idClienteSeleccionado = -1;
 }
 
     private void btnRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-      String id = txtNomCliente.getText();
-String peso = txtPeso.getText();
-String total = txtTotal.getText();
-Date fecha = jcbFechaE.getDate(); 
-String ser = jcbServicios.getSelectedItem().toString(); 
-String es = jcbEstado.getSelectedItem().toString(); 
+     // 1. Validación del Cliente (ID o Nombre)
+    final String clienteInput = txtNomCliente.getText().trim();
+    if(clienteInput.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar un ID o nombre de cliente", "Error", JOptionPane.ERROR_MESSAGE);
+        lblCliente.setForeground(Color.red);
+        txtNomCliente.requestFocus();
+        return;
+    }
 
+    int idCliente = 0;
+    try {
+        // Primero intentamos buscar por ID
+        idCliente = Integer.parseInt(clienteInput);
+        if(idCliente <= 0) {
+            throw new NumberFormatException();
+        }
+        
+        // Validar que exista el ID en la BD
+        if(!existeClientePorID(idCliente)) {
+            JOptionPane.showMessageDialog(this, "No se encontró un cliente con el ID: " + idCliente, "Error", JOptionPane.ERROR_MESSAGE);
+            lblCliente.setForeground(Color.red);
+            txtNomCliente.requestFocus();
+            return;
+        }
+    } catch(NumberFormatException err) {
+        // Si no es número, buscamos por nombre
+        idCliente = obtenerIdClientePorNombre(clienteInput);
+        if(idCliente <= 0) {
+            JOptionPane.showMessageDialog(this, "No se encontró el cliente: " + clienteInput, "Error", JOptionPane.ERROR_MESSAGE);
+            lblCliente.setForeground(Color.red);
+            txtNomCliente.requestFocus();
+            return;
+        }
+    }
+    lblCliente.setForeground(Color.black);
+    
+    // 2. Validación del Peso
+    final String pesoText = txtPeso.getText().trim();
+    if(pesoText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar el peso del paquete", "Error", JOptionPane.ERROR_MESSAGE);
+        lblPeso.setForeground(Color.red);
+        txtPeso.requestFocus();
+        return;
+    }
+    
+    double peso;
+    try {
+        peso = Double.parseDouble(pesoText);
+        if(peso <= 0 || peso > 1000) { // Suponiendo un peso máximo de 1000 kg
+            throw new NumberFormatException();
+        }
+    } catch(NumberFormatException err) {
+        JOptionPane.showMessageDialog(this, "El peso debe ser un número entre 0.1 y 1000 kg", "Error", JOptionPane.ERROR_MESSAGE);
+        lblPeso.setForeground(Color.red);
+        txtPeso.requestFocus();
+        return;
+    }
+    lblPeso.setForeground(Color.black);
+
+    // 3. Validación del Total
+    final String totalText = txtTotal.getText().trim();
+    if(totalText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe ingresar el total del pedido", "Error", JOptionPane.ERROR_MESSAGE);
+        lblTotal.setForeground(Color.red);
+        txtTotal.requestFocus();
+        return;
+    }
+    
+    double total;
+    try {
+        total = Double.parseDouble(totalText);
+        if(total <= 0) {
+            throw new NumberFormatException();
+        }
+    } catch(NumberFormatException err) {
+        JOptionPane.showMessageDialog(this, "El total debe ser un número mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
+        lblTotal.setForeground(Color.red);
+        txtTotal.requestFocus();
+        return;
+    }
+    lblTotal.setForeground(Color.black);
+
+    // 4. Validación de Fecha
+    Date fecha = jcbFechaE.getDate();
+    if(fecha == null) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrega estimada", "Error", JOptionPane.ERROR_MESSAGE);
+        lblFecha.setForeground(Color.red);
+        jcbFechaE.requestFocus();
+        return;
+    }
+    
+    // Validar que la fecha no sea anterior a la fecha actual
+    Date fechaActual = new Date();
+    if(fecha.before(fechaActual)) {
+        JOptionPane.showMessageDialog(this, "La fecha de entrega no puede ser anterior a la fecha actual", "Error", JOptionPane.ERROR_MESSAGE);
+        lblFecha.setForeground(Color.red);
+        jcbFechaE.requestFocus();
+        return;
+    }
+    lblFecha.setForeground(Color.black);
+
+    // 5. Validación de Servicio
+    if(jcbServicios.getSelectedIndex() <= 0) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar un servicio válido", "Error", JOptionPane.ERROR_MESSAGE);
+        lblServicio.setForeground(Color.red);
+        jcbServicios.requestFocus();
+        return;
+    }
+    String ser = jcbServicios.getSelectedItem().toString();
+    lblServicio.setForeground(Color.black);
+
+    // 6. Validación de Estado
+    if(jcbEstado.getSelectedIndex() <= 0) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar un estado válido", "Error", JOptionPane.ERROR_MESSAGE);
+        lblEstado.setForeground(Color.red);
+        jcbEstado.requestFocus();
+        return;
+    }
+    String es = jcbEstado.getSelectedItem().toString();
+    lblEstado.setForeground(Color.black);
+
+    // Formatear fecha para SQL
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String fec = sdf.format(fecha);
 
-    int idServicio = Integer.parseInt(ser.split(" - ")[0]); // Obtener el ID del servicio
+    // Obtener ID del servicio (asumiendo formato "ID - Descripción")
+    int idServicio;
+    try {
+        idServicio = Integer.parseInt(ser.split(" - ")[0]);
+        if(idServicio <= 0) {
+            throw new NumberFormatException();
+        }
+    } catch(Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error al obtener el ID del servicio", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-    if (idServicio != -1) {
+    // Insertar en la base de datos
     try {
         Statement stm = con.createStatement();
-        String query = "INSERT INTO Pedido (IdCliente, FechaCreacion, IdServicio, Peso, CostoTotal,EstadoPedido) " +
-                       "VALUES ('" + id + "', '" + fec + "', " + idServicio + ", " + peso + ", " + total + ", '" + es + "')";
+        String query = "INSERT INTO Pedido (IdCliente, FechaCreacion, FechaEntregaEstimada, IdServicio, Peso, CostoTotal, EstadoPedido) " +
+                       "VALUES (" + idCliente + ", GETDATE(), '" + fec + "', " + idServicio + ", " + peso + ", " + total + ", '" + es + "')";
         
-        System.out.println(query);  // Para depuración
-        stm.executeUpdate(query);
+        System.out.println("Query ejecutado: " + query);
+        int filasAfectadas = stm.executeUpdate(query);
 
-        JOptionPane.showMessageDialog(this, "Pedido registrado con éxito.");
-    } catch (SQLException ex) {
-        System.out.println("Error al registrar el pedido: " + ex.getMessage());
-        JOptionPane.showMessageDialog(this, "Error al registrar el pedido. Intenta de nuevo.");
-    }
-} else {
-    JOptionPane.showMessageDialog(this, "Servicio no encontrado.");
-}
-    
-    actualizarTablaPedidos();
+        if(filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "Pedido registrado con éxito para el cliente ID: " + idCliente, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            actualizarTablaPedidos();
             limpiarCampos();
-
+        }
+    } catch (SQLException ex) {
+        System.err.println("Error al registrar el pedido: " + ex.getMessage());
+        JOptionPane.showMessageDialog(this, "Error al registrar el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }                                                 
         
                              
-    
+    private boolean existeClientePorID(int idCliente) {
+    try {
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT 1 FROM Cliente WHERE IdCliente = " + idCliente);
+        return rs.next();
+    } catch (SQLException ex) {
+        System.err.println("Error al validar cliente: " + ex.getMessage());
+        return false;
+    }
+}
+
+private int obtenerIdClientePorNombre(String nombre) {
+    try {
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT IdCliente FROM Cliente WHERE Nombre LIKE '%" + nombre + "%'");
+        if(rs.next()) {
+            return rs.getInt("IdCliente");
+        }
+    } catch (SQLException ex) {
+        System.err.println("Error al buscar cliente por nombre: " + ex.getMessage());
+    }
+    return 0;
+}
     private void limpiarCampos() {
     txtPeso.setText("");
     txtTotal.setText("");
@@ -767,24 +984,23 @@ String es = jcbEstado.getSelectedItem().toString();
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGenerarTicketP;
     private javax.swing.JButton btnRealizarPedido;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> jcbEstado;
     private com.toedter.calendar.JDateChooser jcbFechaE;
     private javax.swing.JComboBox<String> jcbServicios;
+    private javax.swing.JLabel lblCliente;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblFecha;
+    private javax.swing.JLabel lblPeso;
+    private javax.swing.JLabel lblServicio;
+    private javax.swing.JLabel lblTotal;
     private javax.swing.JTable tblPedido;
     private javax.swing.JTextField txtConsultaPedido;
     private javax.swing.JTextField txtNomCliente;
