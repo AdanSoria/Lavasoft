@@ -8,6 +8,16 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -53,23 +63,29 @@ private int idServicioSeleccionado = -1;
         LabelCostSer = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         TxtCost = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
-        TxtDesc = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TxtDesc = new javax.swing.JTextArea();
+        jLabel7 = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(181, 218, 240));
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel1MouseClicked(evt);
+            }
+        });
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel6.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel6.setText("Servicio");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 30));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 100, 40));
 
         BarraDeBusqueda.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda.setBorder(null);
-        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 10, 120, 30));
+        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 190, 30));
 
         jtblServicios.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jtblServicios.setModel(new javax.swing.table.DefaultTableModel(
@@ -77,17 +93,21 @@ private int idServicioSeleccionado = -1;
                 {null, null, null, null}
             },
             new String [] {
-                "ID Servicio", "Nombre", "Descripcion", "Costo"
+                "ID Servicio", "Nombre", "Descripcion", "Costo P/kg"
             }
         ));
         jtblServicios.setToolTipText("");
+        jtblServicios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtblServiciosMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(jtblServicios);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 50, 430, 390));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 530, 400));
 
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("_______________________________________");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 130, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, 190, -1));
 
         btnBuscar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
@@ -100,7 +120,7 @@ private int idServicioSeleccionado = -1;
                 btnBuscarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 40, 30));
+        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, 40, 30));
 
         btnInsertar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         btnInsertar.setBorder(null);
@@ -115,7 +135,6 @@ private int idServicioSeleccionado = -1;
         jPanel1.add(btnInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 130, 40));
 
         btnEliminar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnEliminar.setForeground(new java.awt.Color(0, 0, 0));
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar (2).png"))); // NOI18N
         btnEliminar.setText("Eliminar");
         btnEliminar.setBorder(null);
@@ -127,10 +146,9 @@ private int idServicioSeleccionado = -1;
                 btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 110, 60));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 110, 60));
 
         btnActualizar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnActualizar.setForeground(new java.awt.Color(0, 0, 0));
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar (1).png"))); // NOI18N
         btnActualizar.setText("Editar");
         btnActualizar.setBorder(null);
@@ -142,31 +160,26 @@ private int idServicioSeleccionado = -1;
                 btnActualizarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 110, 40));
+        jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, 110, 40));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Servicio");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 79, 41));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 79, 41));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Costo por kg");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 80, 41));
+        jLabel2.setText("Costo");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 80, 41));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Descripcion");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 101, 41));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 101, 41));
 
         LabelNomSer.setBackground(new java.awt.Color(118, 120, 237));
-        LabelNomSer.setForeground(new java.awt.Color(0, 0, 0));
-        LabelNomSer.setText("________________________");
-        jPanel1.add(LabelNomSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 110, -1));
+        LabelNomSer.setText("_____________________________");
+        jPanel1.add(LabelNomSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 140, -1));
 
-        LabelCostSer.setForeground(new java.awt.Color(0, 0, 0));
-        LabelCostSer.setText("_________________________");
-        jPanel1.add(LabelCostSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 90, -1));
+        LabelCostSer.setText("___________");
+        jPanel1.add(LabelCostSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, 60, -1));
 
         txtNombre.setBackground(new java.awt.Color(181, 218, 240));
         txtNombre.setBorder(null);
@@ -175,7 +188,7 @@ private int idServicioSeleccionado = -1;
                 txtNombreActionPerformed(evt);
             }
         });
-        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 100, 39));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 120, 39));
 
         TxtCost.setBackground(new java.awt.Color(181, 218, 240));
         TxtCost.setBorder(null);
@@ -184,23 +197,9 @@ private int idServicioSeleccionado = -1;
                 TxtCostActionPerformed(evt);
             }
         });
-        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 70, 39));
-
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel16.setText("_________________________");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 70, -1));
-
-        TxtDesc.setBackground(new java.awt.Color(181, 218, 240));
-        TxtDesc.setBorder(null);
-        TxtDesc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TxtDescActionPerformed(evt);
-            }
-        });
-        jPanel1.add(TxtDesc, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 180, 39));
+        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 60, 30));
 
         btnGuardar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(0, 0, 0));
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
         btnGuardar.setText("Agregar");
         btnGuardar.setBorder(null);
@@ -212,51 +211,151 @@ private int idServicioSeleccionado = -1;
                 btnGuardarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 120, 30));
+        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 380, 120, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 470));
+        jLabel5.setFont(new java.awt.Font("Sans Serif Collection", 0, 14)); // NOI18N
+        jLabel5.setText("Busqueda");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, -1, -1));
+
+        TxtDesc.setColumns(20);
+        TxtDesc.setRows(5);
+        jScrollPane1.setViewportView(TxtDesc);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 246, 220, 110));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setText("$");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        try {
-        int ipNumber = Integer.parseInt(BarraDeBusqueda.getText().trim());
-        
-        DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
-        model.setRowCount(0);
-        
-        // Versión con corchetes (recomendada para SQL Server)
-        String sql = "SELECT [IdServicio], [TipoServicio], [Descripcion], [PrecioUnitario] " +
-                     "FROM [Servicio] " +
-                     "WHERE [IdServicio] = ?";
-        
-        try (Connection conn = Conexion.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, ipNumber);
-            
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    model.addRow(new Object[]{
-                        rs.getInt("IdServicio"),
-                        rs.getString("TipoServicio"),
-                        rs.getString("Descripcion"),
-                        rs.getFloat("PrecioUnitario")
-                    });
-                }
-              if (model.getRowCount() == 0) {
-                    JOptionPane.showMessageDialog(this, 
-                        "No se encontró Servicio con ID: " + ipNumber, 
-                        "Información", JOptionPane.INFORMATION_MESSAGE);
-                    actualizarTablaServicios();
-                }  
-            }
+        String textoBusqueda = BarraDeBusqueda.getText().trim();
+    DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
+    model.setRowCount(0); // Limpiar la tabla antes de la búsqueda
+
+    if (textoBusqueda.isEmpty()) {
+        actualizarTablaServicios();
+        return;
+    }
+
+    try {
+        // Determinar si es búsqueda por ID o por nombre
+        if (textoBusqueda.matches("\\d+")) {
+            // Búsqueda por ID
+            buscarPorId(model, Integer.parseInt(textoBusqueda));
+        } else {
+            // Búsqueda por nombre
+            buscarPorNombre(model, textoBusqueda);
         }
     } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Ingrese un número válido", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error SQL: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Ingrese un ID válido (número)", 
+            "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
+
+// Método auxiliar para búsqueda por ID
+private void buscarPorId(DefaultTableModel model, int idServicio) {
+    String sql = "SELECT [IdServicio], [TipoServicio], [Descripcion], [PrecioUnitario] " +
+                 "FROM [Servicio] WHERE [IdServicio] = ?";
+    
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, idServicio);
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("IdServicio"),
+                    rs.getString("TipoServicio"),
+                    rs.getString("Descripcion"),
+                    rs.getFloat("PrecioUnitario")
+                });
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "No se encontró servicio con ID: " + idServicio, 
+                    "Información", JOptionPane.INFORMATION_MESSAGE);
+                actualizarTablaServicios();
+            }
+        }
+    } catch (SQLException ex) {
+        mostrarErrorSQL(ex);
+    }
+}
+
+// Método auxiliar para búsqueda por nombre
+private void buscarPorNombre(DefaultTableModel model, String nombre) {
+    String sql = "SELECT [IdServicio], [TipoServicio], [Descripcion], [PrecioUnitario] " +
+                 "FROM [Servicio] WHERE [TipoServicio] LIKE ?";
+    
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setString(1, "%" + nombre + "%");
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            boolean encontrado = false;
+            while (rs.next()) {
+                encontrado = true;
+                model.addRow(new Object[]{
+                    rs.getInt("IdServicio"),
+                    rs.getString("TipoServicio"),
+                    rs.getString("Descripcion"),
+                    rs.getFloat("PrecioUnitario")
+                });
+            }
+            
+            if (!encontrado) {
+                mostrarSugerencias(nombre);
+                actualizarTablaServicios();
+            }
+        }
+    } catch (SQLException ex) {
+        mostrarErrorSQL(ex);
+    }
+}
+
+// Método para mostrar sugerencias
+private void mostrarSugerencias(String textoBusqueda) {
+    List<String> sugerencias = new ArrayList<>();
+    String sql = "SELECT DISTINCT [TipoServicio] FROM [Servicio] WHERE [TipoServicio] LIKE ?";
+    
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setString(1, "%" + textoBusqueda + "%");
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                sugerencias.add(rs.getString("TipoServicio"));
+            }
+        }
+        
+        if (!sugerencias.isEmpty()) {
+            String mensaje = "No se encontraron servicios exactos.\n\n" +
+                           "¿Quizás quisiste buscar alguno de estos?\n" +
+                           String.join("\n", sugerencias.subList(0, Math.min(sugerencias.size(), 5)));
+            JOptionPane.showMessageDialog(this, mensaje, 
+                "Sugerencias", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No se encontraron servicios con: " + textoBusqueda, 
+                "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (SQLException ex) {
+        mostrarErrorSQL(ex);
+    }
+}
+
+// Método para manejar errores SQL
+private void mostrarErrorSQL(SQLException ex) {
+    JOptionPane.showMessageDialog(this, 
+        "Error de base de datos: " + ex.getMessage(), 
+        "Error", JOptionPane.ERROR_MESSAGE);
+    ex.printStackTrace();
+    
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
@@ -266,10 +365,6 @@ private int idServicioSeleccionado = -1;
     private void TxtCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtCostActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtCostActionPerformed
-
-    private void TxtDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDescActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TxtDescActionPerformed
 
     private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
     String nombre = txtNombre.getText().trim();       // Corresponde a TipoServicio
@@ -303,7 +398,7 @@ private int idServicioSeleccionado = -1;
     }
     
     limpiarCampos();
-    
+        actualizarTablaServicios();
     }//GEN-LAST:event_btnInsertarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -412,36 +507,66 @@ private int idServicioSeleccionado = -1;
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
        if (idServicioSeleccionado <= 0) {
-        JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+    JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
 
+// Primero verificamos si el servicio está siendo usado en otras tablas
+try (Connection conn = Conexion.getConnection()) {
+    // Consulta para verificar si el servicio está siendo usado en otras tablas
+    String sqlVerificarUso = "SELECT COUNT(*) AS total FROM dbo.Pedido WHERE IdServicio = ?";
+    
+    try (PreparedStatement pstmtVerificar = conn.prepareStatement(sqlVerificarUso)) {
+        pstmtVerificar.setInt(1, idServicioSeleccionado);
+        
+        try (ResultSet rs = pstmtVerificar.executeQuery()) {
+            if (rs.next() && rs.getInt("total") > 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "No se puede eliminar el servicio porque está siendo utilizado en otra tabla", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    }
+    
+    // Si pasa la validación, pedir confirmación
     int confirmacion = JOptionPane.showConfirmDialog(this, 
         "¿Está seguro de eliminar este servicio permanentemente?", 
         "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
     
     if (confirmacion == JOptionPane.YES_OPTION) {
-        try (Connection conn = Conexion.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(
-                 "DELETE FROM dbo.Servicio WHERE IdServicio=?")) {
+        try (PreparedStatement pstmtEliminar = conn.prepareStatement(
+            "DELETE FROM dbo.Servicio WHERE IdServicio=?")) {
             
-            pstmt.setInt(1, idServicioSeleccionado);
+            pstmtEliminar.setInt(1, idServicioSeleccionado);
             
-            if (pstmt.executeUpdate() > 0) {
+            if (pstmtEliminar.executeUpdate() > 0) {
                 JOptionPane.showMessageDialog(this, "Servicio eliminado exitosamente");
-                actualizarTablaServicios(); // Actualizar la tabla
+                actualizarTablaServicios();
                 limpiarCampos();
                 idServicioSeleccionado = -1;
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    } 
-    
-    limpiarCampos();
-    actualizarTablaServicios();
-    
+             }
+          }
+       }
+     } catch (SQLException ex) {
+       JOptionPane.showMessageDialog(this, 
+         "Error en la operación: " + ex.getMessage(), 
+         "Error", JOptionPane.ERROR_MESSAGE);
+       ex.printStackTrace();
+    }
+
+     limpiarCampos();
+     actualizarTablaServicios();
+
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void jtblServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblServiciosMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtblServiciosMouseClicked
+
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+actualizarTablaServicios();
+    }//GEN-LAST:event_jPanel1MouseClicked
 
     private void actualizarTablaServicios() {
     DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
@@ -535,19 +660,21 @@ private void limpiarCampos() {
     private javax.swing.JLabel LabelCostSer;
     private javax.swing.JLabel LabelNomSer;
     private javax.swing.JTextField TxtCost;
-    private javax.swing.JTextField TxtDesc;
+    private javax.swing.JTextArea TxtDesc;
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnInsertar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jtblServicios;
     private javax.swing.JTextField txtNombre;

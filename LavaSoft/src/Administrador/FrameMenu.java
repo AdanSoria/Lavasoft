@@ -26,6 +26,10 @@ import javax.swing.text.AbstractDocument.Content;
  * @author Luis DC
  */
 public class FrameMenu extends javax.swing.JFrame {
+    
+    
+    
+    
     private int idUsuarioActual;
     // Colores para el diseño minimalista
     private final Color COLOR_FONDO = new Color(245, 247, 250);
@@ -236,7 +240,7 @@ public void ajustarTamañoPanel() {
                 jButton4ActionPerformed(evt);
             }
         });
-        panelop.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 170, 60));
+        panelop.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 200, 60));
 
         jpanelb1.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -258,19 +262,16 @@ public void ajustarTamañoPanel() {
         jpanelb1Layout.setHorizontalGroup(
             jpanelb1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb1Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jpanelb1Layout.setVerticalGroup(
             jpanelb1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpanelb1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
         );
 
-        panelop.add(jpanelb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 170, 50));
+        panelop.add(jpanelb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 170, 60));
 
         jpanelb2.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -291,10 +292,10 @@ public void ajustarTamañoPanel() {
         jpanelb2.setLayout(jpanelb2Layout);
         jpanelb2Layout.setHorizontalGroup(
             jpanelb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpanelb2Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+            .addGroup(jpanelb2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         jpanelb2Layout.setVerticalGroup(
             jpanelb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +305,7 @@ public void ajustarTamañoPanel() {
                 .addGap(14, 14, 14))
         );
 
-        panelop.add(jpanelb2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 170, 60));
+        panelop.add(jpanelb2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 180, 60));
 
         jpanelb3.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb3.setForeground(new java.awt.Color(0, 0, 0));
@@ -327,9 +328,9 @@ public void ajustarTamañoPanel() {
         jpanelb3Layout.setHorizontalGroup(
             jpanelb3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb3Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jpanelb3Layout.setVerticalGroup(
             jpanelb3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -361,19 +362,16 @@ public void ajustarTamañoPanel() {
         jpanelb4Layout.setHorizontalGroup(
             jpanelb4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb4Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(15, 15, 15)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         jpanelb4Layout.setVerticalGroup(
             jpanelb4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpanelb4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        panelop.add(jpanelb4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, -1, 50));
+        panelop.add(jpanelb4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 160, 50));
 
         jLabel14.setBackground(new java.awt.Color(255, 255, 255));
         jLabel14.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N

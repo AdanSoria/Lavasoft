@@ -1,6 +1,11 @@
 package Administrador;
 
+import java.awt.Color;
+import java.awt.Desktop;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -43,25 +48,27 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblClientes = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jLabelNombre = new javax.swing.JLabel();
+        jLabelCorreo = new javax.swing.JLabel();
+        jLabelDomicilio = new javax.swing.JLabel();
+        jLabelTelefono = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTextCliente1 = new javax.swing.JTextField();
+        jTextNombre = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         BarraDeBusqueda = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         Busqueda = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
-        jTextCliente2 = new javax.swing.JTextField();
+        jTextDomicilio = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        jTextCliente3 = new javax.swing.JTextField();
+        jTextTelefono = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
-        jTextCliente4 = new javax.swing.JTextField();
+        jTextCorreo = new javax.swing.JTextField();
         btnEditar = new javax.swing.JButton();
         btnAgregarCliente = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        jButtonWhatsapp = new javax.swing.JButton();
+        jCheckBoxWhatsapp = new javax.swing.JCheckBox();
 
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("_________________________");
@@ -100,39 +107,39 @@ public class panelclientesadmin extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 530, 380));
 
-        jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Nombre");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 79, 41));
+        jLabelNombre.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabelNombre.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelNombre.setText("Nombre");
+        jPanel1.add(jLabelNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 79, 41));
 
-        jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Email");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 101, 41));
+        jLabelCorreo.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabelCorreo.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelCorreo.setText("Correo");
+        jPanel1.add(jLabelCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 101, 41));
 
-        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Domicilio");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 101, 41));
+        jLabelDomicilio.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabelDomicilio.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelDomicilio.setText("Domicilio");
+        jPanel1.add(jLabelDomicilio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 101, 41));
 
-        jLabel5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Telefono");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 101, 41));
+        jLabelTelefono.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabelTelefono.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelTelefono.setText("Telefono");
+        jPanel1.add(jLabelTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 101, 41));
 
         jLabel11.setBackground(new java.awt.Color(118, 120, 237));
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("________________________");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 190, -1));
 
-        jTextCliente1.setBackground(new java.awt.Color(181, 218, 240));
-        jTextCliente1.setBorder(null);
-        jTextCliente1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextCliente1ActionPerformed(evt);
+        jTextNombre.setBackground(new java.awt.Color(181, 218, 240));
+        jTextNombre.setBorder(null);
+        jTextNombre.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextNombreFocusGained(evt);
             }
         });
-        jPanel1.add(jTextCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 180, 30));
+        jPanel1.add(jTextNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 180, 30));
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -172,40 +179,40 @@ public class panelclientesadmin extends javax.swing.JPanel {
         jLabel16.setText("_________________________");
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 180, -1));
 
-        jTextCliente2.setBackground(new java.awt.Color(181, 218, 240));
-        jTextCliente2.setBorder(null);
-        jTextCliente2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextCliente2ActionPerformed(evt);
+        jTextDomicilio.setBackground(new java.awt.Color(181, 218, 240));
+        jTextDomicilio.setBorder(null);
+        jTextDomicilio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextDomicilioFocusGained(evt);
             }
         });
-        jPanel1.add(jTextCliente2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 180, 39));
+        jPanel1.add(jTextDomicilio, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 180, 39));
 
         jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setText("_________________________");
         jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 180, -1));
 
-        jTextCliente3.setBackground(new java.awt.Color(181, 218, 240));
-        jTextCliente3.setBorder(null);
-        jTextCliente3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextCliente3ActionPerformed(evt);
+        jTextTelefono.setBackground(new java.awt.Color(181, 218, 240));
+        jTextTelefono.setBorder(null);
+        jTextTelefono.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextTelefonoFocusGained(evt);
             }
         });
-        jPanel1.add(jTextCliente3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 180, 39));
+        jPanel1.add(jTextTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 180, 39));
 
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("_________________________");
         jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 330, 130, -1));
 
-        jTextCliente4.setBackground(new java.awt.Color(181, 218, 240));
-        jTextCliente4.setBorder(null);
-        jTextCliente4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextCliente4ActionPerformed(evt);
+        jTextCorreo.setBackground(new java.awt.Color(181, 218, 240));
+        jTextCorreo.setBorder(null);
+        jTextCorreo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextCorreoFocusGained(evt);
             }
         });
-        jPanel1.add(jTextCliente4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 130, 39));
+        jPanel1.add(jTextCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 130, 39));
 
         btnEditar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(0, 0, 0));
@@ -252,12 +259,25 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 120, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 500));
-    }// </editor-fold>//GEN-END:initComponents
+        jButtonWhatsapp.setText("Whatsapp");
+        jButtonWhatsapp.setEnabled(false);
+        jButtonWhatsapp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonWhatsappActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButtonWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 110, -1));
 
-    private void jTextCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextCliente1ActionPerformed
+        jCheckBoxWhatsapp.setText("Mensajes");
+        jCheckBoxWhatsapp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxWhatsappActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBoxWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 460));
+    }// </editor-fold>//GEN-END:initComponents
 
     private void BarraDeBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BarraDeBusquedaActionPerformed
         // TODO add your handling code here:
@@ -304,82 +324,96 @@ public class panelclientesadmin extends javax.swing.JPanel {
 }
     }//GEN-LAST:event_BusquedaActionPerformed
    
-    private void jTextCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextCliente2ActionPerformed
-
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField8ActionPerformed
 
-    private void jTextCliente3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextCliente3ActionPerformed
-
-    private void jTextCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextCliente4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextCliente4ActionPerformed
-
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-      if ( clienteSeleccionadoId <= 0) {
-        JOptionPane.showMessageDialog(this, "Seleccione un cliente de la tabla primero", 
-                                      "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+     if (clienteSeleccionadoId <= 0) {
+    JOptionPane.showMessageDialog(this, "Seleccione un cliente de la tabla primero", 
+                                  "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
 
-    // Obtener los datos de los JTextField
-    String nombre = jTextCliente1.getText().trim();
-    String direccion = jTextCliente2.getText().trim();
-    String telefono = jTextCliente3.getText().trim();
-    String correo = jTextCliente4.getText().trim();
+// Obtener los datos de los JTextField
+String nombre = jTextNombre.getText().trim();
+String direccion = jTextDomicilio.getText().trim();
+String telefono = jTextTelefono.getText().trim();
+String correo = jTextCorreo.getText().trim();
 
-    // **Validaciones**
-    if (nombre.isEmpty() || telefono.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Nombre y teléfono son campos obligatorios", 
-                                      "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (!esSoloLetras(nombre)) {
-        JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras y espacios", 
-                                      "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (!esSoloNumeros(telefono)) {
-        JOptionPane.showMessageDialog(this, "El teléfono solo debe contener números", 
-                                      "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (!correo.isEmpty() && !contieneArroba(correo)) {
-        JOptionPane.showMessageDialog(this, "El correo debe contener un '@'", 
-                                      "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+// **Validaciones**
+boolean error = false;
 
-    try {
-        int telefonoInt = Integer.parseInt(telefono); // Convertir a número
+// Validación para el campo 'nombre'
+if (nombre.isEmpty() || !esSoloLetras(nombre)) {
+    jLabelNombre.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelNombre.setToolTipText("El nombre no puede estar vacío y debe contener solo letras."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelNombre.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelNombre.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
+// Validación para el campo 'domicilio'
+if (direccion.isEmpty()) {
+    jLabelDomicilio.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelDomicilio.setToolTipText("El domicilio no puede estar vacío."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelDomicilio.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelDomicilio.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
 
-        try (Connection conn = Conexion.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(
-                 "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?")) {
+// Validación para el campo 'telefono'
+if (telefono.isEmpty() || !esSoloNumeros(telefono)) {
+    jLabelTelefono.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelTelefono.setToolTipText("El teléfono no puede estar vacío y debe contener solo números."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelTelefono.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelTelefono.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
 
-            pstmt.setString(1, nombre);
-            pstmt.setString(2, direccion);
-            pstmt.setInt(3, telefonoInt);
-            pstmt.setString(4, correo);
-            pstmt.setInt(5, clienteSeleccionadoId);
+// Validación para el campo 'correo'
+if (correo.isEmpty() || !contieneArroba(correo)) {
+    jLabelCorreo.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelCorreo.setToolTipText("El correo no puede estar vacío y debe contener un '@'."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelCorreo.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelCorreo.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
 
-            if (pstmt.executeUpdate() > 0) {
-                JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
-                actualizarTablaClientes(); // Refrescar la tabla
-                limpiarCampos();
-                clienteSeleccionadoId = -1; // Resetear selección
-            }
+if (error) {
+    JOptionPane.showMessageDialog(this, "Por favor corrige los campos marcados.", 
+                                  "Error de validación", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+try {
+    int telefonoInt = Integer.parseInt(telefono); // Convertir a número
+
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(
+             "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?")) {
+
+        pstmt.setString(1, nombre);
+        pstmt.setString(2, direccion);
+        pstmt.setInt(3, telefonoInt);
+        pstmt.setString(4, correo);
+        pstmt.setInt(5, clienteSeleccionadoId);
+
+        if (pstmt.executeUpdate() > 0) {
+            JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
+            actualizarTablaClientes(); // Refrescar la tabla
+            limpiarCampos();
+            clienteSeleccionadoId = -1; // Resetear selección
         }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Formato de teléfono inválido", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+} catch (NumberFormatException ex) {
+    JOptionPane.showMessageDialog(this, "Formato de teléfono inválido", "Error", JOptionPane.ERROR_MESSAGE);
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
     }//GEN-LAST:event_btnEditarActionPerformed
     // 1. Verifica si solo contiene letras (mayúsculas y minúsculas)
   public static boolean esSoloLetras(String texto) {
@@ -397,81 +431,109 @@ public class panelclientesadmin extends javax.swing.JPanel {
     }
     
     private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
-        // TODO add your handling code here:
-        
-       String nombre = jTextCliente1.getText().trim();
-    String direccion = jTextCliente2.getText().trim();
-    String telefono = jTextCliente3.getText().trim();
-    String correo = jTextCliente4.getText().trim();
-    
-    // Validación básica
-    if (nombre.isEmpty() || telefono.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nombre y teléfono son campos obligatorios", 
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!esSoloLetras(nombre)) {
-            JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras", 
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!esSoloNumeros(telefono)) {
-            JOptionPane.showMessageDialog(this, "El teléfono solo debe contener números", 
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!correo.isEmpty() && !contieneArroba(correo)) {
-            JOptionPane.showMessageDialog(this, "El correo debe contener un '@'", 
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    
-    try (Connection conn = Conexion.getConnection()) {
-        if (btnAgregarCliente.getText().equals("Actualizar")) {
-            // Lógica para actualizar
-            String updateSql = "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?";
-            try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
-                stmt.setString(1, nombre);
-                stmt.setString(2, direccion);
-                stmt.setString(3, telefono);
-                stmt.setString(4, correo);
-                stmt.setInt(5, clienteSeleccionadoId);
-                
-                int filasAfectadas = stmt.executeUpdate();
-                
-                if (filasAfectadas > 0) {
-                    JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
-                    btnAgregarCliente.setText("Añadir");
-                    clienteSeleccionadoId = -1;
-                }
+      // Obtener los datos de los campos de texto
+String nombre = jTextNombre.getText().trim();
+String direccion = jTextDomicilio.getText().trim();
+String telefono = jTextTelefono.getText().trim();
+String correo = jTextCorreo.getText().trim();
+
+// Validación básica
+boolean error = false;
+
+// Validación para el campo 'nombre'
+if (nombre.isEmpty() || !esSoloLetras(nombre)) {
+    jLabelNombre.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelNombre.setToolTipText("El nombre no puede estar vacío y debe contener solo letras."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelNombre.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelNombre.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
+// Validación para el campo 'domicilio'
+if (direccion.isEmpty()) {
+    jLabelDomicilio.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelDomicilio.setToolTipText("El domicilio no puede estar vacío."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelDomicilio.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelDomicilio.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
+
+// Validación para el campo 'telefono'
+if (telefono.isEmpty() || !esSoloNumeros(telefono)) {
+    jLabelTelefono.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelTelefono.setToolTipText("El teléfono no puede estar vacío y debe contener solo números."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelTelefono.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelTelefono.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
+
+// Validación para el campo 'correo'
+if (correo.isEmpty() || !contieneArroba(correo)) {
+    jLabelCorreo.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+    jLabelCorreo.setToolTipText("El correo no puede estar vacío y debe contener un '@'."); // Tooltip con el mensaje de error
+    error = true;
+} else {
+    jLabelCorreo.setForeground(Color.BLACK);  // Restaura el color original del JLabel
+    jLabelCorreo.setToolTipText(null); // Quitar tooltip cuando el campo es válido
+}
+
+
+// Si hay algún error, no continuar con el proceso
+if (error) {
+    JOptionPane.showMessageDialog(this, "Por favor corrige los campos marcados.", 
+                                  "Error de validación", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+// Si no hay errores, proceder con la lógica de agregar o actualizar el cliente
+try (Connection conn = Conexion.getConnection()) {
+    if (btnAgregarCliente.getText().equals("Actualizar")) {
+        // Lógica para actualizar el cliente
+        String updateSql = "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?";
+        try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
+            stmt.setString(1, nombre);
+            stmt.setString(2, direccion);
+            stmt.setString(3, telefono);
+            stmt.setString(4, correo);
+            stmt.setInt(5, clienteSeleccionadoId);
+
+            int filasAfectadas = stmt.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
+                btnAgregarCliente.setText("Añadir");
+                clienteSeleccionadoId = -1;
             }
-        } else {
-            // Lógica para insertar (tu código existente)
-            String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(insertSql)) {
-                LocalDate fechaActual = LocalDate.now();
-                String ftFecha = fechaActual.format(DateTimeFormatter.ISO_DATE);
-                
-                stmt.setString(1, nombre);
-                stmt.setString(2, direccion);
-                stmt.setString(3, telefono);
-                stmt.setString(4, correo);
-                stmt.setString(5, ftFecha);
-                
-                stmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Cliente agregado correctamente");
-            }
         }
-        
-        // Actualizar la tabla en ambos casos
-        actualizarTablaClientes();
-        limpiarCampos();
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al operar con la base de datos: " + e.getMessage(), 
-                                    "Error", JOptionPane.ERROR_MESSAGE);
+    } else {
+        // Lógica para insertar un nuevo cliente
+        String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(insertSql)) {
+            LocalDate fechaActual = LocalDate.now();
+            String ftFecha = fechaActual.format(DateTimeFormatter.ISO_DATE);
+
+            stmt.setString(1, nombre);
+            stmt.setString(2, direccion);
+            stmt.setString(3, telefono);
+            stmt.setString(4, correo);
+            stmt.setString(5, ftFecha);
+
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Cliente agregado correctamente");
+        }
     }
+
+    // Actualizar la tabla de clientes
+    actualizarTablaClientes();
+    limpiarCampos();
+
+} catch (SQLException e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(this, "Error al operar con la base de datos: " + e.getMessage(), 
+                                  "Error", JOptionPane.ERROR_MESSAGE);
+}
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
     
@@ -559,14 +621,73 @@ public class panelclientesadmin extends javax.swing.JPanel {
     if (fila >= 0) {
         // Obtiene los valores de la fila seleccionada y los muestra en los JTextField
          clienteSeleccionadoId = Integer.parseInt(jtblClientes.getValueAt(fila, 0).toString());
-         jTextCliente1.setText(jtblClientes.getValueAt(fila, 1).toString());
-        jTextCliente2.setText(jtblClientes.getValueAt(fila, 2).toString());
-         jTextCliente3.setText(jtblClientes.getValueAt(fila, 3).toString());
-         jTextCliente4.setText(jtblClientes.getValueAt(fila, 4).toString());
+         jTextNombre.setText(jtblClientes.getValueAt(fila, 1).toString());
+        jTextDomicilio.setText(jtblClientes.getValueAt(fila, 2).toString());
+         jTextTelefono.setText(jtblClientes.getValueAt(fila, 3).toString());
+         jTextCorreo.setText(jtblClientes.getValueAt(fila, 4).toString());
 
         btnEditar.setText("Actualizar"); // Cambia el botón para indicar que es una edición
     }
     }//GEN-LAST:event_jtblClientesMouseClicked
+
+    private void jTextNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextNombreFocusGained
+        // Restaurar el color del JLabel a negro cuando el campo recibe foco
+        jLabelNombre.setForeground(Color.BLACK);
+    }//GEN-LAST:event_jTextNombreFocusGained
+
+    private void jTextDomicilioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextDomicilioFocusGained
+        // Restaurar el color del JLabel a negro cuando el campo recibe foco
+        jLabelDomicilio.setForeground(Color.BLACK);
+    }//GEN-LAST:event_jTextDomicilioFocusGained
+
+    private void jTextTelefonoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextTelefonoFocusGained
+       // Restaurar el color del JLabel a negro cuando el campo recibe foco
+        jLabelTelefono.setForeground(Color.BLACK);
+    }//GEN-LAST:event_jTextTelefonoFocusGained
+
+    private void jTextCorreoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextCorreoFocusGained
+       // Restaurar el color del JLabel a negro cuando el campo recibe foco
+        jLabelCorreo.setForeground(Color.BLACK);
+    }//GEN-LAST:event_jTextCorreoFocusGained
+
+    private void jButtonWhatsappActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWhatsappActionPerformed
+        String telefono = jTextTelefono.getText().trim();
+    // Validar que no esté vacío
+    if (telefono.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingresa un número de celular.");
+        return;
+    }
+
+// Mensaje que quieres enviar
+String mensaje = "¡Hola! Este mensaje fue enviado desde mi aplicación Java.";
+
+// Llamar al método que abre WhatsApp Web
+enviarMensajeWhatsApp(telefono, mensaje);
+    }//GEN-LAST:event_jButtonWhatsappActionPerformed
+
+    private void jCheckBoxWhatsappActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxWhatsappActionPerformed
+        if (jCheckBoxWhatsapp.isSelected()) {
+    jButtonWhatsapp.setEnabled(true);
+} else {
+    jButtonWhatsapp.setEnabled(false);
+}
+
+    }//GEN-LAST:event_jCheckBoxWhatsappActionPerformed
+    
+    public void enviarMensajeWhatsApp(String telefono, String mensaje) {
+    try {
+        String mensajeCodificado = URLEncoder.encode(mensaje, StandardCharsets.UTF_8.toString());
+        String url = "https://wa.me/" + telefono + "?text=" + mensajeCodificado;
+
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().browse(new URI(url));
+        } else {
+            JOptionPane.showMessageDialog(null, "No se pudo abrir WhatsApp. Verifica tu sistema.");
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al abrir WhatsApp: " + e.getMessage());
+    }
+}
     
     private void actualizarTablaClientes() {
     DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
@@ -601,10 +722,10 @@ public class panelclientesadmin extends javax.swing.JPanel {
         ResultSet rs = pstmt.executeQuery();
         
         if (rs.next()) {
-           jTextCliente1.setText(rs.getString("Nombre"));
-            jTextCliente2.setText(rs.getString("Direccion"));
-            jTextCliente3.setText(String.valueOf(rs.getInt("Telefono")));
-            jTextCliente4.setText(rs.getString("CorreoElectronico"));
+           jTextNombre.setText(rs.getString("Nombre"));
+            jTextDomicilio.setText(rs.getString("Direccion"));
+            jTextTelefono.setText(String.valueOf(rs.getInt("Telefono")));
+            jTextCorreo.setText(rs.getString("CorreoElectronico"));
         }
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, 
@@ -624,10 +745,10 @@ public class panelclientesadmin extends javax.swing.JPanel {
         ResultSet rs = pstmt.executeQuery();
         
         if (rs.next()) {
-             jTextCliente1.setText(rs.getString("Nombre"));
-             jTextCliente2.setText(rs.getString("Direccion"));
-             jTextCliente3.setText(String.valueOf(rs.getInt("Telefono")));
-             jTextCliente4.setText(rs.getString("CorreoElectronico"));
+             jTextNombre.setText(rs.getString("Nombre"));
+             jTextDomicilio.setText(rs.getString("Direccion"));
+             jTextTelefono.setText(String.valueOf(rs.getInt("Telefono")));
+             jTextCorreo.setText(rs.getString("CorreoElectronico"));
             
             clienteSeleccionadoId = idCliente; // Guarda el ID del cliente seleccionado
         } else {
@@ -643,10 +764,10 @@ public class panelclientesadmin extends javax.swing.JPanel {
 }
     
 private void limpiarCampos() {
-    jTextCliente1.setText("");
-    jTextCliente2.setText("");
-    jTextCliente3.setText("");
-    jTextCliente4.setText("");
+    jTextNombre.setText("");
+    jTextDomicilio.setText("");
+    jTextTelefono.setText("");
+    jTextCorreo.setText("");
 }
     private int clienteSeleccionadoId = -1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -655,24 +776,26 @@ private void limpiarCampos() {
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton jButtonWhatsapp;
+    private javax.swing.JCheckBox jCheckBoxWhatsapp;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabelCorreo;
+    private javax.swing.JLabel jLabelDomicilio;
+    private javax.swing.JLabel jLabelNombre;
+    private javax.swing.JLabel jLabelTelefono;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextCliente1;
-    private javax.swing.JTextField jTextCliente2;
-    private javax.swing.JTextField jTextCliente3;
-    private javax.swing.JTextField jTextCliente4;
+    private javax.swing.JTextField jTextCorreo;
+    private javax.swing.JTextField jTextDomicilio;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextNombre;
+    private javax.swing.JTextField jTextTelefono;
     private javax.swing.JTable jtblClientes;
     // End of variables declaration//GEN-END:variables
 }

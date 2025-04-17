@@ -194,7 +194,7 @@ private int idClienteSeleccionado = -1;
 
             },
             new String [] {
-                "ID", "Cliente", "Servicio", "Fecha del pedido", "Fecha Estimada", "CostoTotal", "Peso", "EstadoPedido", "Detalles Pedido"
+                "ID", "Cliente", "Servicio", "Fecha del pedido", "Fecha Estimada", "Unidad", "Costo Total", "EstadoPedido", "Detalles Pedido"
             }
         ));
         tblPedido.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -388,7 +388,7 @@ private int idClienteSeleccionado = -1;
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

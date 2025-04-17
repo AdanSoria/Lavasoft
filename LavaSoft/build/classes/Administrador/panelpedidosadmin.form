@@ -21,7 +21,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="0" pref="799" max="32767" attributes="0"/>
+          <Component id="jPanel1" alignment="0" pref="801" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -136,8 +136,8 @@
                         <Column editable="true" title="Servicio" type="java.lang.Object"/>
                         <Column editable="true" title="Fecha del pedido" type="java.lang.Object"/>
                         <Column editable="true" title="Fecha Estimada" type="java.lang.Object"/>
-                        <Column editable="true" title="CostoTotal" type="java.lang.Object"/>
-                        <Column editable="true" title="Peso" type="java.lang.Object"/>
+                        <Column editable="true" title="Unidad" type="java.lang.Object"/>
+                        <Column editable="true" title="Costo Total" type="java.lang.Object"/>
                         <Column editable="true" title="EstadoPedido" type="java.lang.Object"/>
                         <Column editable="true" title="Detalles Pedido" type="java.lang.Object"/>
                       </Table>
