@@ -38,7 +38,7 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jLabel9 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
+        jlabel78 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -48,7 +48,6 @@ public class IniciaSesion extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        txtpass1 = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -62,6 +61,8 @@ public class IniciaSesion extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        txtpass1 = new javax.swing.JPasswordField();
+        chkMostrarPass = new javax.swing.JCheckBox();
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bub.png"))); // NOI18N
 
@@ -70,9 +71,9 @@ public class IniciaSesion extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(181, 218, 240));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel10.setText("_______________________________");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, -1, -1));
+        jlabel78.setForeground(new java.awt.Color(0, 0, 0));
+        jlabel78.setText("_______________________________");
+        jPanel1.add(jlabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, -1, -1));
         jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, -1, -1));
         jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 380, -1, -1));
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 16, 16));
@@ -100,12 +101,8 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_______________________________");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 240, -1, -1));
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, -1, -1));
         jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, -1, -1));
-
-        txtpass1.setBackground(new java.awt.Color(181, 218, 240));
-        txtpass1.setBorder(null);
-        jPanel1.add(txtpass1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, 220, -1));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -167,6 +164,15 @@ public class IniciaSesion extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 400, 130, -1));
+        jPanel1.add(txtpass1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 300, 160, -1));
+
+        chkMostrarPass.setText("ver cotraseña");
+        chkMostrarPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkMostrarPassActionPerformed(evt);
+            }
+        });
+        jPanel1.add(chkMostrarPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -183,9 +189,13 @@ public class IniciaSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInicioSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioSesionActionPerformed
-     FrameMenu nv = new FrameMenu();
+     
+        FrameMenu nv = new FrameMenu();
     String credencial = txtusu1.getText().trim();
-    String contraseña = new String(txtpass1.getText());
+    
+    // Usar getPassword() y convertir a String
+    char[] passwordChars = txtpass1.getPassword();
+    String contraseña = new String(passwordChars);
     
     if (credencial.isEmpty() || contraseña.isEmpty()) {
         JOptionPane.showMessageDialog(this, 
@@ -196,15 +206,12 @@ public class IniciaSesion extends javax.swing.JFrame {
     }
 
     try (Connection conn = Conexion.getConnection()) {
-        // Consulta modificada para manejar correctamente los tipos de datos
         String sql = "SELECT Puesto, Nombre, IdUsuario FROM dbo.Usuario WHERE " +
                      "(CONVERT(VARCHAR, IdUsuario) = ? OR Nombre = ?) AND Contraseña = ?";
         
         PreparedStatement stmt = conn.prepareStatement(sql);
-        
-        // Usamos el mismo valor para ambas comparaciones (ID como texto o nombre)
-        stmt.setString(1, credencial); // CONVERT(VARCHAR, IdUsuario) permite comparar como texto
-        stmt.setString(2, credencial); // Para búsqueda por nombre
+        stmt.setString(1, credencial);
+        stmt.setString(2, credencial);
         stmt.setString(3, contraseña);
 
         var rs = stmt.executeQuery();
@@ -214,7 +221,10 @@ public class IniciaSesion extends javax.swing.JFrame {
             String nombreCompleto = rs.getString("Nombre");
             int idUsuario = rs.getInt("IdUsuario");
             
-            // Mensaje de bienvenida
+            // Solo agregamos esta línea para mostrar la info en FrameMenu
+            nv.mostrarInfoUsuario(nombreCompleto, puesto);
+            
+            // El resto del código permanece igual
             JOptionPane.showMessageDialog(this, 
                 "<html><b>Bienvenido/a:</b> " + nombreCompleto + "<br>" +
                 "<b>ID Usuario:</b> " + idUsuario + "<br>" +
@@ -243,14 +253,18 @@ public class IniciaSesion extends javax.swing.JFrame {
                 "Error de autenticación", 
                 JOptionPane.ERROR_MESSAGE);
         }
-    } catch (SQLException e) {
+     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, 
             "Error de conexión: " + e.getMessage(), 
             "Error", 
             JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     } finally {
-        txtpass1.setText("");
+        // Limpieza segura del array de contraseña
+        if (passwordChars != null) {
+            java.util.Arrays.fill(passwordChars, '\0'); // Llenar con caracter nulo
+        }
+        txtpass1.setText(""); // Limpiar el campo visual
     }
     }//GEN-LAST:event_btnInicioSesionActionPerformed
 
@@ -265,6 +279,16 @@ public class IniciaSesion extends javax.swing.JFrame {
         p.setVisible(true);
                 
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void chkMostrarPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkMostrarPassActionPerformed
+        // TODO add your handling code here:
+          if (chkMostrarPass.isSelected()) {
+        txtpass1.setEchoChar((char) 0); // Mostrar texto plano
+    } else {
+        txtpass1.setEchoChar('•'); // Ocultar con caracteres de contraseña
+        // Alternativa: txtpass1.setEchoChar('\u2022'); para un punto más grande
+    }
+    }//GEN-LAST:event_chkMostrarPassActionPerformed
 
     /**
      * @param args the command line arguments
@@ -304,9 +328,9 @@ public class IniciaSesion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInicioSesion;
+    private javax.swing.JCheckBox chkMostrarPass;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -327,7 +351,8 @@ public class IniciaSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField txtpass1;
+    private javax.swing.JLabel jlabel78;
+    private javax.swing.JPasswordField txtpass1;
     private javax.swing.JTextField txtusu1;
     // End of variables declaration//GEN-END:variables
 }

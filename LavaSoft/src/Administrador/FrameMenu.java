@@ -10,10 +10,14 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.text.AbstractDocument.Content;
 
 /*
@@ -29,7 +33,7 @@ public class FrameMenu extends javax.swing.JFrame {
     
     
     
-    
+    private javax.swing.Timer timer;
     private int idUsuarioActual;
     // Colores para el diseño minimalista
     private final Color COLOR_FONDO = new Color(245, 247, 250);
@@ -47,7 +51,53 @@ public class FrameMenu extends javax.swing.JFrame {
         initComponents();
         aplicarEstiloMinimalista();
     ajustarTamañoPanel();
+    
+    jLabel16.setFont(new Font("Segoe UI", Font.BOLD, 12));
+    jLabel16.setHorizontalAlignment(SwingConstants.CENTER);
+    initDateTimeUpdater();
     }
+    
+    private void initDateTimeUpdater() {
+    timer = new Timer(1000, e -> actualizarFechaHora()); // Actualiza cada segundo
+    timer.start();
+    actualizarFechaHora(); // Mostrar inmediatamente
+}
+    private void actualizarFechaHora() {
+    // Formato día/mes/año hora:minuto:segundo AM/PM
+    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss a");
+     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE"+"\n"+", dd/MM/yyyy hh:mm:ss a");
+    String fechaHora = LocalDateTime.now().format(formatter);
+    
+    // Opcional: con día de la semana
+    
+     jLabel16.setText("<html><div style='text-align: center;'>" + 
+                    fechaHora + "<br>" + 
+                      "</div></html>");
+    
+    
+    // Opcional: cambiar color según la hora del día
+    LocalTime now = LocalTime.now();
+    if (now.isAfter(LocalTime.of(18, 0))) {
+        jLabel16.setForeground(new Color(255, 150, 150)); // Noche
+    } else if (now.isAfter(LocalTime.of(12, 0))) {
+        jLabel16.setForeground(new Color(100, 150, 255)); // Tarde
+    } else {
+        jLabel16.setForeground(new Color(80, 180, 80)); // Mañana
+    }
+}
+    // En la clase FrameMenu
+public void mostrarInfoUsuario(String nombreUsuario, String puesto) {
+    // Muestra el nombre en jLabel2
+    jLabel2.setText(nombreUsuario);
+    
+    // Muestra el puesto en jLabel14 (opcional)
+    jLabel14.setText(puesto);
+    
+    // Personalización visual opcional
+    jLabel2.setFont(new Font("Segoe UI", Font.BOLD, 12));
+    jLabel2.setForeground(new Color(70, 70, 70));
+}
+
     // Añade este método a tu clase FrameMenu:
 public void ajustarTamañoPanel() {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -162,6 +212,10 @@ public void ajustarTamañoPanel() {
         jpanelb4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        jpanelb5 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jpanelb6 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
         paneli = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -217,14 +271,15 @@ public void ajustarTamañoPanel() {
 
         jLabel2.setBackground(new java.awt.Color(118, 120, 237));
         jLabel2.setForeground(new java.awt.Color(118, 120, 237));
-        panelop.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
+        jLabel2.setText("Nombre Empleado");
+        panelop.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 150, 20));
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Bienvenido");
-        panelop.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 110, 20));
+        panelop.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 110, 20));
         panelop.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 60, -1));
 
         jButton4.setFont(new java.awt.Font("Roboto Bk", 1, 14)); // NOI18N
@@ -240,7 +295,7 @@ public void ajustarTamañoPanel() {
                 jButton4ActionPerformed(evt);
             }
         });
-        panelop.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 200, 60));
+        panelop.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 200, 50));
 
         jpanelb1.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -262,18 +317,19 @@ public void ajustarTamañoPanel() {
         jpanelb1Layout.setHorizontalGroup(
             jpanelb1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(20, 20, 20)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         jpanelb1Layout.setVerticalGroup(
             jpanelb1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
         );
 
-        panelop.add(jpanelb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 170, 60));
+        panelop.add(jpanelb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 200, 60));
 
         jpanelb2.setBackground(new java.awt.Color(255, 255, 255));
+        jpanelb2.setForeground(new java.awt.Color(0, 0, 0));
         jpanelb2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jpanelb2MouseClicked(evt);
@@ -295,7 +351,7 @@ public void ajustarTamañoPanel() {
             .addGroup(jpanelb2Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jpanelb2Layout.setVerticalGroup(
             jpanelb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,7 +361,7 @@ public void ajustarTamañoPanel() {
                 .addGap(14, 14, 14))
         );
 
-        panelop.add(jpanelb2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 180, 60));
+        panelop.add(jpanelb2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 200, 60));
 
         jpanelb3.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb3.setForeground(new java.awt.Color(0, 0, 0));
@@ -330,16 +386,16 @@ public void ajustarTamañoPanel() {
             .addGroup(jpanelb3Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
         jpanelb3Layout.setVerticalGroup(
             jpanelb3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
         );
 
-        panelop.add(jpanelb3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 170, 50));
+        panelop.add(jpanelb3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 200, 60));
 
         jpanelb4.setBackground(new java.awt.Color(255, 255, 255));
         jpanelb4.setForeground(new java.awt.Color(0, 0, 0));
@@ -362,25 +418,92 @@ public void ajustarTamañoPanel() {
         jpanelb4Layout.setHorizontalGroup(
             jpanelb4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpanelb4Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(20, 20, 20)
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         jpanelb4Layout.setVerticalGroup(
             jpanelb4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        panelop.add(jpanelb4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 160, 50));
+        panelop.add(jpanelb4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 200, 50));
 
         jLabel14.setBackground(new java.awt.Color(255, 255, 255));
         jLabel14.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Administrador");
-        panelop.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 110, 20));
+        panelop.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 150, 20));
 
-        getContentPane().add(panelop, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 500));
+        jpanelb5.setBackground(new java.awt.Color(255, 255, 255));
+        jpanelb5.setForeground(new java.awt.Color(0, 0, 0));
+        jpanelb5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jpanelb5MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jpanelb5MousePressed(evt);
+            }
+        });
+
+        jLabel15.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/support.png"))); // NOI18N
+        jLabel15.setText("Historial Pedidos");
+
+        javax.swing.GroupLayout jpanelb5Layout = new javax.swing.GroupLayout(jpanelb5);
+        jpanelb5.setLayout(jpanelb5Layout);
+        jpanelb5Layout.setHorizontalGroup(
+            jpanelb5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelb5Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        jpanelb5Layout.setVerticalGroup(
+            jpanelb5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelb5Layout.createSequentialGroup()
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        panelop.add(jpanelb5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, -1, -1));
+
+        jpanelb6.setBackground(new java.awt.Color(255, 255, 255));
+        jpanelb6.setForeground(new java.awt.Color(0, 0, 0));
+        jpanelb6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jpanelb6MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jpanelb6MousePressed(evt);
+            }
+        });
+
+        jLabel16.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setText("                   HORA");
+
+        javax.swing.GroupLayout jpanelb6Layout = new javax.swing.GroupLayout(jpanelb6);
+        jpanelb6.setLayout(jpanelb6Layout);
+        jpanelb6Layout.setHorizontalGroup(
+            jpanelb6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelb6Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        jpanelb6Layout.setVerticalGroup(
+            jpanelb6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpanelb6Layout.createSequentialGroup()
+                .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        panelop.add(jpanelb6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, -1, 40));
+
+        getContentPane().add(panelop, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 490));
 
         paneli.setBackground(new java.awt.Color(181, 218, 240));
         paneli.setMinimumSize(new java.awt.Dimension(800, 700));
@@ -447,6 +570,7 @@ public void ajustarTamañoPanel() {
         resetColor(jpanelb2);
         resetColor(jpanelb3);
         resetColor(jpanelb4);
+         resetColor(jpanelb5);
 
        
     }//GEN-LAST:event_jpanelb1MousePressed
@@ -470,6 +594,7 @@ public void ajustarTamañoPanel() {
         resetColor(jpanelb1);
         resetColor(jpanelb3);
         resetColor(jpanelb4);
+         resetColor(jpanelb5);
 
     }//GEN-LAST:event_jpanelb2MousePressed
 
@@ -493,6 +618,7 @@ public void ajustarTamañoPanel() {
         resetColor(jpanelb1);
         resetColor(jpanelb2);
         resetColor(jpanelb4);
+         resetColor(jpanelb5);
 
     }//GEN-LAST:event_jpanelb3MousePressed
 
@@ -515,8 +641,40 @@ public void ajustarTamañoPanel() {
         resetColor(jpanelb1);
         resetColor(jpanelb2);
         resetColor(jpanelb3);
+         resetColor(jpanelb5);
 
     }//GEN-LAST:event_jpanelb4MousePressed
+
+    private void jpanelb5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb5MouseClicked
+        // TODO add your handling code here:
+        panelop.setVisible(true);
+     panelHistorialPedidos p1 = new panelHistorialPedidos();
+    p1.setSize(800, 800); // Sugerir tamaño preferido
+    p1.setLocation(0, 0); // Configurar posición (opcional si usas un layout)
+
+    paneli.removeAll();
+    paneli.setLayout(new BorderLayout());
+    paneli.add(p1, BorderLayout.CENTER);
+    paneli.revalidate();
+    }//GEN-LAST:event_jpanelb5MouseClicked
+
+    private void jpanelb5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb5MousePressed
+        // TODO add your handling code here:
+        setColor(jpanelb5);
+        resetColor(jpanelb1);
+        resetColor(jpanelb2);
+        resetColor(jpanelb3);
+         resetColor(jpanelb4);
+
+    }//GEN-LAST:event_jpanelb5MousePressed
+
+    private void jpanelb6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb6MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jpanelb6MouseClicked
+
+    private void jpanelb6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpanelb6MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jpanelb6MousePressed
     
       public void deshabilitarBotonesParaEmpleado() {
         jLabel4.setEnabled(false); // Deshabilitar botón de Empleados
@@ -573,6 +731,8 @@ public void ajustarTamañoPanel() {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -586,6 +746,8 @@ public void ajustarTamañoPanel() {
     private javax.swing.JPanel jpanelb2;
     private javax.swing.JPanel jpanelb3;
     private javax.swing.JPanel jpanelb4;
+    private javax.swing.JPanel jpanelb5;
+    private javax.swing.JPanel jpanelb6;
     private javax.swing.JPanel paneli;
     private javax.swing.JPanel panelinicio;
     private javax.swing.JPanel panelop;
