@@ -27,15 +27,19 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Chunk;
 import java.awt.Color;
+import java.awt.Component;
 
 // Otras importaciones necesarias
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.text.DecimalFormat;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -71,12 +75,16 @@ private int idClienteSeleccionado = -1;
      private Statement stm;
     private static Connection con;
     private DefaultTableModel m;
-   public panelpedidosadmin() {
+    
+    
+    
+    public panelpedidosadmin() {
     initComponents();
     m=(DefaultTableModel) tblPedido.getModel();
     getConexion();
     cargarServicios();
     actualizarTablaPedidos();
+    personalizarTabla();
     
     // Agregar listeners para el cálculo automático
     txtPeso.getDocument().addDocumentListener(new DocumentListener() {
@@ -95,6 +103,120 @@ private int idClienteSeleccionado = -1;
         }
     });
 }
+    private void personalizarTabla() {
+    // 1. Configuración de estilos para la tabla
+    tblPedido.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+    tblPedido.setRowHeight(25);
+    tblPedido.setShowGrid(true);
+    tblPedido.setGridColor(new Color(220, 220, 220));
+    tblPedido.setSelectionBackground(new Color(181, 218, 240));
+    tblPedido.setSelectionForeground(Color.BLACK);
+    
+    // 2. Personalización del header
+    JTableHeader header = tblPedido.getTableHeader();
+    header.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+    header.setBackground(new Color(70, 130, 180)); // Azul acero
+    header.setForeground(Color.BLACK);
+    header.setReorderingAllowed(false);
+    
+    // 3. Renderizado personalizado para columnas
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    
+    // Aplicar alineación centrada a columnas específicas
+    for(int i = 0; i < tblPedido.getColumnCount(); i++) {
+        tblPedido.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+    }
+    
+    // 4. Ajustar ancho de columnas
+    tblPedido.getColumnModel().getColumn(0).setPreferredWidth(40);  // ID
+    tblPedido.getColumnModel().getColumn(1).setPreferredWidth(120); // Cliente
+    tblPedido.getColumnModel().getColumn(2).setPreferredWidth(100); // Servicio
+    tblPedido.getColumnModel().getColumn(3).setPreferredWidth(120); // Fecha pedido
+    tblPedido.getColumnModel().getColumn(4).setPreferredWidth(120); // Fecha estimada
+    tblPedido.getColumnModel().getColumn(5).setPreferredWidth(60);  // Unidad
+    tblPedido.getColumnModel().getColumn(6).setPreferredWidth(80);  // Costo
+    tblPedido.getColumnModel().getColumn(7).setPreferredWidth(100); // Estado
+    tblPedido.getColumnModel().getColumn(8).setPreferredWidth(150); // Detalles
+    
+    // 5. Alternar colores de filas
+    tblPedido.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, 
+                isSelected, hasFocus, row, column);
+            
+            if (!isSelected) {
+                c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 240));
+            }
+            return c;
+        }
+    });
+    // Renderizador para columna de estado
+tblPedido.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        Component c = super.getTableCellRendererComponent(table, value, 
+            isSelected, hasFocus, row, column);
+        
+        String estado = (String) value;
+        
+        if (!isSelected) {
+            if ("Pendiente".equals(estado)) {
+                c.setForeground(Color.RED);
+                c.setFont(c.getFont().deriveFont(Font.BOLD));
+            } else if ("En Proceso".equals(estado)) {
+                c.setForeground(new Color(0, 100, 0)); // Verde oscuro
+                c.setFont(c.getFont().deriveFont(Font.BOLD));
+            }
+        } else {
+            c.setForeground(Color.WHITE);
+        }
+        
+        ((JLabel)c).setHorizontalAlignment(SwingConstants.CENTER);
+        
+        return c;
+    }
+});
+    // Añade esto al método personalizarTabla()
+tblPedido.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
+    private final DecimalFormat df = new DecimalFormat("$#,##0.00");
+    
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        if (value instanceof Number) {
+            value = df.format(value);
+        }
+        return super.getTableCellRendererComponent(table, value, isSelected, 
+            hasFocus, row, column);
+    }
+});
+
+// Para fechas
+tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        if (value instanceof Date) {
+            value = sdf.format((Date)value);
+        } else if (value instanceof Timestamp) {
+            value = sdf.format(new Date(((Timestamp)value).getTime()));
+        }
+        return super.getTableCellRendererComponent(table, value, isSelected, 
+            hasFocus, row, column);
+    }
+});
+}
+    
+    
    private void calcularTotalAutomatico() {
     try {
         // Verificar que haya un servicio seleccionado y peso válido
@@ -707,35 +829,37 @@ private int obtenerIdClientePorNombre(String nombre) {
     jcbServicios.setSelectedIndex(0);
 }
     
-    private void actualizarTablaPedidos() {
-     DefaultTableModel model = (DefaultTableModel) tblPedido.getModel();
-    model.setRowCount(0);
+  private void actualizarTablaPedidos() {
+    DefaultTableModel model = (DefaultTableModel) tblPedido.getModel();
+    model.setRowCount(0); // Limpiar la tabla
     
     try (Connection conn = Conexion.getConnection()) {
-        // USAR EL NOMBRE CORRECTO: FechaEntregaEstimada
         String sql = "SELECT p.idPedido, c.Nombre AS Cliente, s.Descripcion AS Servicio, " +
                      "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal, p.EstadoPedido " +
                      "FROM dbo.Pedido p " +
                      "JOIN dbo.Cliente c ON p.idCliente = c.idCliente " +
                      "JOIN dbo.Servicio s ON p.idServicio = s.idServicio " +
+                     "WHERE p.EstadoPedido IN ('Pendiente', 'En Proceso') " +
                      "ORDER BY p.FechaCreacion DESC";
         
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            DecimalFormat df = new DecimalFormat("$#,##0.00");
             
             while (rs.next()) {
+                String estado = rs.getString("EstadoPedido");
+                
                 model.addRow(new Object[]{
                     rs.getInt("idPedido"),
                     rs.getString("Cliente"),
                     rs.getString("Servicio"),
                     dateFormat.format(rs.getTimestamp("FechaCreacion")),
-                    // USAR EL NOMBRE CORRECTO AQUÍ TAMBIÉN
                     dateFormat.format(rs.getTimestamp("FechaEntregaEstimada")),
-                    rs.getDouble("Peso"),
-                    rs.getDouble("CostoTotal"),
-                    rs.getString("EstadoPedido")
+                    rs.getDouble("Peso") + " kg",
+                    df.format(rs.getDouble("CostoTotal")),
+                    estado
                 });
             }
         }

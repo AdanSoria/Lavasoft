@@ -3,7 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Administrador;
-
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 /**
  *
  * @author soria
@@ -15,8 +32,102 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
      */
     public panelHistorialPedidos() {
         initComponents();
+        personalizarTabla();
+        actualizarTablaPedidos();
+        //Panel Mejorado 
+         jPanel4.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+    // Mejorar el scroll pane
+    jScrollPane1.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createEmptyBorder(5, 0, 5, 0),
+        BorderFactory.createLineBorder(new Color(200, 200, 200))
+    ));
+    
     }
+    private void personalizarTabla() {
+    // 1. Configuración de estilos para la tabla
+    tblPedido.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+    tblPedido.setRowHeight(25);
+    tblPedido.setShowGrid(true);
+    tblPedido.setGridColor(new Color(220, 220, 220));
+    tblPedido.setSelectionBackground(new Color(181, 218, 240));
+    tblPedido.setSelectionForeground(Color.BLACK);
+    
+    // 2. Personalización del header
+    JTableHeader header = tblPedido.getTableHeader();
+    header.setFont(new Font("Segoe UI", Font.BOLD, 13));
+    header.setBackground(new Color(70, 130, 180)); // Azul acero
+    header.setForeground(Color.BLACK);
+    header.setReorderingAllowed(false);
+    
+    // 3. Renderizado personalizado para columnas
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    
+    // Aplicar alineación centrada a columnas específicas
+    for(int i = 0; i < tblPedido.getColumnCount(); i++) {
+        tblPedido.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+    }
+    
+    // 4. Ajustar ancho de columnas
+    tblPedido.getColumnModel().getColumn(0).setPreferredWidth(40);  // ID
+    tblPedido.getColumnModel().getColumn(1).setPreferredWidth(120); // Cliente
+    tblPedido.getColumnModel().getColumn(2).setPreferredWidth(100); // Servicio
+    tblPedido.getColumnModel().getColumn(3).setPreferredWidth(120); // Fecha pedido
+    tblPedido.getColumnModel().getColumn(4).setPreferredWidth(120); // Fecha estimada
+    tblPedido.getColumnModel().getColumn(5).setPreferredWidth(60);  // Unidad
+    tblPedido.getColumnModel().getColumn(6).setPreferredWidth(80);  // Costo
+    tblPedido.getColumnModel().getColumn(7).setPreferredWidth(100); // Estado
+    tblPedido.getColumnModel().getColumn(8).setPreferredWidth(150); // Detalles
+    
+    // 5. Alternar colores de filas
+    tblPedido.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, 
+                isSelected, hasFocus, row, column);
+            
+            if (!isSelected) {
+                c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 240));
+            }
+            return c;
+        }
+    });
+    // Añade esto al método personalizarTabla()
+tblPedido.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
+    private final DecimalFormat df = new DecimalFormat("$#,##0.00");
+    
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        if (value instanceof Number) {
+            value = df.format(value);
+        }
+        return super.getTableCellRendererComponent(table, value, isSelected, 
+            hasFocus, row, column);
+    }
+});
 
+// Para fechas
+tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        if (value instanceof Date) {
+            value = sdf.format((Date)value);
+        } else if (value instanceof Timestamp) {
+            value = sdf.format(new Date(((Timestamp)value).getTime()));
+        }
+        return super.getTableCellRendererComponent(table, value, isSelected, 
+            hasFocus, row, column);
+    }
+});
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,9 +144,7 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         txtConsultaPedido = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        btnEditar = new javax.swing.JButton();
         btnGenerarTicketP = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         btnBusqueda = new javax.swing.JButton();
         txtPeso = new javax.swing.JTextField();
         txtTotal = new javax.swing.JTextField();
@@ -60,7 +169,7 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblPedido);
 
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 590, 380));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 770, 410));
 
         txtNomCliente.setBackground(new java.awt.Color(181, 218, 240));
         txtNomCliente.setBorder(null);
@@ -69,7 +178,7 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
         jLabel8.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Pedido");
-        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, -1, -1));
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         txtConsultaPedido.setBackground(new java.awt.Color(181, 218, 240));
         txtConsultaPedido.setBorder(null);
@@ -78,28 +187,13 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
                 txtConsultaPedidoActionPerformed(evt);
             }
         });
-        jPanel4.add(txtConsultaPedido, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 390, -1));
+        jPanel4.add(txtConsultaPedido, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 390, -1));
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_______________________________________________________________________________");
-        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 400, -1));
+        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 400, -1));
 
-        btnEditar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnEditar.setForeground(new java.awt.Color(0, 0, 0));
-        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar.png"))); // NOI18N
-        btnEditar.setText("Editar");
-        btnEditar.setBorder(null);
-        btnEditar.setContentAreaFilled(false);
-        btnEditar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnEditar.setVerifyInputWhenFocusTarget(false);
-        btnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarActionPerformed(evt);
-            }
-        });
-        jPanel4.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 390, 90, 40));
-
-        btnGenerarTicketP.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnGenerarTicketP.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnGenerarTicketP.setForeground(new java.awt.Color(0, 0, 0));
         btnGenerarTicketP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/factura.png"))); // NOI18N
         btnGenerarTicketP.setText("Generar ticket");
@@ -112,22 +206,7 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
                 btnGenerarTicketPActionPerformed(evt);
             }
         });
-        jPanel4.add(btnGenerarTicketP, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 170, 40));
-
-        btnEliminar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnEliminar.setForeground(new java.awt.Color(0, 0, 0));
-        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
-        btnEliminar.setText("Eliminar");
-        btnEliminar.setBorder(null);
-        btnEliminar.setContentAreaFilled(false);
-        btnEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnEliminar.setVerifyInputWhenFocusTarget(false);
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
-        jPanel4.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 430, 100, 40));
+        jPanel4.add(btnGenerarTicketP, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 30, 180, 50));
 
         btnBusqueda.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnBusqueda.setForeground(new java.awt.Color(0, 0, 0));
@@ -141,7 +220,7 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
                 btnBusquedaActionPerformed(evt);
             }
         });
-        jPanel4.add(btnBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, -1, -1));
+        jPanel4.add(btnBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 40, -1, -1));
 
         txtPeso.setBackground(new java.awt.Color(181, 218, 240));
         txtPeso.setBorder(null);
@@ -191,20 +270,9 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtConsultaPedidoActionPerformed
 
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-       
-
-    }//GEN-LAST:event_btnEditarActionPerformed
-
     private void btnGenerarTicketPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarTicketPActionPerformed
      
     }//GEN-LAST:event_btnGenerarTicketPActionPerformed
-
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-      
-
-    }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaActionPerformed
 
@@ -217,12 +285,47 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
     private void txtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalActionPerformed
-
+    private void actualizarTablaPedidos() {
+     DefaultTableModel model = (DefaultTableModel) tblPedido.getModel();
+    model.setRowCount(0);
+    
+    try (Connection conn = Conexion.getConnection()) {
+        // USAR EL NOMBRE CORRECTO: FechaEntregaEstimada
+        String sql = "SELECT p.idPedido, c.Nombre AS Cliente, s.Descripcion AS Servicio, " +
+                     "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal, p.EstadoPedido " +
+                     "FROM dbo.Pedido p " +
+                     "JOIN dbo.Cliente c ON p.idCliente = c.idCliente " +
+                     "JOIN dbo.Servicio s ON p.idServicio = s.idServicio " +
+                     "ORDER BY p.FechaCreacion DESC";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("idPedido"),
+                    rs.getString("Cliente"),
+                    rs.getString("Servicio"),
+                    dateFormat.format(rs.getTimestamp("FechaCreacion")),
+                    // USAR EL NOMBRE CORRECTO AQUÍ TAMBIÉN
+                    dateFormat.format(rs.getTimestamp("FechaEntregaEstimada")),
+                    rs.getDouble("Peso"),
+                    rs.getDouble("CostoTotal"),
+                    rs.getString("EstadoPedido")
+                });
+            }
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar pedidos: " + e.getMessage(), 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBusqueda;
-    private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGenerarTicketP;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel8;
