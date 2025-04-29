@@ -14,6 +14,9 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -33,7 +36,35 @@ public class panelclientesadmin extends javax.swing.JPanel {
     public panelclientesadmin() {
     initComponents();
     actualizarTablaClientes(); // Cargar datos al iniciar
+    personalizarTabla();
 }
+    private void personalizarTabla() {
+    // 1. Configuración de estilos para la tabla
+    jtblClientes.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+    jtblClientes.setRowHeight(25);
+    jtblClientes.setShowGrid(true);
+    jtblClientes.setGridColor(new Color(220, 220, 220));
+    jtblClientes.setSelectionBackground(new Color(181, 218, 240));
+    jtblClientes.setSelectionForeground(Color.BLACK);
+    
+    // 2. Personalización del header
+    JTableHeader header = jtblClientes.getTableHeader();
+    header.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+    header.setBackground(new Color(70, 130, 180)); // Azul acero
+    header.setForeground(Color.BLACK);
+    header.setReorderingAllowed(false);
+    
+    // 3. Renderizado personalizado para columnas
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    
+    // Aplicar alineación centrada a columnas específicas
+    for(int i = 0; i < jtblClientes.getColumnCount(); i++) {
+        jtblClientes.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+    }
+
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,32 +136,32 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jtblClientes);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 530, 380));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 630, 380));
 
         jLabelNombre.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabelNombre.setForeground(new java.awt.Color(0, 0, 0));
         jLabelNombre.setText("Nombre");
-        jPanel1.add(jLabelNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 79, 41));
+        jPanel1.add(jLabelNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 79, 41));
 
         jLabelCorreo.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabelCorreo.setForeground(new java.awt.Color(0, 0, 0));
         jLabelCorreo.setText("Correo");
-        jPanel1.add(jLabelCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 101, 41));
+        jPanel1.add(jLabelCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 101, 41));
 
         jLabelDomicilio.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabelDomicilio.setForeground(new java.awt.Color(0, 0, 0));
         jLabelDomicilio.setText("Domicilio");
-        jPanel1.add(jLabelDomicilio, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 101, 41));
+        jPanel1.add(jLabelDomicilio, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 101, 41));
 
         jLabelTelefono.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabelTelefono.setForeground(new java.awt.Color(0, 0, 0));
         jLabelTelefono.setText("Telefono");
-        jPanel1.add(jLabelTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 101, 41));
+        jPanel1.add(jLabelTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 101, 41));
 
         jLabel11.setBackground(new java.awt.Color(118, 120, 237));
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("________________________");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 190, -1));
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 190, -1));
 
         jTextNombre.setBackground(new java.awt.Color(181, 218, 240));
         jTextNombre.setBorder(null);
@@ -139,7 +170,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jTextNombreFocusGained(evt);
             }
         });
-        jPanel1.add(jTextNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 180, 30));
+        jPanel1.add(jTextNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 180, 30));
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -177,7 +208,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_________________________");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 180, -1));
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 180, -1));
 
         jTextDomicilio.setBackground(new java.awt.Color(181, 218, 240));
         jTextDomicilio.setBorder(null);
@@ -186,11 +217,16 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jTextDomicilioFocusGained(evt);
             }
         });
-        jPanel1.add(jTextDomicilio, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 180, 39));
+        jTextDomicilio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextDomicilioActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jTextDomicilio, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 180, 39));
 
         jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setText("_________________________");
-        jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 180, -1));
+        jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 180, -1));
 
         jTextTelefono.setBackground(new java.awt.Color(181, 218, 240));
         jTextTelefono.setBorder(null);
@@ -199,11 +235,11 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jTextTelefonoFocusGained(evt);
             }
         });
-        jPanel1.add(jTextTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 180, 39));
+        jPanel1.add(jTextTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 180, 39));
 
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("_________________________");
-        jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 330, 130, -1));
+        jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, 130, -1));
 
         jTextCorreo.setBackground(new java.awt.Color(181, 218, 240));
         jTextCorreo.setBorder(null);
@@ -212,7 +248,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jTextCorreoFocusGained(evt);
             }
         });
-        jPanel1.add(jTextCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 130, 39));
+        jPanel1.add(jTextCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 290, 130, 39));
 
         btnEditar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(0, 0, 0));
@@ -266,7 +302,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jButtonWhatsappActionPerformed(evt);
             }
         });
-        jPanel1.add(jButtonWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 110, -1));
+        jPanel1.add(jButtonWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 250, 110, -1));
 
         jCheckBoxWhatsapp.setText("Mensajes");
         jCheckBoxWhatsapp.addActionListener(new java.awt.event.ActionListener() {
@@ -274,9 +310,9 @@ public class panelclientesadmin extends javax.swing.JPanel {
                 jCheckBoxWhatsappActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBoxWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+        jPanel1.add(jCheckBoxWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 460));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 490));
     }// </editor-fold>//GEN-END:initComponents
 
     private void BarraDeBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BarraDeBusquedaActionPerformed
@@ -673,6 +709,10 @@ enviarMensajeWhatsApp(telefono, mensaje);
 }
 
     }//GEN-LAST:event_jCheckBoxWhatsappActionPerformed
+
+    private void jTextDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextDomicilioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextDomicilioActionPerformed
     
     public void enviarMensajeWhatsApp(String telefono, String mensaje) {
     try {

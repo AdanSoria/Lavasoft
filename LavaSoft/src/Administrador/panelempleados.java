@@ -1,13 +1,17 @@
 package Administrador;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.sql.SQLException;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -25,6 +29,7 @@ public class panelempleados extends javax.swing.JPanel {
      */
     
     public panelempleados() {
+        personalizarTabla();
          try (Connection conn = Conexion.getConnection()) {
             System.out.println("Conexión exitosa:D.");
             
@@ -39,6 +44,33 @@ public class panelempleados extends javax.swing.JPanel {
         agregarListenerBusqueda(); // Llama al método que agrega el listener para la barra de búsqueda
         
     }
+    private void personalizarTabla() {
+    // 1. Configuración de estilos para la tabla
+    jtbEmpleado.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+    jtbEmpleado.setRowHeight(25);
+    jtbEmpleado.setShowGrid(true);
+    jtbEmpleado.setGridColor(new Color(220, 220, 220));
+    jtbEmpleado.setSelectionBackground(new Color(181, 218, 240));
+    jtbEmpleado.setSelectionForeground(Color.BLACK);
+    
+    // 2. Personalización del header
+    JTableHeader header = jtbEmpleado.getTableHeader();
+    header.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+    header.setBackground(new Color(70, 130, 180)); // Azul acero
+    header.setForeground(Color.BLACK);
+    header.setReorderingAllowed(false);
+    
+    // 3. Renderizado personalizado para columnas
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    
+    // Aplicar alineación centrada a columnas específicas
+    for(int i = 0; i < jtbEmpleado.getColumnCount(); i++) {
+        jtbEmpleado.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+    }
+
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -109,7 +141,7 @@ public class panelempleados extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jtbEmpleado);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 350, 370));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, 620, 370));
 
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -119,11 +151,11 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda.setBorder(null);
-        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 250, 20));
+        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 560, 20));
 
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("___________________________________");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, -1, -1));
+        jLabel1.setText("_________________________________________________________________________________________________________________");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, 560, -1));
 
         jButton4.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(0, 0, 0));
@@ -138,7 +170,7 @@ public class panelempleados extends javax.swing.JPanel {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 430, 130, 34));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 130, 34));
 
         btnbuscar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnbuscar.setForeground(new java.awt.Color(0, 0, 0));
@@ -152,7 +184,7 @@ public class panelempleados extends javax.swing.JPanel {
                 btnbuscarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnbuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 40, 50, -1));
+        jPanel1.add(btnbuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 40, 50, -1));
 
         jButton6.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(0, 0, 0));
@@ -172,7 +204,7 @@ public class panelempleados extends javax.swing.JPanel {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 382, 130, 30));
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 130, 30));
 
         jButton7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton7.setForeground(new java.awt.Color(0, 0, 0));
@@ -187,7 +219,7 @@ public class panelempleados extends javax.swing.JPanel {
                 jButton7ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(77, 340, 128, -1));
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 128, -1));
 
         BarraDeBusqueda1.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda1.setForeground(new java.awt.Color(0, 0, 0));
@@ -242,7 +274,7 @@ public class panelempleados extends javax.swing.JPanel {
         });
         jPanel1.add(comboBoxPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 120, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 490));
     }// </editor-fold>//GEN-END:initComponents
 
     

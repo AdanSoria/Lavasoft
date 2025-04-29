@@ -1,4 +1,7 @@
 package Administrador;
+import com.itextpdf.text.Font;
+import java.awt.Color;
+import java.awt.Component;
 import java.io.StringReader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,12 +15,29 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.prefs.Preferences;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -33,9 +53,37 @@ private int idServicioSeleccionado = -1;
      * Creates new form panelserviciosadmin
      */
     public panelserviciosadmin() {
-        initComponents();
-        actualizarTablaServicios();
+    initComponents();
+    cargarTiposUnidad();
+    actualizarTablaServicios();
+    personalizarTabla();
     }
+    private void personalizarTabla() {
+    // 1. Configuración de estilos para la tabla
+    jtblServicios.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+    jtblServicios.setRowHeight(25);
+    jtblServicios.setShowGrid(true);
+    jtblServicios.setGridColor(new Color(220, 220, 220));
+    jtblServicios.setSelectionBackground(new Color(181, 218, 240));
+    jtblServicios.setSelectionForeground(Color.BLACK);
+    
+    // 2. Personalización del header
+    JTableHeader header = jtblServicios.getTableHeader();
+    header.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+    header.setBackground(new Color(70, 130, 180)); // Azul acero
+    header.setForeground(Color.BLACK);
+    header.setReorderingAllowed(false);
+    
+    // 3. Renderizado personalizado para columnas
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    
+    // Aplicar alineación centrada a columnas específicas
+    for(int i = 0; i < jtblServicios.getColumnCount(); i++) {
+        jtblServicios.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+    }
+
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +116,8 @@ private int idServicioSeleccionado = -1;
         jScrollPane1 = new javax.swing.JScrollPane();
         TxtDesc = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -81,19 +131,19 @@ private int idServicioSeleccionado = -1;
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel6.setText("Servicio");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 100, 40));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 100, 40));
 
         BarraDeBusqueda.setBackground(new java.awt.Color(181, 218, 240));
         BarraDeBusqueda.setBorder(null);
-        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 190, 30));
+        jPanel1.add(BarraDeBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 420, 30));
 
         jtblServicios.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jtblServicios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID Servicio", "Nombre", "Descripcion", "Costo P/kg"
+                "ID Servicio", "Nombre", "Descripcion", "Costo", "Piez/Kilo"
             }
         ));
         jtblServicios.setToolTipText("");
@@ -104,10 +154,10 @@ private int idServicioSeleccionado = -1;
         });
         jScrollPane5.setViewportView(jtblServicios);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 530, 400));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 640, 410));
 
-        jLabel1.setText("_______________________________________");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, 190, -1));
+        jLabel1.setText("_______________________________________________________________________________________");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, 420, -1));
 
         btnBuscar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
@@ -120,7 +170,7 @@ private int idServicioSeleccionado = -1;
                 btnBuscarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, 40, 30));
+        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 30, 40, 30));
 
         btnInsertar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         btnInsertar.setBorder(null);
@@ -164,22 +214,22 @@ private int idServicioSeleccionado = -1;
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setText("Servicio");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 79, 41));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 79, 41));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel2.setText("Costo");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 80, 41));
+        jLabel2.setText("Pieza o Kilo");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 80, 20));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel4.setText("Descripcion");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 101, 41));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 101, 20));
 
         LabelNomSer.setBackground(new java.awt.Color(118, 120, 237));
         LabelNomSer.setText("_____________________________");
-        jPanel1.add(LabelNomSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 140, -1));
+        jPanel1.add(LabelNomSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 140, -1));
 
-        LabelCostSer.setText("___________");
-        jPanel1.add(LabelCostSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, 60, -1));
+        LabelCostSer.setText("______");
+        jPanel1.add(LabelCostSer, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 60, -1));
 
         txtNombre.setBackground(new java.awt.Color(181, 218, 240));
         txtNombre.setBorder(null);
@@ -188,7 +238,7 @@ private int idServicioSeleccionado = -1;
                 txtNombreActionPerformed(evt);
             }
         });
-        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 120, 39));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 140, 20));
 
         TxtCost.setBackground(new java.awt.Color(181, 218, 240));
         TxtCost.setBorder(null);
@@ -197,7 +247,7 @@ private int idServicioSeleccionado = -1;
                 TxtCostActionPerformed(evt);
             }
         });
-        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 60, 30));
+        jPanel1.add(TxtCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 40, 20));
 
         btnGuardar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton-agregar.png"))); // NOI18N
@@ -221,13 +271,25 @@ private int idServicioSeleccionado = -1;
         TxtDesc.setRows(5);
         jScrollPane1.setViewportView(TxtDesc);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 246, 220, 110));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 220, 110));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("$");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, -1, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pieza", "Kilo" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 100, -1));
+
+        jLabel8.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel8.setText("Costo");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 40, 41));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 490));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -402,34 +464,36 @@ private void mostrarErrorSQL(SQLException ex) {
     }//GEN-LAST:event_btnInsertarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // 1. Obtener valores
+       // 1. Obtener valores del formulario
     String nombre = txtNombre.getText().trim();
     String descripcion = TxtDesc.getText().trim();
+    String tipoUnidad = (String) jComboBox1.getSelectedItem(); // "Pieza" o "Kilo"
     
     try {
         float costo = Float.parseFloat(TxtCost.getText().trim());
         
-        // 2. Validación básica
+        // 2. Validaciones básicas
         if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El nombre del servicio es obligatorio", 
-                                       "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "El nombre del servicio es obligatorio", 
+                "Error", JOptionPane.ERROR_MESSAGE);
             txtNombre.requestFocus();
             return;
         }
         
-        // 3. Determinar si es INSERT o UPDATE
+        // 3. Preparar la operación SQL
         try (Connection conn = Conexion.getConnection()) {
             String sql;
             boolean esActualizacion = (idServicioSeleccionado > 0);
             
             if (esActualizacion) {
-                sql = "UPDATE dbo.Servicio SET TipoServicio=?, Descripcion=?, PrecioUnitario=? WHERE IdServicio=?";
+                sql = "UPDATE Servicio SET TipoServicio=?, Descripcion=?, PrecioUnitario=? WHERE IdServicio=?";
             } else {
-                sql = "INSERT INTO dbo.Servicio (TipoServicio, Descripcion, PrecioUnitario) VALUES (?, ?, ?)";
+                sql = "INSERT INTO Servicio (TipoServicio, Descripcion, PrecioUnitario) VALUES (?, ?, ?)";
             }
             
-            // 4. Ejecutar operación
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            // 4. Ejecutar la operación
+            try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 pstmt.setString(1, nombre);
                 pstmt.setString(2, descripcion);
                 pstmt.setFloat(3, costo);
@@ -440,58 +504,88 @@ private void mostrarErrorSQL(SQLException ex) {
                 
                 int filasAfectadas = pstmt.executeUpdate();
                 
-                // 5. Manejar resultados
+                // 5. Manejar el resultado
                 if (filasAfectadas > 0) {
+                    // Guardar el tipo de unidad en el mapa
+                    if (esActualizacion) {
+                        // Para actualización, usamos el ID existente
+                        tipoUnidadMap.put(idServicioSeleccionado, tipoUnidad);
+                    } else {
+                        // Para inserción, obtenemos el ID generado
+                        try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                            if (generatedKeys.next()) {
+                                int nuevoId = generatedKeys.getInt(1);
+                                tipoUnidadMap.put(nuevoId, tipoUnidad);
+                            }
+                        }
+                    }
+                    
+                    // Guardar los cambios en el archivo
+                    guardarTiposUnidad();
+                    
+                    // Mostrar mensaje y actualizar interfaz
                     String mensaje = esActualizacion ? "Servicio actualizado" : "Servicio registrado";
                     JOptionPane.showMessageDialog(this, mensaje);
                     
-                    // 6. Resetear interfaz EXACTAMENTE como lo pides
                     limpiarCampos();
-                    btnGuardar.setText("Guardar"); // Equivalente a tu "Añadir"
-                    idServicioSeleccionado = -1;    // Equivalente a tu clienteSeleccionadoId = -1
-                    
-                    // 7. Actualizar tabla
                     actualizarTablaServicios();
+                    idServicioSeleccionado = -1;
                 }
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error en base de datos: " + ex.getMessage(), 
-                                       "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Error en base de datos: " + ex.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "El costo debe ser un número válido", 
-                                    "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, 
+            "El costo debe ser un número válido", 
+            "Error", JOptionPane.ERROR_MESSAGE);
         TxtCost.requestFocus();
     }
-
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-       if (idServicioSeleccionado <= 0) {
+    if (idServicioSeleccionado <= 0) {
         JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
+    // Obtener valores del formulario
     String nombre = txtNombre.getText().trim();
     String descripcion = TxtDesc.getText().trim();
+    String tipoUnidad = (String) jComboBox1.getSelectedItem(); // "Pieza" o "Kilo" (solo visual)
     
     try {
         float costo = Float.parseFloat(TxtCost.getText().trim());
 
+        // Validación básica
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre del servicio es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         try (Connection conn = Conexion.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(
-                 "UPDATE dbo.Servicio SET TipoServicio=?, Descripcion=?, PrecioUnitario=? WHERE IdServicio=?")) {
+                 "UPDATE Servicio SET TipoServicio=?, Descripcion=?, PrecioUnitario=? WHERE IdServicio=?")) {
             
             pstmt.setString(1, nombre);
             pstmt.setString(2, descripcion);
             pstmt.setFloat(3, costo);
             pstmt.setInt(4, idServicioSeleccionado);
             
-            if (pstmt.executeUpdate() > 0) {
+            int filasAfectadas = pstmt.executeUpdate();
+            
+            if (filasAfectadas > 0) {
                 JOptionPane.showMessageDialog(this, "Servicio actualizado correctamente");
-                actualizarTablaServicios(); // Actualizar la tabla
+                
+                // Actualizar la tabla (incluyendo el tipo de unidad visual)
+                actualizarTablaServicios();
+                
+                // Limpiar y resetear
                 limpiarCampos();
-                idServicioSeleccionado = -1; // Resetear selección
+                idServicioSeleccionado = -1;
             }
         }
     } catch (NumberFormatException ex) {
@@ -499,160 +593,244 @@ private void mostrarErrorSQL(SQLException ex) {
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-    
-    limpiarCampos();
-    actualizarTablaServicios();
-    
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-       if (idServicioSeleccionado <= 0) {
-    JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla primero", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
+      // 1. Verificar que haya un servicio seleccionado
+    if (idServicioSeleccionado <= 0) {
+        JOptionPane.showMessageDialog(this, 
+            "Seleccione un servicio de la tabla primero", 
+            "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-// Primero verificamos si el servicio está siendo usado en otras tablas
-try (Connection conn = Conexion.getConnection()) {
-    // Consulta para verificar si el servicio está siendo usado en otras tablas
-    String sqlVerificarUso = "SELECT COUNT(*) AS total FROM dbo.Pedido WHERE IdServicio = ?";
-    
-    try (PreparedStatement pstmtVerificar = conn.prepareStatement(sqlVerificarUso)) {
-        pstmtVerificar.setInt(1, idServicioSeleccionado);
-        
-        try (ResultSet rs = pstmtVerificar.executeQuery()) {
-            if (rs.next() && rs.getInt("total") > 0) {
-                JOptionPane.showMessageDialog(this, 
-                    "No se puede eliminar el servicio porque está siendo utilizado en otra tabla", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+    // 2. Obtener el tipo de unidad visual (solo para mostrar en el mensaje)
+    String tipoUnidad = (String) jComboBox1.getSelectedItem();
+    String nombreServicio = txtNombre.getText().trim();
+
+    // 3. Mostrar confirmación con detalles del servicio
+    int confirmacion = JOptionPane.showConfirmDialog(this, 
+        "¿Está seguro de eliminar permanentemente el servicio:\n" +
+        "Nombre: " + nombreServicio + "\n" +
+        "Tipo: " + tipoUnidad + "\n" +
+        "Esta acción no se puede deshacer.", 
+        "Confirmar Eliminación", 
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE);
+
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        // 4. Verificar si el servicio está siendo usado en otras tablas
+        try (Connection conn = Conexion.getConnection()) {
+            // Consulta para verificar dependencias
+            String sqlVerificarUso = "SELECT COUNT(*) AS total FROM dbo.Pedido WHERE IdServicio = ?";
+            
+            try (PreparedStatement pstmtVerificar = conn.prepareStatement(sqlVerificarUso)) {
+                pstmtVerificar.setInt(1, idServicioSeleccionado);
+                
+                try (ResultSet rs = pstmtVerificar.executeQuery()) {
+                    if (rs.next() && rs.getInt("total") > 0) {
+                        JOptionPane.showMessageDialog(this, 
+                            "No se puede eliminar el servicio porque está siendo utilizado en pedidos.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
             }
+            
+            // 5. Proceder con la eliminación
+            try (PreparedStatement pstmtEliminar = conn.prepareStatement(
+                "DELETE FROM dbo.Servicio WHERE IdServicio=?")) {
+                
+                pstmtEliminar.setInt(1, idServicioSeleccionado);
+                
+                if (pstmtEliminar.executeUpdate() > 0) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Servicio eliminado exitosamente: " + nombreServicio + " (" + tipoUnidad + ")",
+                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    // 6. Actualizar interfaz
+                    limpiarCampos();
+                    actualizarTablaServicios();
+                    idServicioSeleccionado = -1;
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al eliminar el servicio: " + ex.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     }
-    
-    // Si pasa la validación, pedir confirmación
-    int confirmacion = JOptionPane.showConfirmDialog(this, 
-        "¿Está seguro de eliminar este servicio permanentemente?", 
-        "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
-    
-    if (confirmacion == JOptionPane.YES_OPTION) {
-        try (PreparedStatement pstmtEliminar = conn.prepareStatement(
-            "DELETE FROM dbo.Servicio WHERE IdServicio=?")) {
-            
-            pstmtEliminar.setInt(1, idServicioSeleccionado);
-            
-            if (pstmtEliminar.executeUpdate() > 0) {
-                JOptionPane.showMessageDialog(this, "Servicio eliminado exitosamente");
-                actualizarTablaServicios();
-                limpiarCampos();
-                idServicioSeleccionado = -1;
-             }
-          }
-       }
-     } catch (SQLException ex) {
-       JOptionPane.showMessageDialog(this, 
-         "Error en la operación: " + ex.getMessage(), 
-         "Error", JOptionPane.ERROR_MESSAGE);
-       ex.printStackTrace();
-    }
-
-     limpiarCampos();
-     actualizarTablaServicios();
-
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void jtblServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblServiciosMouseClicked
-        // TODO add your handling code here:
+    int filaSeleccionada = jtblServicios.getSelectedRow();
+    if (filaSeleccionada >= 0) {
+        idServicioSeleccionado = (int) jtblServicios.getValueAt(filaSeleccionada, 0);
+        txtNombre.setText(jtblServicios.getValueAt(filaSeleccionada, 1).toString());
+        TxtDesc.setText(jtblServicios.getValueAt(filaSeleccionada, 2).toString());
+        TxtCost.setText(jtblServicios.getValueAt(filaSeleccionada, 3).toString());
+        
+        // Establecer el ComboBox según el valor guardado
+         jComboBox1.setSelectedItem(tipoUnidadMap.getOrDefault(idServicioSeleccionado, "Pieza"));
+         btnGuardar.setText("Actualizar");
+    }
     }//GEN-LAST:event_jtblServiciosMouseClicked
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
 actualizarTablaServicios();
     }//GEN-LAST:event_jPanel1MouseClicked
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     private void actualizarTablaServicios() {
-    DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
-    model.setRowCount(0); // Limpiar tabla
-    
-    String sql = "SELECT IdServicio, TipoServicio, Descripcion, PrecioUnitario FROM dbo.Servicio";
+     DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
+    model.setRowCount(0);
     
     try (Connection conn = Conexion.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql);
-         ResultSet rs = pstmt.executeQuery()) {
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT IdServicio, TipoServicio, Descripcion, PrecioUnitario FROM Servicio")) {
         
-        // Llenar tabla
+        while (rs.next()) {
+            int id = rs.getInt("IdServicio");
+            String tipoUnidad = tipoUnidadMap.getOrDefault(id, "Pieza"); // Valor por defecto
+            
+            model.addRow(new Object[]{
+                id,
+                rs.getString("TipoServicio"),
+                rs.getString("Descripcion"),
+                rs.getFloat("PrecioUnitario"),
+                tipoUnidad
+            });
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar servicios", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }
+ 
+    private void actualizarTablaServiciosConTipo(String tipoUnidad) {
+    DefaultTableModel model = (DefaultTableModel) jtblServicios.getModel();
+    model.setRowCount(0);
+    
+    try (Connection conn = Conexion.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT IdServicio, TipoServicio, Descripcion, PrecioUnitario FROM Servicio")) {
+        
         while (rs.next()) {
             model.addRow(new Object[]{
                 rs.getInt("IdServicio"),
                 rs.getString("TipoServicio"),
                 rs.getString("Descripcion"),
-                String.format("$%.2f", rs.getFloat("PrecioUnitario")) // Formato monetario
+                rs.getFloat("PrecioUnitario"),
+                tipoUnidad // Usamos el tipo específico que se acaba de guardar
             });
         }
-        
-        // Configurar listener para selección
-        jtblServicios.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                int fila = jtblServicios.getSelectedRow();
-                if (fila >= 0) {
-                    idServicioSeleccionado = (int) jtblServicios.getValueAt(fila, 0);
-                    cargarServicioParaEdicion(idServicioSeleccionado);
-                }
-            }
-        });
-        
     } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al actualizar tabla:\n" + ex.getMessage(), 
-            "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Error al actualizar la tabla", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-
 private void cargarServicioParaEdicion(int idServicio) {
-    try (Connection conn = Conexion.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(
-             "SELECT TipoServicio, Descripcion, PrecioUnitario FROM dbo.Servicio WHERE IdServicio=?")) {
-        
-        pstmt.setInt(1, idServicio);
-        ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-            txtNombre.setText(rs.getString("TipoServicio"));
-            TxtDesc.setText(rs.getString("Descripcion"));
-            TxtCost.setText(String.valueOf(rs.getFloat("PrecioUnitario")));
-            btnGuardar.setText("Actualizar");
-        }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar servicio: " + ex.getMessage(), 
-            "Error", JOptionPane.ERROR_MESSAGE);
-    }
+     cargarServicio(idServicio); // Simplemente llamamos al método anterior
 }
     
     private void cargarServicio(int idServicio) {
     try (Connection conn = Conexion.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(
-             "SELECT TipoServicio, Descripcion, PrecioUnitario FROM dbo.Servicio WHERE IdServicio=?")) {
+             "SELECT TipoServicio, Descripcion, PrecioUnitario FROM Servicio WHERE IdServicio = ?")) {
         
         pstmt.setInt(1, idServicio);
         ResultSet rs = pstmt.executeQuery();
         
         if (rs.next()) {
+            // Cargar datos en los campos de texto
             txtNombre.setText(rs.getString("TipoServicio"));
             TxtDesc.setText(rs.getString("Descripcion"));
             TxtCost.setText(String.valueOf(rs.getFloat("PrecioUnitario")));
+            
+            // Actualizar el estado de la interfaz
             idServicioSeleccionado = idServicio;
+            btnGuardar.setText("Actualizar");
+            
+            // Nota: El ComboBox no se carga desde la BD porque es solo visual
+            // Pero puedes establecerlo según algún criterio si lo necesitas
+            // jComboBox1.setSelectedItem("Pieza" o "Kilo");
         }
     } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al cargar servicio", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, 
+            "Error al cargar servicio: " + ex.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
     }
 }
+
+    
     
     // Limpiar formulario
-private void limpiarCampos() {
+private void limpiarCampos() { 
     txtNombre.setText("");
     TxtDesc.setText("");
     TxtCost.setText("");
-    txtNombre.requestFocus();
+    jComboBox1.setSelectedIndex(0); // Volver a selección inicial
+    idServicioSeleccionado = -1;
+    btnGuardar.setText("Agregar");
+
+} 
+
+private Map<Integer, String> tipoUnidadPorServicio = new HashMap<>();
+
+private void cargarTiposUnidadExistentes() {
+    try (Connection conn = Conexion.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT IdServicio FROM Servicio")) {
+        
+        while (rs.next()) {
+            int id = rs.getInt("IdServicio");
+            // Por defecto, alternar entre Pieza y Kilo para servicios existentes
+            String tipo = (id % 2 == 0) ? "Pieza" : "Kilo";
+            tipoUnidadPorServicio.put(id, tipo);
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar tipos de unidad", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }
+
+
+private Map<Integer, String> tipoUnidadMap = new HashMap<>();
+private static final String CONFIG_FILE = "config_servicios.dat";
+
+// Método para cargar los tipos al iniciar
+private void cargarTiposUnidad() {
+    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(CONFIG_FILE))) {
+        tipoUnidadMap = (Map<Integer, String>) ois.readObject();
+    } catch (FileNotFoundException e) {
+        // El archivo no existe aún, se creará al guardar
+    } catch (IOException | ClassNotFoundException e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar configuración", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+// Método para guardar los tipos
+private void guardarTiposUnidad() {
+    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(CONFIG_FILE))) {
+        oos.writeObject(tipoUnidadMap);
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error al guardar configuración", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
+private Preferences prefs = Preferences.userNodeForPackage(panelserviciosadmin.class);
+
+private void guardarTipoUnidad(int idServicio, String tipo) {
+    prefs.put("servicio." + idServicio + ".tipo", tipo);
+}
+
+private String obtenerTipoUnidad(int idServicio) {
+    return prefs.get("servicio." + idServicio + ".tipo", "Pieza"); // Valor por defecto
+}
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -666,6 +844,7 @@ private void limpiarCampos() {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnInsertar;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -673,6 +852,7 @@ private void limpiarCampos() {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane5;

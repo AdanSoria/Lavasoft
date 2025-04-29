@@ -91,7 +91,7 @@ public class IniciaSesion extends javax.swing.JFrame {
                 txtusu1ActionPerformed(evt);
             }
         });
-        jPanel1.add(txtusu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 220, -1));
+        jPanel1.add(txtusu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 236, 150, 20));
 
         jLabel7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -101,7 +101,7 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_______________________________");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, -1, -1));
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 250, -1, -1));
         jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, -1, -1));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));

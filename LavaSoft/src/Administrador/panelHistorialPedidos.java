@@ -169,7 +169,7 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         });
         jScrollPane1.setViewportView(tblPedido);
 
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 770, 410));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 770, 410));
 
         txtNomCliente.setBackground(new java.awt.Color(181, 218, 240));
         txtNomCliente.setBorder(null);
@@ -206,7 +206,7 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
                 btnGenerarTicketPActionPerformed(evt);
             }
         });
-        jPanel4.add(btnGenerarTicketP, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 30, 180, 50));
+        jPanel4.add(btnGenerarTicketP, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 20, 180, 50));
 
         btnBusqueda.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnBusqueda.setForeground(new java.awt.Color(0, 0, 0));
@@ -244,21 +244,15 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 912, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 912, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 510, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 510, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
