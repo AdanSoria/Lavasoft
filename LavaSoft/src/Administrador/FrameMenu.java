@@ -516,26 +516,25 @@ public void ajustarTamañoPanel() {
         paneliLayout.setHorizontalGroup(
             paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneliLayout.createSequentialGroup()
-                .addGroup(paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneliLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jLabel13))
-                    .addGroup(paneliLayout.createSequentialGroup()
-                        .addGap(226, 226, 226)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGap(50, 50, 50)
+                .addComponent(jLabel13)
+                .addGap(750, 750, 750))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneliLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157))
         );
         paneliLayout.setVerticalGroup(
             paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneliLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel13)
-                .addGap(86, 86, 86)
+                .addGap(138, 138, 138)
                 .addComponent(jLabel12)
                 .addContainerGap())
         );
 
-        getContentPane().add(paneli, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 900, 490));
+        getContentPane().add(paneli, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 800, 490));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -708,6 +707,7 @@ public void ajustarTamañoPanel() {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FrameMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

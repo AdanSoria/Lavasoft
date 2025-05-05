@@ -14,9 +14,7 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
-import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -35,36 +33,9 @@ public class panelclientesadmin extends javax.swing.JPanel {
     
     public panelclientesadmin() {
     initComponents();
+    
     actualizarTablaClientes(); // Cargar datos al iniciar
-    personalizarTabla();
 }
-    private void personalizarTabla() {
-    // 1. Configuración de estilos para la tabla
-    jtblClientes.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
-    jtblClientes.setRowHeight(25);
-    jtblClientes.setShowGrid(true);
-    jtblClientes.setGridColor(new Color(220, 220, 220));
-    jtblClientes.setSelectionBackground(new Color(181, 218, 240));
-    jtblClientes.setSelectionForeground(Color.BLACK);
-    
-    // 2. Personalización del header
-    JTableHeader header = jtblClientes.getTableHeader();
-    header.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
-    header.setBackground(new Color(70, 130, 180)); // Azul acero
-    header.setForeground(Color.BLACK);
-    header.setReorderingAllowed(false);
-    
-    // 3. Renderizado personalizado para columnas
-    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-    
-    // Aplicar alineación centrada a columnas específicas
-    for(int i = 0; i < jtblClientes.getColumnCount(); i++) {
-        jtblClientes.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-    }
-
-}
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,7 +70,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
         btnAgregarCliente = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         jButtonWhatsapp = new javax.swing.JButton();
-        jCheckBoxWhatsapp = new javax.swing.JCheckBox();
+        jcbWhatsapp = new javax.swing.JCheckBox();
 
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("_________________________");
@@ -124,7 +95,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
 
             },
             new String [] {
-                "IdCliente", "Nombre", "Domicilio", "Telefono", "Correo", "FechaRegistro"
+                "IdCliente", "Nombre", "Domicilio", "Telefono", "Correo", "FechaRegistro", "Whatsapp"
             }
         ));
         jtblClientes.setGridColor(new java.awt.Color(51, 51, 51));
@@ -136,7 +107,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jtblClientes);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 630, 380));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 530, 380));
 
         jLabelNombre.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabelNombre.setForeground(new java.awt.Color(0, 0, 0));
@@ -304,17 +275,29 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jPanel1.add(jButtonWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 250, 110, -1));
 
-        jCheckBoxWhatsapp.setText("Mensajes");
-        jCheckBoxWhatsapp.addActionListener(new java.awt.event.ActionListener() {
+        jcbWhatsapp.setText("Mensajes");
+        jcbWhatsapp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxWhatsappActionPerformed(evt);
+                jcbWhatsappActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBoxWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
+        jPanel1.add(jcbWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 490));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 460));
     }// </editor-fold>//GEN-END:initComponents
 
+    DefaultTableCellRenderer whatsappRenderer = new DefaultTableCellRenderer() {
+    @Override
+    public void setValue(Object value) {
+        if (value instanceof Integer) {
+            int val = (int) value;
+            setText(val == 1 ? "Permitido" : "No permitido");
+        } else {
+            setText("Desconocido");
+        }
+    }
+};
+    
     private void BarraDeBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BarraDeBusquedaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_BarraDeBusquedaActionPerformed
@@ -327,7 +310,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
     model.setRowCount(0);
 
     // Consulta SQL para buscar clientes por nombre (usando LIKE para búsquedas parciales)
-    String sql = "SELECT [IdCliente], [Nombre], [Direccion], [Telefono], [CorreoElectronico], [FechaRegistro] FROM Cliente WHERE [Nombre] LIKE ?";
+    String sql = "SELECT [IdCliente], [Nombre], [Direccion], [Telefono], [CorreoElectronico], [FechaRegistro],[Whatsapp] FROM Cliente WHERE [Nombre] LIKE ?";
 
     try (Connection conn = Conexion.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -342,7 +325,8 @@ public class panelclientesadmin extends javax.swing.JPanel {
                     rs.getString("Direccion"),
                     rs.getInt("Telefono"),
                     rs.getString("CorreoElectronico"),
-                    rs.getString("FechaRegistro")
+                    rs.getString("FechaRegistro"),
+                    rs.getInt("Whatsapp")
                 });
             }
 
@@ -376,6 +360,7 @@ String nombre = jTextNombre.getText().trim();
 String direccion = jTextDomicilio.getText().trim();
 String telefono = jTextTelefono.getText().trim();
 String correo = jTextCorreo.getText().trim();
+int whatsapp = jcbWhatsapp.isSelected() ? 1 : 0;
 
 // **Validaciones**
 boolean error = false;
@@ -426,17 +411,18 @@ if (error) {
 }
 
 try {
-    int telefonoInt = Integer.parseInt(telefono); // Convertir a número
+    int telefonoInt = Integer.parseInt(telefono);
 
     try (Connection conn = Conexion.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(
-             "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?")) {
+             "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=?,Whatsapp = ? WHERE IdCliente=?")) {
 
         pstmt.setString(1, nombre);
         pstmt.setString(2, direccion);
         pstmt.setInt(3, telefonoInt);
         pstmt.setString(4, correo);
-        pstmt.setInt(5, clienteSeleccionadoId);
+        pstmt.setInt(5,whatsapp);
+        pstmt.setInt(6, clienteSeleccionadoId);
 
         if (pstmt.executeUpdate() > 0) {
             JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
@@ -472,6 +458,8 @@ String nombre = jTextNombre.getText().trim();
 String direccion = jTextDomicilio.getText().trim();
 String telefono = jTextTelefono.getText().trim();
 String correo = jTextCorreo.getText().trim();
+int whatsapp = jcbWhatsapp.isSelected() ? 1 : 0;
+
 
 // Validación básica
 boolean error = false;
@@ -514,8 +502,6 @@ if (correo.isEmpty() || !contieneArroba(correo)) {
     jLabelCorreo.setForeground(Color.BLACK);  // Restaura el color original del JLabel
     jLabelCorreo.setToolTipText(null); // Quitar tooltip cuando el campo es válido
 }
-
-
 // Si hay algún error, no continuar con el proceso
 if (error) {
     JOptionPane.showMessageDialog(this, "Por favor corrige los campos marcados.", 
@@ -527,13 +513,14 @@ if (error) {
 try (Connection conn = Conexion.getConnection()) {
     if (btnAgregarCliente.getText().equals("Actualizar")) {
         // Lógica para actualizar el cliente
-        String updateSql = "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=? WHERE IdCliente=?";
+        String updateSql = "UPDATE dbo.Cliente SET Nombre=?, Direccion=?, Telefono=?, CorreoElectronico=?,Whatsapp = ? WHERE IdCliente=?";
         try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
             stmt.setString(1, nombre);
             stmt.setString(2, direccion);
             stmt.setString(3, telefono);
             stmt.setString(4, correo);
-            stmt.setInt(5, clienteSeleccionadoId);
+            stmt.setInt(5,whatsapp);
+            stmt.setInt(6, clienteSeleccionadoId);
 
             int filasAfectadas = stmt.executeUpdate();
 
@@ -545,7 +532,7 @@ try (Connection conn = Conexion.getConnection()) {
         }
     } else {
         // Lógica para insertar un nuevo cliente
-        String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO dbo.Cliente (Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro,Whatsapp) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(insertSql)) {
             LocalDate fechaActual = LocalDate.now();
             String ftFecha = fechaActual.format(DateTimeFormatter.ISO_DATE);
@@ -555,6 +542,7 @@ try (Connection conn = Conexion.getConnection()) {
             stmt.setString(3, telefono);
             stmt.setString(4, correo);
             stmt.setString(5, ftFecha);
+            stmt.setInt(6, whatsapp);
 
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(this, "Cliente agregado correctamente");
@@ -564,6 +552,7 @@ try (Connection conn = Conexion.getConnection()) {
     // Actualizar la tabla de clientes
     actualizarTablaClientes();
     limpiarCampos();
+    BotonWhatsapp();
 
 } catch (SQLException e) {
     e.printStackTrace();
@@ -572,7 +561,6 @@ try (Connection conn = Conexion.getConnection()) {
 }
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
-    
    private boolean tienePedidosActivos(int idCliente) {
     String sql = "SELECT COUNT(*) FROM dbo.Pedido WHERE IdCliente = ? AND EstadoPedido IN ('Pendiente', 'Proceso', 'Listo')";
 
@@ -661,6 +649,9 @@ try (Connection conn = Conexion.getConnection()) {
         jTextDomicilio.setText(jtblClientes.getValueAt(fila, 2).toString());
          jTextTelefono.setText(jtblClientes.getValueAt(fila, 3).toString());
          jTextCorreo.setText(jtblClientes.getValueAt(fila, 4).toString());
+         int whatsappValor = Integer.parseInt(jtblClientes.getValueAt(fila, 6).toString());
+        jcbWhatsapp.setSelected(whatsappValor == 1);
+        BotonWhatsapp();
 
         btnEditar.setText("Actualizar"); // Cambia el botón para indicar que es una edición
     }
@@ -695,21 +686,24 @@ try (Connection conn = Conexion.getConnection()) {
     }
 
 // Mensaje que quieres enviar
-String mensaje = "¡Hola! Este mensaje fue enviado desde mi aplicación Java.";
+String mensaje = "¡Hola! Este mensaje fue enviado desde Lavasoft para comprobar tu numero de Celular.";
 
 // Llamar al método que abre WhatsApp Web
 enviarMensajeWhatsApp(telefono, mensaje);
     }//GEN-LAST:event_jButtonWhatsappActionPerformed
 
-    private void jCheckBoxWhatsappActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxWhatsappActionPerformed
-        if (jCheckBoxWhatsapp.isSelected()) {
-    jButtonWhatsapp.setEnabled(true);
-} else {
+    private void jcbWhatsappActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbWhatsappActionPerformed
+        BotonWhatsapp();
+    }//GEN-LAST:event_jcbWhatsappActionPerformed
+
+    private void BotonWhatsapp(){
+    if (jcbWhatsapp.isSelected()) {
+        jButtonWhatsapp.setEnabled(true);
+    } else {
     jButtonWhatsapp.setEnabled(false);
-}
-
-    }//GEN-LAST:event_jCheckBoxWhatsappActionPerformed
-
+    }
+    }
+    
     private void jTextDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextDomicilioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextDomicilioActionPerformed
@@ -730,7 +724,8 @@ enviarMensajeWhatsApp(telefono, mensaje);
 }
     
     private void actualizarTablaClientes() {
-    DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
+    jtblClientes.getColumnModel().getColumn(6).setCellRenderer(whatsappRenderer);
+        DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
     model.setRowCount(0);
     
     try (Connection conn = Conexion.getConnection();
@@ -744,62 +739,12 @@ enviarMensajeWhatsApp(telefono, mensaje);
                 rs.getString("Direccion"),
                 rs.getString("Telefono"),
                 rs.getString("CorreoElectronico"),
-                rs.getDate("FechaRegistro").toString()
+                rs.getDate("FechaRegistro").toString(),
+                rs.getInt("Whatsapp")
             });
         }
     } catch (SQLException e) {
         e.printStackTrace();
-    }
-}
-
-    
-    private void cargarClienteParaEdicion(int idCliente) {
-    try (Connection conn = Conexion.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(
-             "SELECT Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro FROM dbo.Cliente WHERE IdCliente=?")) {
-        
-        pstmt.setInt(1, idCliente);
-        ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-           jTextNombre.setText(rs.getString("Nombre"));
-            jTextDomicilio.setText(rs.getString("Direccion"));
-            jTextTelefono.setText(String.valueOf(rs.getInt("Telefono")));
-            jTextCorreo.setText(rs.getString("CorreoElectronico"));
-        }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Error al cargar cliente: " + ex.getMessage(), 
-            "Error", JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
-    }
-}
-
-    
-    private void cargarCliente(int idCliente) {
-    try (Connection conn = Conexion.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(
-             "SELECT Nombre, Direccion, Telefono, CorreoElectronico, FechaRegistro FROM dbo.Cliente WHERE IdCliente=?")) {
-        
-        pstmt.setInt(1, idCliente);
-        ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-             jTextNombre.setText(rs.getString("Nombre"));
-             jTextDomicilio.setText(rs.getString("Direccion"));
-             jTextTelefono.setText(String.valueOf(rs.getInt("Telefono")));
-             jTextCorreo.setText(rs.getString("CorreoElectronico"));
-            
-            clienteSeleccionadoId = idCliente; // Guarda el ID del cliente seleccionado
-        } else {
-            JOptionPane.showMessageDialog(this, "No se encontró el cliente con ID: " + idCliente, 
-                                          "Información", JOptionPane.INFORMATION_MESSAGE);
-            limpiarCampos();
-        }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al cargar cliente: " + ex.getMessage(), 
-                                      "Error", JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
     }
 }
     
@@ -808,6 +753,7 @@ private void limpiarCampos() {
     jTextDomicilio.setText("");
     jTextTelefono.setText("");
     jTextCorreo.setText("");
+    jcbWhatsapp.setSelected(false);
 }
     private int clienteSeleccionadoId = -1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -817,7 +763,6 @@ private void limpiarCampos() {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton jButtonWhatsapp;
-    private javax.swing.JCheckBox jCheckBoxWhatsapp;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -836,6 +781,7 @@ private void limpiarCampos() {
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextNombre;
     private javax.swing.JTextField jTextTelefono;
+    private javax.swing.JCheckBox jcbWhatsapp;
     private javax.swing.JTable jtblClientes;
     // End of variables declaration//GEN-END:variables
 }

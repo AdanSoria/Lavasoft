@@ -17,19 +17,29 @@ class Cliente {
     private String telefono;
     private String correo;
     private String fechaRegistro;
+    private int whatsapp;
+
+    public int getWhatsapp() {
+        return whatsapp;
+    }
+
+    public void setWhatsapp(int whatsapp) {
+        this.whatsapp = whatsapp;
+    }
 
     // Constructor
     public Cliente(){
     
     }
     
-    public Cliente(int idCliente, String nombre, String direccion, String telefono, String correo, String fechaRegistro) {
+    public Cliente(int idCliente, String nombre, String direccion, String telefono, String correo, String fechaRegistro,int whatsapp) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
         this.fechaRegistro = fechaRegistro;
+        this.whatsapp = whatsapp;
     }
 
     // Getters y Setters

@@ -4,25 +4,34 @@
  */
 package Administrador;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 
 
 /**
@@ -47,31 +56,75 @@ private List<Cliente> listaClientes;
         initComponents();
         actualizarTablaClientes(); // Llama a la función para cargar la tabla
         cargarServicios();
-        
-    }
-     private void actualizarTablaClientes() {
-        DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
-        model.setRowCount(0);  // Limpiar la tabla antes de llenarla
+        configurarRenderizadores();
+         
+        Component[] componentes = this.getContentPane().getComponents();
 
-        try (Connection conn = Conexion.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM dbo.Cliente");
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    false,  // Inicializa la casilla de verificación como no seleccionada
-                    rs.getInt("IdCliente"),
-                    rs.getString("Nombre"),
-                    rs.getString("Direccion"),
-                    rs.getString("Telefono"),
-                    rs.getString("CorreoElectronico"),
-                    rs.getDate("FechaRegistro").toString()
-                });
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+for (Component comp : componentes) {
+    comp.addFocusListener(new java.awt.event.FocusAdapter() {
+        @Override
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            limpiarMensaje(lblMensaje);
         }
+    });
+}
     }
+    
+private void limpiarMensaje(JLabel label) {
+    label.setForeground(Color.BLACK);
+    label.setToolTipText(null);
+}
+
+    private void actualizarTablaClientes() {
+    DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
+    model.setRowCount(0);  // Limpiar la tabla antes de llenarla
+
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM dbo.Cliente");
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                false,  // Checkbox (Boolean)
+                rs.getInt("IdCliente"),  // Integer
+                rs.getString("Nombre"),   // String
+                rs.getString("Direccion"), // String
+                rs.getString("Telefono"),  // String
+                rs.getString("CorreoElectronico"), // String
+                new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("FechaRegistro")), // String
+                rs.getInt("Whatsapp")  // Integer (no Boolean)
+            });
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + e.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    private void configurarRenderizadores() {
+    // Renderizador para checkboxes (columna 0)
+    jtblClientes.getColumnModel().getColumn(0).setCellRenderer(new CheckBoxRenderer());
+    jtblClientes.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JCheckBox()));
+    
+    // Renderizador para la columna Whatsapp (columna 7)
+    jtblClientes.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            Component c = super.getTableCellRendererComponent(table, value, 
+                isSelected, hasFocus, row, column);
+            
+            // Mostrar "Sí" o "No" en lugar de 1/0
+            if (value instanceof Integer) {
+                int whatsappValue = (Integer) value;
+                setText(whatsappValue == 1 ? "Sí" : "No");
+            }
+            
+            return c;
+        }
+    });
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,6 +145,11 @@ private List<Cliente> listaClientes;
         jButton7 = new javax.swing.JButton();
         lblCliente1 = new javax.swing.JLabel();
         jcbEstados = new javax.swing.JComboBox<>();
+        jcbFechaI = new com.toedter.calendar.JDateChooser();
+        jcbFechaF = new com.toedter.calendar.JDateChooser();
+        lblFechaF = new javax.swing.JLabel();
+        lblFechaI = new javax.swing.JLabel();
+        lblMensaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,11 +165,6 @@ private List<Cliente> listaClientes;
         lblCliente.setText("Servicio:");
 
         jcbServicios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Servicio" }));
-        jcbServicios.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jcbServiciosMouseClicked(evt);
-            }
-        });
         jcbServicios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbServiciosActionPerformed(evt);
@@ -129,17 +182,9 @@ private List<Cliente> listaClientes;
 
             },
             new String [] {
-                "Seleccionar", "IdCliente", "Nombre", "Direccion", "Telefono", "Correo", "FechaRegistro"
+                "Seleccionar", "IdCliente", "Nombre", "Direccion", "Telefono", "Correo", "FechaRegistro", "Whatsapp"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         jtblClientes.setGridColor(new java.awt.Color(51, 51, 51));
         jtblClientes.setSelectionBackground(new java.awt.Color(51, 51, 51));
         jtblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -151,6 +196,11 @@ private List<Cliente> listaClientes;
 
         jTextAreaMensaje.setColumns(20);
         jTextAreaMensaje.setRows(5);
+        jTextAreaMensaje.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextAreaMensajeMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextAreaMensaje);
 
         jButton7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
@@ -172,75 +222,129 @@ private List<Cliente> listaClientes;
         lblCliente1.setText("Estado:");
 
         jcbEstados.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Estado", "Pendiente", "Proceso", "Listo", "Entregado" }));
-        jcbEstados.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jcbEstadosMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jcbEstadosMouseEntered(evt);
-            }
-        });
         jcbEstados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbEstadosActionPerformed(evt);
             }
         });
 
+        jcbFechaI.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jcbFechaIPropertyChange(evt);
+            }
+        });
+
+        jcbFechaF.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jcbFechaFPropertyChange(evt);
+            }
+        });
+
+        lblFechaF.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblFechaF.setForeground(new java.awt.Color(0, 0, 0));
+        lblFechaF.setText("Fecha Fin:");
+
+        lblFechaI.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblFechaI.setForeground(new java.awt.Color(0, 0, 0));
+        lblFechaI.setText("Fecha Inicio:");
+
+        lblMensaje.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblMensaje.setForeground(new java.awt.Color(0, 0, 0));
+        lblMensaje.setText("Mensaje:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(36, Short.MAX_VALUE)
+                        .addContainerGap(21, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(JMasivo)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jcbEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jcbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(84, 84, 84))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(JMasivo)
+                                    .addComponent(lblCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jcbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jcbFechaF, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblFechaF, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jcbEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(276, 276, 276)
+                                                .addComponent(jcbFechaI, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(102, 102, 102)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(184, 184, 184)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(188, 188, 188)
+                                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(70, 70, 70)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(72, 72, 72))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(456, 456, 456)
+                    .addComponent(lblFechaI, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(628, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 40, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(JMasivo)
-                            .addComponent(lblCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(JMasivo)
+                                .addComponent(lblCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jcbEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbFechaI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jcbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addComponent(lblFechaF, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jcbFechaF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(30, 30, 30)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton7)
-                        .addGap(70, 70, 70))))
+                        .addGap(46, 46, 46))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(40, 40, 40)
+                    .addComponent(lblFechaI, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(394, Short.MAX_VALUE)))
         );
 
         pack();
@@ -252,14 +356,17 @@ private List<Cliente> listaClientes;
     // Si el RadioButton está seleccionado
     boolean selectAll = JMasivo.isSelected();
     
+      if (selectAll) {
+    jcbEstados.setSelectedIndex(0);
+    jcbServicios.setSelectedIndex(0);
+    jcbFechaI.setDate(null);
+    jcbFechaF.setDate(null);
+    }
+    
     for (int i = 0; i < model.getRowCount(); i++) {
         model.setValueAt(selectAll, i, 0);  // Actualiza el valor de la casilla de la primera columna
     }
     }//GEN-LAST:event_JMasivoActionPerformed
-
-    private void jcbServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbServiciosMouseClicked
-       
-    }//GEN-LAST:event_jcbServiciosMouseClicked
 
     
     private void limpiarChecks() {
@@ -287,101 +394,81 @@ private List<Cliente> listaClientes;
 }
      
     private void jcbServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbServiciosActionPerformed
-String itemSeleccionado = (String) jcbServicios.getSelectedItem();
-String estadoSeleccionado = (String) jcbEstados.getSelectedItem();
-
-// Si ambos están en "Selecciona", limpiar los checks
-if ((itemSeleccionado == null || itemSeleccionado.equalsIgnoreCase("Selecciona Servicio")) &&
-    (estadoSeleccionado == null || estadoSeleccionado.equalsIgnoreCase("Seleccione Estado"))) {
-
-    limpiarChecks();  // Limpiar los checks si ambos están en "Selecciona"
-} else {
-    try {
-        Integer idServicio = null;
-        // Si el servicio no está en "Selecciona servicio", procesamos el servicio
-        if (itemSeleccionado != null && !itemSeleccionado.equalsIgnoreCase("Selecciona Servicio")) {
-            // Asegurarnos de que estamos extrayendo solo el ID del servicio
-            idServicio = Integer.valueOf(itemSeleccionado.split("-")[0].trim()).intValue();
-
-
-        }
-
-        // Si el estado no está en "Selecciona estado", procesamos el estado
-        if (estadoSeleccionado != null && !estadoSeleccionado.equalsIgnoreCase("Seleccione Estado")) {
-            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(idServicio, estadoSeleccionado);
-            seleccionarClientesEnTabla(clientesSeleccionados);  // Actualiza los checks en la tabla
-        } else if (idServicio != null) {
-            // Si sólo el servicio está seleccionado, filtramos por servicio
-            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(idServicio, null);
-            seleccionarClientesEnTabla(clientesSeleccionados);
-        } else if (estadoSeleccionado != null) {
-            // Si sólo el estado está seleccionado, filtramos por estado
-            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(null, estadoSeleccionado);
-            seleccionarClientesEnTabla(clientesSeleccionados);
-        }
-    } catch (NumberFormatException e) {
-        System.out.println("Error al convertir ID de servicio: " + itemSeleccionado);
-        limpiarChecks(); // Limpiar los checks si hay un error
-    }
-}
-
+    ParametrosConsulta();
     }//GEN-LAST:event_jcbServiciosActionPerformed
 
     private void jtblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblClientesMouseClicked
-
+        limpiarMensaje(lblMensaje);
     }//GEN-LAST:event_jtblClientesMouseClicked
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         enviarMensajesMasivo();
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void jcbEstadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbEstadosMouseClicked
-        
-    }//GEN-LAST:event_jcbEstadosMouseClicked
-
-    private void jcbEstadosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jcbEstadosMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jcbEstadosMouseEntered
-
     private void jcbEstadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbEstadosActionPerformed
- String itemSeleccionado = (String) jcbServicios.getSelectedItem();
+        ParametrosConsulta();
+    }//GEN-LAST:event_jcbEstadosActionPerformed
+    private void ParametrosConsulta(){
+     String itemSeleccionado = (String) jcbServicios.getSelectedItem();
 String estadoSeleccionado = (String) jcbEstados.getSelectedItem();
 
-// Si ambos están en "Selecciona", limpiar los checks
-if ((itemSeleccionado == null || itemSeleccionado.equalsIgnoreCase("Selecciona Servicio")) &&
-    (estadoSeleccionado == null || estadoSeleccionado.equalsIgnoreCase("Seleccione Estado"))) {
+Date fechaInicio = jcbFechaI.getDate();
+Date fechaFin = jcbFechaF.getDate();
 
-    limpiarChecks();  // Limpiar los checks si ambos están en "Selecciona"
-} else {
-    try {
-        Integer idServicio = null;
-        // Si el servicio no está en "Selecciona servicio", procesamos el servicio
-        if (itemSeleccionado != null && !itemSeleccionado.equalsIgnoreCase("Selecciona Servicio")) {
-            // Asegurarnos de que estamos extrayendo solo el ID del servicio
-            idServicio = Integer.valueOf(itemSeleccionado.split("-")[0].trim()).intValue();
+LocalDate fechaI = null;
+LocalDate fechaF = null;
 
-
-        }
-
-        // Si el estado no está en "Selecciona estado", procesamos el estado
-        if (estadoSeleccionado != null && !estadoSeleccionado.equalsIgnoreCase("Seleccione Estado")) {
-            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(idServicio, estadoSeleccionado);
-            seleccionarClientesEnTabla(clientesSeleccionados);  // Actualiza los checks en la tabla
-        } else if (idServicio != null) {
-            // Si sólo el servicio está seleccionado, filtramos por servicio
-            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(idServicio, null);
-            seleccionarClientesEnTabla(clientesSeleccionados);
-        } else if (estadoSeleccionado != null) {
-            // Si sólo el estado está seleccionado, filtramos por estado
-            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(null, estadoSeleccionado);
-            seleccionarClientesEnTabla(clientesSeleccionados);
-        }
-    } catch (NumberFormatException e) {
-        System.out.println("Error al convertir ID de servicio: " + itemSeleccionado);
-        limpiarChecks(); // Limpiar los checks si hay un error
+if (fechaInicio != null && fechaFin != null) {
+    fechaI = fechaInicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    fechaF = fechaFin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    if (fechaInicio.after(fechaFin)) {
+        lblFechaI.setForeground(Color.RED);  // Cambia el color del JLabel a rojo
+       lblFechaI.setToolTipText("La Fecha de INICIO no puede ser POSTERIOR a la Fecha FINAL."); 
+        jcbFechaI.requestFocus();
     }
 }
-    }//GEN-LAST:event_jcbEstadosActionPerformed
+
+// Si servicio y estado están en "Selecciona" y las fechas son nulas, limpiar los checks
+    if ((itemSeleccionado == null || itemSeleccionado.equalsIgnoreCase("Selecciona Servicio")) &&
+        (estadoSeleccionado == null || estadoSeleccionado.equalsIgnoreCase("Seleccione Estado")) &&
+        (fechaI == null || fechaF == null)) {
+
+        limpiarChecks();  // Limpiar los checks si no hay ningún filtro activo
+    } else {
+        try {
+            Integer idServicio = null;
+
+            if (itemSeleccionado != null && !itemSeleccionado.equalsIgnoreCase("Selecciona Servicio")) {
+            idServicio = Integer.valueOf(itemSeleccionado.split("-")[0].trim());
+            }
+
+            // Llamada con todos los filtros posibles
+            Set<Integer> clientesSeleccionados = obtenerClientesSeleccionados(idServicio, 
+                                                                               estadoSeleccionado.equalsIgnoreCase("Seleccione Estado") ? null : estadoSeleccionado, 
+                                                                               fechaI, 
+                                                                               fechaF);
+            seleccionarClientesEnTabla(clientesSeleccionados);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Error al convertir ID de servicio: " + itemSeleccionado);
+            limpiarChecks(); // Limpiar los checks si hay un error
+        }
+    }
+    }
+    
+    private void jcbFechaIPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcbFechaIPropertyChange
+         limpiarMensaje(lblFechaI);
+        ParametrosConsulta();
+    }//GEN-LAST:event_jcbFechaIPropertyChange
+
+    private void jcbFechaFPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcbFechaFPropertyChange
+         limpiarMensaje(lblFechaF) ;
+        ParametrosConsulta();
+    }//GEN-LAST:event_jcbFechaFPropertyChange
+
+    private void jTextAreaMensajeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextAreaMensajeMouseClicked
+      limpiarMensaje(lblMensaje);
+    }//GEN-LAST:event_jTextAreaMensajeMouseClicked
 
     
     // Función para generar el mensaje personalizado con los datos del cliente
@@ -407,6 +494,9 @@ public String generarMensaje(Cliente cliente, String mensajeTemplate) {
     if (mensaje.contains("@IdCliente")) {
         mensaje = mensaje.replace("@IdCliente", String.valueOf(cliente.getIdCliente()));
     }
+    if (mensaje.contains("@Whatsapp")) {
+        mensaje = mensaje.replace("@Whatsapp", String.valueOf(cliente.getWhatsapp()));
+    }
 
     return mensaje;
 }
@@ -414,41 +504,52 @@ public String generarMensaje(Cliente cliente, String mensajeTemplate) {
 // Función para generar el mensaje personalizado con los datos del cliente
 private void enviarMensajesMasivo() {
     // Obtener los clientes seleccionados
-    List<Cliente> clientes = obtenerClientesSeleccionados(); // Este método obtiene los clientes de la tabla
-
-    // Obtener el mensaje del JTextArea
-    String mensajeTemplate = jTextAreaMensaje.getText();
-
-    // Verificar si la plantilla de mensaje no está vacía
-    if (mensajeTemplate.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "El mensaje no puede estar vacío.");
+    
+    List<Cliente> clientes = obtenerClientesSeleccionados();
+    String mensajeTemplate = jTextAreaMensaje.getText();// Este método obtiene los clientes de la tabla
+    
+    if ((clientes == null || clientes.isEmpty()) && mensajeTemplate.isEmpty()) {
+        lblMensaje.setForeground(Color.RED);  // Restaura el color original del JLabel
+        lblMensaje.setToolTipText( " El MENSAJE no puede estar VACIO Y NO hay CLIENTES seleccionados.");
+        return; // o puedes hacer cualquier otra acción para detener el proceso
+    }if (mensajeTemplate.isEmpty()) {
+       lblMensaje.setForeground(Color.RED);  // Restaura el color original del JLabel
+        lblMensaje.setToolTipText("El MENSAJE no puede estar VACIO"); 
         return;
-    }
+    } else if (clientes == null || clientes.isEmpty()) {
+    lblMensaje.setForeground(Color.RED);  // Restaura el color original del JLabel
+    lblMensaje.setToolTipText("No hay CLIENTES seleccionados. NO se puede enviar el MENSAJE.");
+    return; // o puedes hacer cualquier otra acción para detener el proceso
+    } 
 
     // Iterar sobre los clientes seleccionados
-    for (Cliente cliente : clientes) {
-        // Generar el mensaje personalizado para este cliente
+   for (Cliente cliente : clientes) {
         String mensajePersonalizado = generarMensaje(cliente, mensajeTemplate);
 
-        // Ahora enviamos el mensaje por WhatsApp
-        String telefono = cliente.getTelefono(); // Obtener el teléfono del cliente
+        if (cliente.getWhatsapp() == 1) {
+            enviarPorWhatsApp(cliente.getTelefono(), mensajePersonalizado);
+        } else {
+           // ENVIAR POR CORREO
+        }
 
         try {
-            // Generar la URL de WhatsApp
-            String url = "https://api.whatsapp.com/send?phone=52" + telefono + 
-                         "&text=" + URLEncoder.encode(mensajePersonalizado, "UTF-8");
-
-            // Abrir la URL de WhatsApp
-            Desktop.getDesktop().browse(new URI(url));
-
-            // Opcional: esperar un poco entre cada mensaje
-            Thread.sleep(500); // medio segundo entre cada uno
-
-        } catch (Exception e) {
+            Thread.sleep(500); // espera entre envíos
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 }
+
+private void enviarPorWhatsApp(String telefono, String mensaje) {
+    try {
+        String url = "https://api.whatsapp.com/send?phone=52" + telefono +
+                     "&text=" + URLEncoder.encode(mensaje, "UTF-8");
+        Desktop.getDesktop().browse(new URI(url));
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
 
 
 
@@ -460,59 +561,64 @@ private void enviarMensajesMasivo() {
         }
     }
     
-    private Set<Integer> obtenerClientesSeleccionados(Integer idServicio, String estadoPedido) {
+private Set<Integer> obtenerClientesSeleccionados(Integer idServicio, String estadoPedido, LocalDate fechaInicio, LocalDate fechaFin) {
     Set<Integer> clientesSeleccionados = new HashSet<>();
-    
-    // Base de la consulta
+
     String sql = "SELECT c.IdCliente " +
                  "FROM Pedido p " +
                  "INNER JOIN Cliente c ON c.IdCliente = p.IdCliente " +
                  "INNER JOIN Servicio s ON s.IdServicio = p.IdServicio " +
-                 "WHERE 1=1";  // Condición siempre verdadera, para que podamos agregar más condiciones opcionales
-
-    // Depuración
-    
-
+                 "WHERE 1=1";
 
     if (idServicio != null) {
         sql += " AND p.IdServicio = ?";
     }
-    
+
     if (estadoPedido != null && !estadoPedido.isEmpty()) {
         sql += " AND p.EstadoPedido = ?";
     }
 
+    if (fechaInicio != null && fechaFin != null) {
+        sql += " AND p.FechaCreacion BETWEEN ? AND ?";
+    }
+
     try (Connection conn = Conexion.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
-        
+
         int paramIndex = 1;
-        
-        if (idServicio != 0) {
+
+        if (idServicio != null) {
             stmt.setInt(paramIndex++, idServicio);
         }
-        
-        if (estadoPedido != null && !estadoPedido.isEmpty()) {
-            stmt.setString(paramIndex, estadoPedido);  // Solo se asigna si el estado no es null o vacío
-        }
-       
-        System.out.println("Consulta SQL ejecutada: " + sql);
-    System.out.println("Parámetros -> Servicio: " + idServicio + " | Estado: " + estadoPedido);
-    
 
+        if (estadoPedido != null && !estadoPedido.isEmpty()) {
+            stmt.setString(paramIndex++, estadoPedido);
+        }
+
+        if (fechaInicio != null && fechaFin != null) {
+             stmt.setDate(paramIndex++, java.sql.Date.valueOf(fechaInicio));
+            stmt.setDate(paramIndex++, java.sql.Date.valueOf(fechaFin));
+        }
+
+
+        System.out.println("Consulta SQL ejecutada: " + sql);
+        System.out.println("Parámetros -> Servicio: " + idServicio + " | Estado: " + estadoPedido + 
+                           " | FechaInicio: " + fechaInicio + " | FechaFin: " + fechaFin);
 
         ResultSet rs = stmt.executeQuery();
-        
+
         while (rs.next()) {
             clientesSeleccionados.add(rs.getInt("IdCliente"));
             System.out.println("Cliente seleccionado: " + rs.getInt("IdCliente"));
         }
-        
+
     } catch (SQLException e) {
         e.printStackTrace();
     }
-    
+
     return clientesSeleccionados;
 }
+
 
     private void seleccionarClientesEnTabla(Set<Integer> clientesSeleccionados) {
     DefaultTableModel model = (DefaultTableModel) jtblClientes.getModel();
@@ -537,9 +643,9 @@ private void enviarMensajesMasivo() {
             String telefono = (String) jtblClientes.getValueAt(i, 4);  // Columna con teléfono, por ejemplo
             String correo = (String) jtblClientes.getValueAt(i, 5);  // Columna con correo, por ejemplo
             String fechaRegistro = (String) jtblClientes.getValueAt(i, 6);  // Columna con fecha de registro, por ejemplo
-
+            int Whatsapp = (int) jtblClientes.getValueAt(i, 7);// Columna con Whatsapp, por ejemplo
             // Crear el objeto Cliente y agregarlo a la lista
-            clientesSeleccionados.add(new Cliente(clienteId, nombre, direccion, telefono, correo, fechaRegistro));
+            clientesSeleccionados.add(new Cliente(clienteId, nombre, direccion, telefono, correo, fechaRegistro,Whatsapp));
         }
     }
     
@@ -592,10 +698,15 @@ private void enviarMensajesMasivo() {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaMensaje;
     private javax.swing.JComboBox<String> jcbEstados;
+    private com.toedter.calendar.JDateChooser jcbFechaF;
+    private com.toedter.calendar.JDateChooser jcbFechaI;
     private javax.swing.JComboBox<String> jcbServicios;
     private javax.swing.JTable jtblClientes;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblCliente1;
+    private javax.swing.JLabel lblFechaF;
+    private javax.swing.JLabel lblFechaI;
+    private javax.swing.JLabel lblMensaje;
     // End of variables declaration//GEN-END:variables
 
 
