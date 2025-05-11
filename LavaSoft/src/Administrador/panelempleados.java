@@ -8,7 +8,10 @@ import java.sql.SQLException;
 
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -239,13 +242,17 @@ public class panelempleados extends javax.swing.JPanel {
         jbchorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un horario", "Matutino", "Vespertino" }));
         jPanel1.add(jbchorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 150, -1));
 
+        btnCorteCaja.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnCorteCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/caja-registradora.png"))); // NOI18N
         btnCorteCaja.setText("Corte de Caja");
+        btnCorteCaja.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/caja-registradora.png"))); // NOI18N
+        btnCorteCaja.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/caja-registradora.png"))); // NOI18N
         btnCorteCaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCorteCajaActionPerformed(evt);
             }
         });
-        jPanel1.add(btnCorteCaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 210, 30));
+        jPanel1.add(btnCorteCaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 230, 60));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
     }// </editor-fold>//GEN-END:initComponents
@@ -559,6 +566,11 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
 
     private void btnCorteCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorteCajaActionPerformed
         // TODO add your handling code here:
+         JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Corte de Caja", true);
+    dialog.setContentPane(new panelCorteCaja());
+    dialog.setSize(470, 500); // Tamaño deseado
+    dialog.setLocationRelativeTo(this); // Centrar respecto al componente actual
+    dialog.setVisible(true); // Mostrar ventana
         
     }//GEN-LAST:event_btnCorteCajaActionPerformed
 
