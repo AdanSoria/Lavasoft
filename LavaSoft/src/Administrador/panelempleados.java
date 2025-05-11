@@ -1,12 +1,15 @@
 package Administrador;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.sql.SQLException;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -62,17 +65,17 @@ public class panelempleados extends javax.swing.JPanel {
         btnbuscar = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        BarraDeBusqueda1 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        BarraDeBusqueda3 = new javax.swing.JTextField();
+        txttelefono = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         BarraDeBusqueda4 = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        txthorario = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        comboBoxPuesto = new javax.swing.JComboBox<>();
+        jbcpuesto = new javax.swing.JComboBox<>();
+        jbchorario = new javax.swing.JComboBox<>();
+        btnCorteCaja = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -109,7 +112,7 @@ public class panelempleados extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jtbEmpleado);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 350, 370));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, 510, 430));
 
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -138,7 +141,7 @@ public class panelempleados extends javax.swing.JPanel {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 430, 130, 34));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, 130, 34));
 
         btnbuscar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnbuscar.setForeground(new java.awt.Color(0, 0, 0));
@@ -172,7 +175,7 @@ public class panelempleados extends javax.swing.JPanel {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 382, 130, 30));
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 130, 30));
 
         jButton7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton7.setForeground(new java.awt.Color(0, 0, 0));
@@ -187,12 +190,12 @@ public class panelempleados extends javax.swing.JPanel {
                 jButton7ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(77, 340, 128, -1));
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 310, 128, 30));
 
-        BarraDeBusqueda1.setBackground(new java.awt.Color(181, 218, 240));
-        BarraDeBusqueda1.setForeground(new java.awt.Color(0, 0, 0));
-        BarraDeBusqueda1.setBorder(null);
-        jPanel1.add(BarraDeBusqueda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 250, 20));
+        txtNombre.setBackground(new java.awt.Color(181, 218, 240));
+        txtNombre.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombre.setBorder(null);
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 250, 20));
 
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("________________________");
@@ -202,10 +205,10 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel9.setText("________________________");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, -1));
 
-        BarraDeBusqueda3.setBackground(new java.awt.Color(181, 218, 240));
-        BarraDeBusqueda3.setForeground(new java.awt.Color(0, 0, 0));
-        BarraDeBusqueda3.setBorder(null);
-        jPanel1.add(BarraDeBusqueda3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 250, 20));
+        txttelefono.setBackground(new java.awt.Color(181, 218, 240));
+        txttelefono.setForeground(new java.awt.Color(0, 0, 0));
+        txttelefono.setBorder(null);
+        jPanel1.add(txttelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, 20));
 
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("________________________");
@@ -218,29 +221,31 @@ public class panelempleados extends javax.swing.JPanel {
         BarraDeBusqueda4.setBackground(new java.awt.Color(118, 120, 237));
         BarraDeBusqueda4.setForeground(new java.awt.Color(0, 0, 0));
         BarraDeBusqueda4.setBorder(null);
-        jPanel1.add(BarraDeBusqueda4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 250, 20));
-
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel14.setText("________________________");
-        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, -1, -1));
-
-        txthorario.setBackground(new java.awt.Color(181, 218, 240));
-        txthorario.setForeground(new java.awt.Color(0, 0, 0));
-        txthorario.setBorder(null);
-        jPanel1.add(txthorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 230, 250, 20));
+        jPanel1.add(BarraDeBusqueda4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, 20));
 
         jLabel16.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("Horario:");
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, -1));
 
-        comboBoxPuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empleado", "Administrador" }));
-        comboBoxPuesto.addActionListener(new java.awt.event.ActionListener() {
+        jbcpuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un puesto", "Empleado", "Administrador" }));
+        jbcpuesto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxPuestoActionPerformed(evt);
+                jbcpuestoActionPerformed(evt);
             }
         });
-        jPanel1.add(comboBoxPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 120, 30));
+        jPanel1.add(jbcpuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 150, 30));
+
+        jbchorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un horario", "Matutino", "Vespertino" }));
+        jPanel1.add(jbchorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 150, -1));
+
+        btnCorteCaja.setText("Corte de Caja");
+        btnCorteCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCorteCajaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCorteCaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 210, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
     }// </editor-fold>//GEN-END:initComponents
@@ -303,6 +308,7 @@ public class panelempleados extends javax.swing.JPanel {
     
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+  
         eliminarEmpleado();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -312,6 +318,7 @@ public class panelempleados extends javax.swing.JPanel {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+
         int filaSeleccionada = jtbEmpleado.getSelectedRow();
     
     if (filaSeleccionada != -1) {
@@ -323,10 +330,10 @@ public class panelempleados extends javax.swing.JPanel {
             String updateSql = "UPDATE dbo.Usuario SET Nombre = ?, Puesto = ?, Telefono = ?, Turno = ? WHERE IdUsuario = ?";
             
             PreparedStatement stmt = conn.prepareStatement(updateSql);
-            stmt.setString(1, BarraDeBusqueda1.getText());
-            stmt.setString(2, (String) comboBoxPuesto.getSelectedItem());
-            stmt.setString(3, BarraDeBusqueda3.getText());
-            stmt.setString(4, txthorario.getText());
+            stmt.setString(1, txtNombre.getText());
+            stmt.setString(2, (String) jbcpuesto.getSelectedItem());
+            stmt.setString(3, txttelefono.getText());
+            stmt.setString(4, (String)jbchorario.getSelectedItem());
             stmt.setString(5, idEmpleado);  // Establecer el ID del empleado que estamos actualizando
 
             int filasActualizadas = stmt.executeUpdate();
@@ -378,53 +385,104 @@ private void actualizarTabla() {
 
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-        try (Connection conn = Conexion.getConnection()) {
-    String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno,Contraseña) VALUES (?, ?, ?, ?, ?)";
-    PreparedStatement stmt = conn.prepareStatement(insertSql);
-    
-    String nombre = BarraDeBusqueda1.getText();
-     String puesto = (String) comboBoxPuesto.getSelectedItem();
-    String telefono = BarraDeBusqueda3.getText();
-    String turno = txthorario.getText();
-    
-    String Contraseña = JOptionPane.showInputDialog("Ingresar contraseña");
-    
-    stmt.setString(1, nombre);
-    stmt.setString(2, puesto);
-    stmt.setString(3, telefono);
-    stmt.setString(4, turno);
-    stmt.setString(5, Contraseña);
-    
-    int filasAfectadas = stmt.executeUpdate();
-    
-    if (filasAfectadas > 0) {
-        System.out.println("Empleado insertado correctamente.");
-        
-        // Actualizar JTable
-        DefaultTableModel model = (DefaultTableModel) jtbEmpleado.getModel();
-        model.setRowCount(0); // Limpiar tabla antes de actualizar
-        
-        String selectSql = "SELECT * FROM dbo.Usuario";
-        try (PreparedStatement selectStmt = conn.prepareStatement(selectSql); var rs = selectStmt.executeQuery()) {
-           while (rs.next()) {
-                Object[] row = {
-                rs.getInt("IdUsuario"), 
-                rs.getString("Nombre"),
-                rs.getString("Puesto"),
-                rs.getString("Telefono"),
-                rs.getString("Turno")
-                    };
-        model.addRow(row);
+    private boolean validarCampos() {
+    boolean valido = true;
+
+    // Limpiar errores previos
+    txtNombre.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+    txttelefono.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+    jbchorario.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+    jbcpuesto.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("ComboBox.border"));
+
+    // Validar nombre sin números
+    if (!txtNombre.getText().matches("[a-zA-Z\\s]+")) {
+        JOptionPane.showMessageDialog(this, "El nombre no debe contener números.", "Error", JOptionPane.ERROR_MESSAGE);
+        txtNombre.setToolTipText("Solo letras y espacios permitidos");
+        txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED));
+        txtNombre.requestFocus();
+        valido = false;
     }
 
-        }
-    } else {
-        System.out.println("Error al insertar el empleado.");
+    // Validar teléfono sin letras
+    if (!txttelefono.getText().matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "El teléfono solo debe contener números.", "Error", JOptionPane.ERROR_MESSAGE);
+        txttelefono.setToolTipText("Solo números permitidos");
+        txttelefono.setBorder(BorderFactory.createLineBorder(Color.RED));
+        txttelefono.requestFocus();
+        valido = false;
     }
-} catch (SQLException e) {
+
+    // Validar horario no vacío
+    // Validar que se haya seleccionado un elemento válido del ComboBox de horario
+if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) {
+    JOptionPane.showMessageDialog(this, "Selecciona un turno válido.", "Error", JOptionPane.ERROR_MESSAGE);
+    jbchorario.setToolTipText("Selecciona un horario");
+    jbchorario.setBorder(BorderFactory.createLineBorder(Color.RED));
+    valido = false;
 }
+
+    // Validar que se haya seleccionado un elemento válido del ComboBox
+    if (jbcpuesto.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(this, "Selecciona un puesto valido", "Error", JOptionPane.ERROR_MESSAGE);
+        jbcpuesto.setToolTipText("Selecciona una opción");
+        jbcpuesto.setBorder(BorderFactory.createLineBorder(Color.RED));
+        valido = false;
+    }
+
+    return valido;
+}
+
+
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+      if (validarCampos()) {
+    try (Connection conn = Conexion.getConnection()) {
+        String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno, Contraseña) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(insertSql);
+
+        String nombre = txtNombre.getText();
+        String puesto = (String) jbcpuesto.getSelectedItem();
+        String telefono = txttelefono.getText();
+        String turno = (String) jbchorario.getSelectedItem(); // <-- CAMBIO AQUÍ
+
+        String Contraseña = JOptionPane.showInputDialog("Ingresar contraseña");
+
+        stmt.setString(1, nombre);
+        stmt.setString(2, puesto);
+        stmt.setString(3, telefono);
+        stmt.setString(4, turno);
+        stmt.setString(5, Contraseña);
+
+        int filasAfectadas = stmt.executeUpdate();
+
+        if (filasAfectadas > 0) {
+            System.out.println("Empleado insertado correctamente.");
+
+            // Actualizar JTable
+            DefaultTableModel model = (DefaultTableModel) jtbEmpleado.getModel();
+            model.setRowCount(0); // Limpiar tabla antes de actualizar
+
+            String selectSql = "SELECT * FROM dbo.Usuario";
+            try (PreparedStatement selectStmt = conn.prepareStatement(selectSql); var rs = selectStmt.executeQuery()) {
+                while (rs.next()) {
+                    Object[] row = {
+                        rs.getInt("IdUsuario"),
+                        rs.getString("Nombre"),
+                        rs.getString("Puesto"),
+                        rs.getString("Telefono"),
+                        rs.getString("Turno")
+                    };
+                    model.addRow(row);
+                }
+            }
+        } else {
+            System.out.println("Error al insertar el empleado.");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -453,9 +511,8 @@ private void actualizarTabla() {
                 if (filasAfectadas > 0) {
                     JOptionPane.showMessageDialog(null, "Empleado eliminado correctamente.");
                     actualizarTabla();
-                    BarraDeBusqueda1.setText("");
-                    BarraDeBusqueda3.setText("");
-                    txthorario.setText("");
+                    txtNombre.setText("");
+                    txttelefono.setText("");
                 } else {
                     JOptionPane.showMessageDialog(null, "No se encontró el empleado con ID: " + idUsuario);
                 }
@@ -470,9 +527,9 @@ private void actualizarTabla() {
 
 
     
-    private void comboBoxPuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxPuestoActionPerformed
+    private void jbcpuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcpuestoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_comboBoxPuestoActionPerformed
+    }//GEN-LAST:event_jbcpuestoActionPerformed
 
     private void jtbEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbEmpleadoMouseClicked
         // TODO add your handling code here:
@@ -485,10 +542,10 @@ private void actualizarTabla() {
             String turno = jtbEmpleado.getValueAt(filaseleccionada, 4).toString();
      
             
-        BarraDeBusqueda1.setText(nombre);
-        comboBoxPuesto.setSelectedItem(puesto);
-            BarraDeBusqueda3.setText(telefono);
-            txthorario.setText(turno);     
+        txtNombre.setText(nombre);
+        jbcpuesto.setSelectedItem(puesto);
+            txttelefono.setText(telefono);
+            jbchorario.setSelectedItem(turno);
         }
         
         
@@ -500,21 +557,23 @@ private void actualizarTabla() {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6MouseClicked
 
+    private void btnCorteCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorteCajaActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnCorteCajaActionPerformed
+
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BarraDeBusqueda;
-    private javax.swing.JTextField BarraDeBusqueda1;
-    private javax.swing.JTextField BarraDeBusqueda3;
     private javax.swing.JTextField BarraDeBusqueda4;
+    private javax.swing.JButton btnCorteCaja;
     private javax.swing.JButton btnbuscar;
-    private javax.swing.JComboBox<String> comboBoxPuesto;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -524,7 +583,10 @@ private void actualizarTabla() {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JComboBox<String> jbchorario;
+    private javax.swing.JComboBox<String> jbcpuesto;
     private javax.swing.JTable jtbEmpleado;
-    private javax.swing.JTextField txthorario;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txttelefono;
     // End of variables declaration//GEN-END:variables
 }

@@ -63,6 +63,7 @@ public class IniciaSesion extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         txtpass1 = new javax.swing.JPasswordField();
         chkMostrarPass = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bub.png"))); // NOI18N
 
@@ -73,7 +74,7 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jlabel78.setForeground(new java.awt.Color(0, 0, 0));
         jlabel78.setText("_______________________________");
-        jPanel1.add(jlabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, -1, -1));
+        jPanel1.add(jlabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 320, -1, -1));
         jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, -1, -1));
         jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 380, -1, -1));
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 16, 16));
@@ -91,7 +92,7 @@ public class IniciaSesion extends javax.swing.JFrame {
                 txtusu1ActionPerformed(evt);
             }
         });
-        jPanel1.add(txtusu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 220, -1));
+        jPanel1.add(txtusu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 230, 220, 20));
 
         jLabel7.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -101,7 +102,7 @@ public class IniciaSesion extends javax.swing.JFrame {
 
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("_______________________________");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, -1, -1));
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 240, -1, -1));
         jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, -1, -1));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -109,7 +110,7 @@ public class IniciaSesion extends javax.swing.JFrame {
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 0, 417, 170));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Imagen_de_WhatsApp_2024-11-21_a_las_16.51.39_2c052284-removebg-preview.png"))); // NOI18N
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 370, 170));
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 400, 170));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bub.png"))); // NOI18N
         jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 40, -1, -1));
@@ -129,7 +130,7 @@ public class IniciaSesion extends javax.swing.JFrame {
         jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bub.png"))); // NOI18N
         jPanel3.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, -1));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, 0, 440, 170));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, 0, 460, 170));
 
         btnInicioSesion.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnInicioSesion.setForeground(new java.awt.Color(0, 0, 0));
@@ -164,15 +165,34 @@ public class IniciaSesion extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 400, 130, -1));
-        jPanel1.add(txtpass1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 300, 160, -1));
 
+        txtpass1.setBackground(new java.awt.Color(181, 218, 240));
+        txtpass1.setBorder(null);
+        jPanel1.add(txtpass1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 220, -1));
+
+        chkMostrarPass.setBackground(new java.awt.Color(181, 218, 240));
+        chkMostrarPass.setFont(new java.awt.Font("Roboto Bk", 0, 12)); // NOI18N
+        chkMostrarPass.setForeground(new java.awt.Color(0, 0, 0));
         chkMostrarPass.setText("ver cotraseña");
+        chkMostrarPass.setBorder(null);
         chkMostrarPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkMostrarPassActionPerformed(evt);
             }
         });
-        jPanel1.add(chkMostrarPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, -1, -1));
+        jPanel1.add(chkMostrarPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 310, -1, -1));
+
+        jButton1.setBackground(new java.awt.Color(181, 218, 240));
+        jButton1.setFont(new java.awt.Font("Roboto Bk", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(0, 0, 0));
+        jButton1.setText("¿Olvidaste tu contraseña?");
+        jButton1.setBorder(null);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 430, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,7 +202,7 @@ public class IniciaSesion extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
         );
 
         pack();
@@ -290,6 +310,13 @@ public class IniciaSesion extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_chkMostrarPassActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        Restablecer p=new Restablecer();
+        p.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -319,6 +346,10 @@ public class IniciaSesion extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -331,6 +362,7 @@ public class IniciaSesion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInicioSesion;
     private javax.swing.JCheckBox chkMostrarPass;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;

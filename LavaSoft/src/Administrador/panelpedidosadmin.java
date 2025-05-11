@@ -989,7 +989,7 @@ private int obtenerIdClientePorNombre(String nombre) {
                      "FROM dbo.Pedido p " +
                      "JOIN dbo.Cliente c ON p.idCliente = c.idCliente " +
                      "JOIN dbo.Servicio s ON p.idServicio = s.idServicio " +
-                     "WHERE p.EstadoPedido IN ('Pendiente', 'En Proceso') " +
+                     "WHERE p.EstadoPedido IN ('Pendiente', 'Proceso') " +
                      "ORDER BY p.FechaCreacion DESC";
         
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -25,6 +25,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -40,6 +41,7 @@ public class panelWhatsappadmin extends javax.swing.JPanel {
      * Creates new form panelWhatsappadmin
      */
     public panelWhatsappadmin() {
+        
         try (Connection conn = Conexion.getConnection()) {
             System.out.println("Conexión exitosa:D.");
             
@@ -89,10 +91,12 @@ for (Component comp : componentes) {
         jLabel7 = new javax.swing.JLabel();
         lblCliente1 = new javax.swing.JLabel();
         jcbEstados = new javax.swing.JComboBox<>();
-        lblMensaje = new javax.swing.JLabel();
         JMasivo = new javax.swing.JRadioButton();
         jButton7 = new javax.swing.JButton();
         lblFechaI = new javax.swing.JLabel();
+        lblMensaje = new javax.swing.JLabel();
+        lblAsunto = new javax.swing.JLabel();
+        jTextAsunto = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(900, 490));
 
@@ -168,10 +172,6 @@ for (Component comp : componentes) {
             }
         });
 
-        lblMensaje.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
-        lblMensaje.setForeground(new java.awt.Color(0, 0, 0));
-        lblMensaje.setText("Mensaje:");
-
         JMasivo.setText("Todos");
         JMasivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,12 +197,23 @@ for (Component comp : componentes) {
         lblFechaI.setForeground(new java.awt.Color(0, 0, 0));
         lblFechaI.setText("Fecha Inicio:");
 
+        lblMensaje.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblMensaje.setForeground(new java.awt.Color(0, 0, 0));
+        lblMensaje.setText("Mensaje:");
+
+        lblAsunto.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
+        lblAsunto.setForeground(new java.awt.Color(0, 0, 0));
+        lblAsunto.setText("Asunto:");
+
         javax.swing.GroupLayout paneliLayout = new javax.swing.GroupLayout(paneli);
         paneli.setLayout(paneliLayout);
         paneliLayout.setHorizontalGroup(
             paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneliLayout.createSequentialGroup()
                 .addGroup(paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneliLayout.createSequentialGroup()
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(63, 63, 63))
                     .addGroup(paneliLayout.createSequentialGroup()
                         .addGroup(paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(paneliLayout.createSequentialGroup()
@@ -232,15 +243,17 @@ for (Component comp : componentes) {
                                     .addGroup(paneliLayout.createSequentialGroup()
                                         .addGap(43, 43, 43)
                                         .addComponent(jLabel7))))
-                            .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(paneliLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneliLayout.createSequentialGroup()
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 55, 55)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                                .addComponent(lblAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(paneliLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(12, 12, 12)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
                 .addContainerGap())
         );
         paneliLayout.setVerticalGroup(
@@ -248,7 +261,9 @@ for (Component comp : componentes) {
             .addGroup(paneliLayout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                    .addGroup(paneliLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(paneliLayout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
@@ -273,14 +288,17 @@ for (Component comp : componentes) {
                                 .addComponent(jcbEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(9, 9, 9)
                         .addComponent(JMasivo)
-                        .addGap(4, 4, 4)
-                        .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(17, 17, 17))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -289,14 +307,14 @@ for (Component comp : componentes) {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(paneli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(paneli, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(paneli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 30, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -337,11 +355,11 @@ for (Component comp : componentes) {
     }//GEN-LAST:event_jcbServiciosActionPerformed
 
     private void jtblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblClientesMouseClicked
-        limpiarMensaje(lblMensaje);
+        limpiarMensaje(lblAsunto);
     }//GEN-LAST:event_jtblClientesMouseClicked
 
     private void jTextAreaMensajeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextAreaMensajeMouseClicked
-        limpiarMensaje(lblMensaje);
+        limpiarMensaje(lblAsunto);
     }//GEN-LAST:event_jTextAreaMensajeMouseClicked
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -509,32 +527,56 @@ public String generarMensaje(Cliente cliente, String mensajeTemplate) {
 // Función para generar el mensaje personalizado con los datos del cliente
 private void enviarMensajesMasivo() {
     // Obtener los clientes seleccionados
-    
     List<Cliente> clientes = obtenerClientesSeleccionados();
-    String mensajeTemplate = jTextAreaMensaje.getText();// Este método obtiene los clientes de la tabla
+    String mensajeTemplate = jTextAreaMensaje.getText();
+    String asunto = jTextAsunto.getText().trim();
     
+    // Validaciones
     if ((clientes == null || clientes.isEmpty()) && mensajeTemplate.isEmpty()) {
-        lblMensaje.setForeground(Color.RED);  // Restaura el color original del JLabel
-        lblMensaje.setToolTipText( " El MENSAJE no puede estar VACIO Y NO hay CLIENTES seleccionados.");
-        return; // o puedes hacer cualquier otra acción para detener el proceso
-    }if (mensajeTemplate.isEmpty()) {
-       lblMensaje.setForeground(Color.RED);  // Restaura el color original del JLabel
+        lblMensaje.setForeground(Color.RED);
+        lblMensaje.setToolTipText("El MENSAJE no puede estar VACIO Y NO hay CLIENTES seleccionados.");
+        return;
+    }
+    if (mensajeTemplate.isEmpty()) {
+        lblMensaje.setForeground(Color.RED);
         lblMensaje.setToolTipText("El MENSAJE no puede estar VACIO"); 
         return;
     } else if (clientes == null || clientes.isEmpty()) {
-    lblMensaje.setForeground(Color.RED);  // Restaura el color original del JLabel
-    lblMensaje.setToolTipText("No hay CLIENTES seleccionados. NO se puede enviar el MENSAJE.");
-    return; // o puedes hacer cualquier otra acción para detener el proceso
-    } 
+        lblMensaje.setForeground(Color.RED);
+        lblMensaje.setToolTipText("No hay CLIENTES seleccionados. NO se puede enviar el MENSAJE.");
+        return;
+    }
+    if (asunto.isEmpty()) {
+        lblAsunto.setForeground(Color.RED);
+        lblAsunto.setToolTipText("El ASUNTO no puede estar VACIO");
+        return;
+    }
 
+    // Solicitar credenciales (en producción debería ser configurado previamente)
+    String correoAdmin = JOptionPane.showInputDialog(this, "Ingrese su correo electrónico:");
+    if (correoAdmin == null || correoAdmin.trim().isEmpty()) return;
+    
+    String contraseña = JOptionPane.showInputDialog(this, "Ingrese su contraseña:");
+    if (contraseña == null || contraseña.trim().isEmpty()) return;
+
+    // Crear enviador de correos
+    EnviadorCorreos enviador = new EnviadorCorreos(correoAdmin, contraseña);
+    
     // Iterar sobre los clientes seleccionados
-   for (Cliente cliente : clientes) {
+    for (Cliente cliente : clientes) {
         String mensajePersonalizado = generarMensaje(cliente, mensajeTemplate);
 
-        if (cliente.getWhatsapp() == 1) {
-            enviarPorWhatsApp(cliente.getTelefono(), mensajePersonalizado);
-        } else {
-           // ENVIAR POR CORREO
+       // if (cliente.getWhatsapp() == 1) {
+         //   enviarPorWhatsApp(cliente.getTelefono(), mensajePersonalizado);
+        //}
+        
+        // Enviar por correo si tiene dirección de correo
+        if (cliente.getCorreo() != null && !cliente.getCorreo().isEmpty()) {
+            boolean exito = enviador.enviarCorreo(cliente.getCorreo(), asunto, mensajePersonalizado);
+            if (exito) {
+                System.out.println("Correo enviado a: " + cliente.getCorreo());
+                showMessageDialog(null,"Felicidades Enviantes un correo");
+            }
         }
 
         try {
@@ -543,6 +585,9 @@ private void enviarMensajesMasivo() {
             e.printStackTrace();
         }
     }
+    
+    JOptionPane.showMessageDialog(this, "Proceso de envío completado", 
+                                "Información", JOptionPane.INFORMATION_MESSAGE);
 }
 
 private void enviarPorWhatsApp(String telefono, String mensaje) {
@@ -665,11 +710,13 @@ private Set<Integer> obtenerClientesSeleccionados(Integer idServicio, String est
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaMensaje;
+    private javax.swing.JTextField jTextAsunto;
     private javax.swing.JComboBox<String> jcbEstados;
     private com.toedter.calendar.JDateChooser jcbFechaF;
     private com.toedter.calendar.JDateChooser jcbFechaI;
     private javax.swing.JComboBox<String> jcbServicios;
     private javax.swing.JTable jtblClientes;
+    private javax.swing.JLabel lblAsunto;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblCliente1;
     private javax.swing.JLabel lblFechaF;
