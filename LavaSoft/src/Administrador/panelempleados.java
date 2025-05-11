@@ -1,11 +1,8 @@
-package Administrador;
+ package Administrador;
 
 import java.awt.Color;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
-import java.sql.SQLException;
-
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
@@ -79,6 +76,8 @@ public class panelempleados extends javax.swing.JPanel {
         jbcpuesto = new javax.swing.JComboBox<>();
         jbchorario = new javax.swing.JComboBox<>();
         btnCorteCaja = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        txtCorreo = new javax.swing.JTextField();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -105,7 +104,7 @@ public class panelempleados extends javax.swing.JPanel {
 
             },
             new String [] {
-                "IdUsuario", "Nombre", "Puesto", "Telefono", "Turno"
+                "IdUsuario", "Nombre", "Puesto", "Telefono", "Turno", "Correo"
             }
         ));
         jtbEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -148,7 +147,7 @@ public class panelempleados extends javax.swing.JPanel {
 
         btnbuscar.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         btnbuscar.setForeground(new java.awt.Color(0, 0, 0));
-        btnbuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar (1).png"))); // NOI18N
+        btnbuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar_1.png"))); // NOI18N
         btnbuscar.setBorder(null);
         btnbuscar.setContentAreaFilled(false);
         btnbuscar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -158,7 +157,7 @@ public class panelempleados extends javax.swing.JPanel {
                 btnbuscarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnbuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 40, 50, -1));
+        jPanel1.add(btnbuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 30, 50, 30));
 
         jButton6.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(0, 0, 0));
@@ -229,7 +228,7 @@ public class panelempleados extends javax.swing.JPanel {
         jLabel16.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setText("Horario:");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, -1));
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
 
         jbcpuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un puesto", "Empleado", "Administrador" }));
         jbcpuesto.addActionListener(new java.awt.event.ActionListener() {
@@ -240,19 +239,25 @@ public class panelempleados extends javax.swing.JPanel {
         jPanel1.add(jbcpuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, 150, 30));
 
         jbchorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un horario", "Matutino", "Vespertino" }));
-        jPanel1.add(jbchorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 150, -1));
+        jPanel1.add(jbchorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 150, -1));
 
         btnCorteCaja.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btnCorteCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/caja-registradora.png"))); // NOI18N
+        btnCorteCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/caja-registradora.png"))); // NOI18N
         btnCorteCaja.setText("Corte de Caja");
-        btnCorteCaja.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/caja-registradora.png"))); // NOI18N
-        btnCorteCaja.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/caja-registradora.png"))); // NOI18N
+        btnCorteCaja.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/caja-registradora.png"))); // NOI18N
+        btnCorteCaja.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/caja-registradora.png"))); // NOI18N
         btnCorteCaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCorteCajaActionPerformed(evt);
             }
         });
         jPanel1.add(btnCorteCaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 230, 60));
+
+        jLabel17.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel17.setText("Correo:");
+        jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, -1));
+        jPanel1.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 280, 150, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
     }// </editor-fold>//GEN-END:initComponents
@@ -288,8 +293,9 @@ public class panelempleados extends javax.swing.JPanel {
                 String puesto = rs.getString("Puesto");
                 String telefono = rs.getString("Telefono");
                 String turno = rs.getString("Turno");
+                String correo = rs.getString("Correo");
 
-                model.addRow(new Object[]{idUsuario, nombre, puesto, telefono, turno});
+                model.addRow(new Object[]{idUsuario, nombre, puesto, telefono, turno,correo});
                 encontrado = true;
             }
             
@@ -341,7 +347,8 @@ public class panelempleados extends javax.swing.JPanel {
             stmt.setString(2, (String) jbcpuesto.getSelectedItem());
             stmt.setString(3, txttelefono.getText());
             stmt.setString(4, (String)jbchorario.getSelectedItem());
-            stmt.setString(5, idEmpleado);  // Establecer el ID del empleado que estamos actualizando
+             stmt.setString(5, txtCorreo.getText());
+            stmt.setString(6, idEmpleado);  // Establecer el ID del empleado que estamos actualizando
 
             int filasActualizadas = stmt.executeUpdate();
             
@@ -382,8 +389,8 @@ private void actualizarTabla() {
             String puesto = rs.getString("Puesto");
             String telefono = rs.getString("Telefono");
             String turno = rs.getString("Turno");
-
-            model.addRow(new Object[]{idUsuario, nombre, puesto, telefono, turno,});
+            String correo = rs.getString("Correo");
+            model.addRow(new Object[]{idUsuario, nombre, puesto, telefono, turno,correo,});
         }
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Error al cargar los datos.");
@@ -451,6 +458,7 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
         String puesto = (String) jbcpuesto.getSelectedItem();
         String telefono = txttelefono.getText();
         String turno = (String) jbchorario.getSelectedItem(); // <-- CAMBIO AQUÍ
+        String correo = txtCorreo.getText();
 
         String Contraseña = JOptionPane.showInputDialog("Ingresar contraseña");
 
@@ -458,7 +466,9 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
         stmt.setString(2, puesto);
         stmt.setString(3, telefono);
         stmt.setString(4, turno);
-        stmt.setString(5, Contraseña);
+        stmt.setString(5,correo);
+        stmt.setString(6, Contraseña);
+         
 
         int filasAfectadas = stmt.executeUpdate();
 
@@ -477,7 +487,8 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
                         rs.getString("Nombre"),
                         rs.getString("Puesto"),
                         rs.getString("Telefono"),
-                        rs.getString("Turno")
+                        rs.getString("Turno"),
+                        rs.getString("Correo")
                     };
                     model.addRow(row);
                 }
@@ -587,6 +598,7 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
@@ -598,6 +610,7 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
     private javax.swing.JComboBox<String> jbchorario;
     private javax.swing.JComboBox<String> jbcpuesto;
     private javax.swing.JTable jtbEmpleado;
+    private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txttelefono;
     // End of variables declaration//GEN-END:variables

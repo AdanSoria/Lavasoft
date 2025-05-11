@@ -4,13 +4,12 @@
  */
 package Administrador;
 
-import com.sun.jdi.connect.Transport;
-import com.sun.jdi.connect.spi.Connection;
 import java.awt.Color;
-import java.net.PasswordAuthentication;
 import java.sql.PreparedStatement;
-import java.util.Properties;
+import java.util.Random;
 import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *
@@ -25,6 +24,84 @@ public class Restablecer extends javax.swing.JFrame {
         initComponents();
         validarYEnviarCorreo();
     }
+    private String codigoVerificacion;
+    private int intentosRestantes = 3;
+    private String empleadoId;
+    private String correoEmpleado;
+
+    // Método para enviar código de verificación
+    private boolean enviarCodigoVerificacion() {
+        // Generar código de 6 dígitos
+        codigoVerificacion = String.format("%06d", new Random().nextInt(999999));
+        
+        // Configurar el enviador de correos
+        EnviadorCorreos enviador = new EnviadorCorreos("serviciolavasoft@gmail.com", "tu_contraseña_de_aplicacion");
+        
+        String asunto = "Código de Verificación - Restablecer Contraseña";
+        String cuerpo = "Estimado empleado,\n\n"
+                      + "Su código de verificación para restablecer la contraseña es: " + codigoVerificacion + "\n\n"
+                      + "Tiene 3 intentos para ingresarlo correctamente.\n\n"
+                      + "Atentamente,\nEquipo de Lavasoft";
+        
+        return enviador.enviarCorreo(correoEmpleado, asunto, cuerpo);
+    }                                       
+
+    private void verificarCodigo() {
+        while (intentosRestantes > 0) {
+            String input = JOptionPane.showInputDialog(
+                this, 
+                "Ingrese el código enviado a su correo:\n"
+                + "Intentos restantes: " + intentosRestantes,
+                "Verificación de Código",
+                JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (input == null) { // Si el usuario cancela
+                break;
+            }
+
+            if (input.equals(codigoVerificacion)) {
+                cambiarContrasena();
+                return;
+            } else {
+                intentosRestantes--;
+                JOptionPane.showMessageDialog(this, 
+                    "Código incorrecto. Intentos restantes: " + intentosRestantes);
+            }
+        }
+
+        if (intentosRestantes == 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Límite de intentos alcanzado. Por favor inicie el proceso nuevamente.");
+        }
+    }
+
+    private void cambiarContrasena() {
+        String nuevaContra = JOptionPane.showInputDialog(
+            this,
+            "Ingrese su nueva contraseña:",
+            "Cambio de Contraseña",
+            JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (nuevaContra != null && !nuevaContra.isEmpty()) {
+            try (Connection con = Conexion.getConnection()) {
+                String update = "UPDATE empleados SET contrasena = ? WHERE id_empleado = ?";
+                PreparedStatement ps = con.prepareStatement(update);
+                ps.setString(1, nuevaContra);
+                ps.setString(2, empleadoId);
+                
+                int filasActualizadas = ps.executeUpdate();
+                if (filasActualizadas > 0) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Contraseña actualizada exitosamente!");
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, 
+                    "Error al actualizar la contraseña: " + ex.getMessage());
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -37,15 +114,15 @@ public class Restablecer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtid = new javax.swing.JTextField();
+        txtIdEmpleado = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtcorr = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnVerificar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         lblid = new javax.swing.JLabel();
         lbltel = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,30 +132,27 @@ public class Restablecer extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Roboto Bk", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("¡Has olvidado tu contraseña!");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 6, -1, -1));
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/olvido.png"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 53, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Roboto Bk", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Ingresa tu telefono asociado");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 237, 235, -1));
+        jLabel3.setText("Ingresa tu telefono/correo asociado");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 300, -1));
 
-        txtid.setBackground(new java.awt.Color(153, 204, 255));
-        txtid.setForeground(new java.awt.Color(0, 0, 0));
-        txtid.setBorder(null);
-        txtid.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtIdEmpleado.setBackground(new java.awt.Color(153, 204, 255));
+        txtIdEmpleado.setForeground(new java.awt.Color(0, 0, 0));
+        txtIdEmpleado.setBorder(null);
+        txtIdEmpleado.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtidKeyPressed(evt);
+                txtIdEmpleadoKeyPressed(evt);
             }
         });
-        jPanel1.add(txtid, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 210, 30));
+        jPanel1.add(txtIdEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 210, 30));
 
         jLabel4.setFont(new java.awt.Font("Roboto Bk", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Ingresa tu id empleado");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(97, 167, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, -1, -1));
 
         txtcorr.setBackground(new java.awt.Color(153, 204, 255));
         txtcorr.setForeground(new java.awt.Color(0, 0, 0));
@@ -90,17 +164,17 @@ public class Restablecer extends javax.swing.JFrame {
         });
         jPanel1.add(txtcorr, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 271, 210, 20));
 
-        jButton1.setBackground(new java.awt.Color(153, 204, 255));
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/flecha-correcta.png"))); // NOI18N
-        jButton1.setText("Continuar");
-        jButton1.setBorder(null);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVerificar.setBackground(new java.awt.Color(153, 204, 255));
+        btnVerificar.setForeground(new java.awt.Color(0, 0, 0));
+        btnVerificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/flecha-correcta.png"))); // NOI18N
+        btnVerificar.setText("Continuar");
+        btnVerificar.setBorder(null);
+        btnVerificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVerificarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 330, 120, 40));
+        jPanel1.add(btnVerificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 330, 120, 40));
 
         jButton2.setBackground(new java.awt.Color(153, 204, 255));
         jButton2.setForeground(new java.awt.Color(0, 0, 0));
@@ -112,7 +186,7 @@ public class Restablecer extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 332, 140, 40));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 140, 40));
 
         lblid.setForeground(new java.awt.Color(0, 0, 0));
         lblid.setText("______________________________");
@@ -127,15 +201,18 @@ public class Restablecer extends javax.swing.JFrame {
         });
         jPanel1.add(lbltel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 280, 220, 20));
 
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/9710382.png"))); // NOI18N
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 140, 100));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -145,72 +222,45 @@ public class Restablecer extends javax.swing.JFrame {
         
     }
    
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnVerificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificarActionPerformed
         // TODO add your handling code here:
+       String idEmpleado = txtIdEmpleado.getText().trim();
         
-         String id = txtid.getText().trim();
-    String telefono = txtcorr.getText().trim();
-
-    if (id.isEmpty() || telefono.isEmpty()) {
-     lblid.setForeground(Color.red);
-           lbltel.setForeground(Color.red);
-    }
-    
-    if (id.isEmpty() || telefono.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor llena todos los campos.");
-         lblid.setForeground(Color.red);
-           lbltel.setForeground(Color.red);
-           txtid.requestFocus();
-           txtcorr.requestFocus();
-        return;
-    }
-
-    try (java.sql.Connection con = Conexion.getConnection()) {
-        String sql = "SELECT * FROM usuario WHERE idusuario = ? AND telefono = ?";
-        PreparedStatement stmt = con.prepareStatement(sql);
-        stmt.setString(1, id);
-        stmt.setString(2, telefono);
-        java.sql.ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            // El usuario existe, solicitamos la nueva contraseña
-            String nuevaContrasena = JOptionPane.showInputDialog(this, "Ingresa la nueva contraseña:");
-
-            if (nuevaContrasena != null && !nuevaContrasena.trim().isEmpty()) {
-                String updateSQL = "UPDATE usuario SET contraseña = ? WHERE idusuario = ?";
-                PreparedStatement updateStmt = con.prepareStatement(updateSQL);
-                updateStmt.setString(1, nuevaContrasena);
-                updateStmt.setString(2, id);
-                int filasActualizadas = updateStmt.executeUpdate();
-
-                if (filasActualizadas > 0) {
-                    JOptionPane.showMessageDialog(this, "Contraseña actualizada exitosamente.");
-                    txtid.setText("");
-                    txtcorr.setText("");
-                    
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo actualizar la contraseña.");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "No se ingresó una contraseña válida.");
-                
-            }
-
-        } else {
-            JOptionPane.showMessageDialog(this, "No se encontró un usuario con ese ID y telefono.");
-            lblid.setForeground(Color.red);
-           lbltel.setForeground(Color.red);
-           txtid.requestFocus();
-           txtcorr.requestFocus();
-           
+        if (idEmpleado.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el ID de empleado");
+            return;
         }
 
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.");
-    }
+        try (Connection con = Conexion.getConnection()) {
+            // Buscar empleado en la base de datos
+            String sql = "SELECT correo FROM empleados WHERE id_empleado = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, idEmpleado);
+            var rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                empleadoId = idEmpleado;
+                correoEmpleado = rs.getString("correo");
+                
+                if (correoEmpleado != null && !correoEmpleado.isEmpty()) {
+                    if (enviarCodigoVerificacion()) {
+                        verificarCodigo();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al enviar el código");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "El empleado no tiene correo registrado");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Empleado no encontrado");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error de conexión con la base de datos");
+        }
+     
        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnVerificarActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -220,12 +270,12 @@ public class Restablecer extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void txtidKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtidKeyPressed
+    private void txtIdEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdEmpleadoKeyPressed
         // TODO add your handling code here:
        
         lblid.setForeground(Color.black);
         
-    }//GEN-LAST:event_txtidKeyPressed
+    }//GEN-LAST:event_txtIdEmpleadoKeyPressed
 
     private void lbltelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lbltelKeyPressed
         // TODO add your handling code here:
@@ -274,17 +324,17 @@ public class Restablecer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnVerificar;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblid;
     private javax.swing.JLabel lbltel;
+    private javax.swing.JTextField txtIdEmpleado;
     private javax.swing.JTextField txtcorr;
-    private javax.swing.JTextField txtid;
     // End of variables declaration//GEN-END:variables
 
     

@@ -131,7 +131,7 @@ public class panelCorteCaja extends javax.swing.JPanel {
         jPanel1.add(jcbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, 110, -1));
 
         txtReporte.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        txtReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Administrador/sobresalir (1).png"))); // NOI18N
+        txtReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/sobresalir (1).png"))); // NOI18N
         txtReporte.setText("Generar reporte");
         txtReporte.setToolTipText("");
         txtReporte.addMouseListener(new java.awt.event.MouseAdapter() {
