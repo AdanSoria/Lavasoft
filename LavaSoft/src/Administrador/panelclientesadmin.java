@@ -283,7 +283,7 @@ public class panelclientesadmin extends javax.swing.JPanel {
         });
         jPanel1.add(jcbWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 460));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 460));
     }// </editor-fold>//GEN-END:initComponents
 
     DefaultTableCellRenderer whatsappRenderer = new DefaultTableCellRenderer() {

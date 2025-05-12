@@ -173,14 +173,14 @@ public class IniciaSesion extends javax.swing.JFrame {
         chkMostrarPass.setBackground(new java.awt.Color(181, 218, 240));
         chkMostrarPass.setFont(new java.awt.Font("Roboto Bk", 0, 12)); // NOI18N
         chkMostrarPass.setForeground(new java.awt.Color(0, 0, 0));
-        chkMostrarPass.setText("ver cotraseña");
+        chkMostrarPass.setText("ver contraseña");
         chkMostrarPass.setBorder(null);
         chkMostrarPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkMostrarPassActionPerformed(evt);
             }
         });
-        jPanel1.add(chkMostrarPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 310, -1, -1));
+        jPanel1.add(chkMostrarPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 320, -1, -1));
 
         jButton1.setBackground(new java.awt.Color(181, 218, 240));
         jButton1.setFont(new java.awt.Font("Roboto Bk", 1, 14)); // NOI18N

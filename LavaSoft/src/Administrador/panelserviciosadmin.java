@@ -28,15 +28,27 @@ import java.util.List;
  * @author Luis DC
  */
 public class panelserviciosadmin extends javax.swing.JPanel {
-private int idServicioSeleccionado = -1;
-    /**
-     * Creates new form panelserviciosadmin
-     */
+ private int idServicioSeleccionado = -1;
+    private String rolUsuario; // Variable para almacenar el rol del usuario
+
+    // Modifica el constructor para recibir el rol
     public panelserviciosadmin() {
         initComponents();
+        this.rolUsuario = rolUsuario;
+        configurarPermisos(); // Configurar los permisos según el rol
         actualizarTablaServicios();
     }
 
+    // Método para configurar los permisos según el rol
+    private void configurarPermisos() {
+        if ("empleado".equalsIgnoreCase(rolUsuario)) {
+            btnEliminar.setEnabled(false); // Desactivar el botón de eliminar
+            btnEliminar.setVisible(false); // También puedes ocultarlo si prefieres
+        } else {
+            btnEliminar.setEnabled(true);
+            btnEliminar.setVisible(true);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -227,7 +239,7 @@ private int idServicioSeleccionado = -1;
         jLabel7.setText("$");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed

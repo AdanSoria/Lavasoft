@@ -259,7 +259,7 @@ public class panelempleados extends javax.swing.JPanel {
         jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, -1));
         jPanel1.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 280, 150, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 500));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -451,7 +451,7 @@ if (jbchorario.getSelectedIndex() == 0 || jbchorario.getSelectedItem() == null) 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
       if (validarCampos()) {
     try (Connection conn = Conexion.getConnection()) {
-        String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno, Contraseña) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO dbo.Usuario (Nombre, Puesto, Telefono, Turno, correo, Contraseña) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = conn.prepareStatement(insertSql);
 
         String nombre = txtNombre.getText();

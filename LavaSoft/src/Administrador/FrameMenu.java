@@ -522,19 +522,19 @@ public void ajustarTamañoPanel() {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneliLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(157, 157, 157))
+                .addGap(147, 147, 147))
         );
         paneliLayout.setVerticalGroup(
             paneliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneliLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel13)
-                .addGap(138, 138, 138)
+                .addGap(132, 132, 132)
                 .addComponent(jLabel12)
                 .addContainerGap())
         );
 
-        getContentPane().add(paneli, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 800, 490));
+        getContentPane().add(paneli, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 850, 490));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

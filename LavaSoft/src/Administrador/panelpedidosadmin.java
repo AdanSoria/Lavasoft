@@ -45,6 +45,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -283,6 +284,7 @@ private void seleccionarCliente() {
         }
     });
     // Renderizador para columna de estado
+// Renderizador para columna de estado
 tblPedido.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
@@ -294,13 +296,21 @@ tblPedido.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRend
         String estado = (String) value;
         
         if (!isSelected) {
-            if ("Pendiente".equals(estado)) {
-                c.setForeground(Color.RED);
-                c.setFont(c.getFont().deriveFont(Font.BOLD));
-            } else if ("En Proceso".equals(estado)) {
-                c.setForeground(new Color(0, 100, 0)); // Verde oscuro
-                c.setFont(c.getFont().deriveFont(Font.BOLD));
+            switch (estado) {
+                case "Pendiente":
+                    c.setForeground(Color.RED);
+                    break;
+                case "Proceso":
+                    c.setForeground(new Color(255, 165, 0)); // Naranja
+                    break;
+                case "Listo":
+                    c.setForeground(new Color(0, 128, 0)); // Verde
+                    break;
+                default:
+                    c.setForeground(Color.BLACK);
+                    break;
             }
+            c.setFont(c.getFont().deriveFont(Font.BOLD));
         } else {
             c.setForeground(Color.WHITE);
         }
@@ -310,6 +320,7 @@ tblPedido.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRend
         return c;
     }
 });
+
     // Añade esto al método personalizarTabla()
 tblPedido.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
     private final DecimalFormat df = new DecimalFormat("$#,##0.00");
@@ -456,7 +467,7 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         });
         jScrollPane1.setViewportView(tblPedido);
 
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 680, 380));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 660, 380));
 
         jLabel3.setBackground(new java.awt.Color(181, 218, 240));
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -612,7 +623,7 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         jLabel13.setText("__________________");
         jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 100, -1));
 
-        jcbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Pendiente", "Proceso", "Listo" }));
+        jcbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Pendiente", "Proceso", "Listo", "Entregado", "Baja" }));
         jcbEstado.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jcbEstadoMouseClicked(evt);
@@ -642,17 +653,17 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         });
         jPanel4.add(jButtonWhatsapp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 110, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 510));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 510));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 902, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -728,6 +739,7 @@ String s=jcbServicios.getSelectedItem().toString();
         m.setValueAt(es, r, 7);
 
         JOptionPane.showMessageDialog(this, "Pedido editado con exito.");
+         actualizarTablaPedidos();
     } catch (NumberFormatException nfe) {
         JOptionPane.showMessageDialog(this, "Error numerico. Verifica los datos ingresados.");
     } catch (SQLException ex) {
@@ -979,43 +991,47 @@ private int obtenerIdClientePorNombre(String nombre) {
     jcbServicios.setSelectedIndex(0);
 }
     
-  private void actualizarTablaPedidos() {
+private void actualizarTablaPedidos() {
     DefaultTableModel model = (DefaultTableModel) tblPedido.getModel();
     model.setRowCount(0); // Limpiar la tabla
-    
+
     try (Connection conn = Conexion.getConnection()) {
         String sql = "SELECT p.idPedido, c.Nombre AS Cliente, s.Descripcion AS Servicio, " +
                      "p.FechaCreacion, p.FechaEntregaEstimada, p.Peso, p.CostoTotal, p.EstadoPedido " +
                      "FROM dbo.Pedido p " +
                      "JOIN dbo.Cliente c ON p.idCliente = c.idCliente " +
                      "JOIN dbo.Servicio s ON p.idServicio = s.idServicio " +
-                     "WHERE p.EstadoPedido IN ('Pendiente', 'Proceso') " +
+                     "WHERE p.EstadoPedido IN ('Pendiente', 'Proceso', 'Listo') " +
                      "ORDER BY p.FechaCreacion DESC";
-        
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
-            
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             DecimalFormat df = new DecimalFormat("$#,##0.00");
-            
+
             while (rs.next()) {
                 String estado = rs.getString("EstadoPedido");
-                
+
                 model.addRow(new Object[]{
                     rs.getInt("idPedido"),
                     rs.getString("Cliente"),
                     rs.getString("Servicio"),
                     dateFormat.format(rs.getTimestamp("FechaCreacion")),
                     dateFormat.format(rs.getTimestamp("FechaEntregaEstimada")),
-                    rs.getDouble("Peso") + " kg",
+                    rs.getDouble("Peso"),
                     df.format(rs.getDouble("CostoTotal")),
                     estado
                 });
             }
         }
+
+        // APLICA EL RENDERER AQUÍ (índice 7 = EstadoPedido)
+        tblPedido.getColumnModel().getColumn(7).setCellRenderer(new EstadoPedidoRenderer());
+
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error al cargar pedidos: " + e.getMessage(), 
-                                    "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Error al cargar pedidos: " + e.getMessage(),
+                                      "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
 }

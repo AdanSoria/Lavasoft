@@ -20,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -85,19 +86,45 @@ public class panelHistorialPedidos extends javax.swing.JPanel {
     tblPedido.getColumnModel().getColumn(8).setPreferredWidth(150); // Detalles
     
     // 5. Alternar colores de filas
-    tblPedido.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, 
+   tblPedido.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+
+        Component c = super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
-            
-            if (!isSelected) {
-                c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 240));
+
+        String estado = (value != null) ? value.toString() : "";
+
+        if (!isSelected) {
+            switch (estado) {
+                case "Pendiente":
+                    c.setForeground(Color.RED);
+                    break;
+                case "Proceso":
+                    c.setForeground(new Color(255, 165, 0)); // Naranja
+                    break;
+                case "Listo":
+                    c.setForeground(new Color(0, 128, 0)); // Verde
+                    break;
+                case "Entregado":
+                    c.setForeground(new Color(30, 144, 255)); // Azul Dodger
+                    break;
+                default:
+                    c.setForeground(Color.BLACK);
+                    break;
             }
-            return c;
+            c.setFont(c.getFont().deriveFont(Font.BOLD));
+        } else {
+            c.setForeground(Color.WHITE);
         }
-    });
+
+        ((JLabel) c).setHorizontalAlignment(SwingConstants.CENTER);
+
+        return c;
+    }
+});
+
     // Añade esto al método personalizarTabla()
 tblPedido.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
     private final DecimalFormat df = new DecimalFormat("$#,##0.00");
@@ -226,7 +253,7 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         });
         jPanel4.add(jbcmes, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, 190, 40));
 
-        jbcEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Pendiente", "Proceso", "Listo" }));
+        jbcEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Pendiente", "Proceso", "Listo", "Entregado", "Baja" }));
         jbcEstado.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jbcEstadoMouseClicked(evt);
@@ -256,21 +283,18 @@ tblPedido.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRend
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 900, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 900, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 510, Short.MAX_VALUE)
+            .addGap(0, 522, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 

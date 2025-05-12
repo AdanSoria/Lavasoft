@@ -35,7 +35,7 @@ public class Restablecer extends javax.swing.JFrame {
         codigoVerificacion = String.format("%06d", new Random().nextInt(999999));
         
         // Configurar el enviador de correos
-        EnviadorCorreos enviador = new EnviadorCorreos("serviciolavasoft@gmail.com", "tu_contraseña_de_aplicacion");
+        EnviadorCorreos enviador = new EnviadorCorreos("serviciolavasoft@gmail.com", "logk uwgq gbhp nlvr");
         
         String asunto = "Código de Verificación - Restablecer Contraseña";
         String cuerpo = "Estimado empleado,\n\n"
@@ -86,7 +86,7 @@ public class Restablecer extends javax.swing.JFrame {
 
         if (nuevaContra != null && !nuevaContra.isEmpty()) {
             try (Connection con = Conexion.getConnection()) {
-                String update = "UPDATE empleados SET contrasena = ? WHERE id_empleado = ?";
+                String update = "UPDATE Usuario SET contraseña = ? WHERE IdUsuario = ?";
                 PreparedStatement ps = con.prepareStatement(update);
                 ps.setString(1, nuevaContra);
                 ps.setString(2, empleadoId);
@@ -122,7 +122,6 @@ public class Restablecer extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         lblid = new javax.swing.JLabel();
         lbltel = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -166,7 +165,6 @@ public class Restablecer extends javax.swing.JFrame {
 
         btnVerificar.setBackground(new java.awt.Color(153, 204, 255));
         btnVerificar.setForeground(new java.awt.Color(0, 0, 0));
-        btnVerificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/flecha-correcta.png"))); // NOI18N
         btnVerificar.setText("Continuar");
         btnVerificar.setBorder(null);
         btnVerificar.addActionListener(new java.awt.event.ActionListener() {
@@ -178,7 +176,6 @@ public class Restablecer extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(153, 204, 255));
         jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/flecha.png"))); // NOI18N
         jButton2.setText("Regresar");
         jButton2.setBorder(null);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -200,9 +197,6 @@ public class Restablecer extends javax.swing.JFrame {
             }
         });
         jPanel1.add(lbltel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 280, 220, 20));
-
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/9710382.png"))); // NOI18N
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 140, 100));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -233,7 +227,7 @@ public class Restablecer extends javax.swing.JFrame {
 
         try (Connection con = Conexion.getConnection()) {
             // Buscar empleado en la base de datos
-            String sql = "SELECT correo FROM empleados WHERE id_empleado = ?";
+            String sql = "SELECT correo FROM Usuario WHERE IdUsuario = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, idEmpleado);
             var rs = stmt.executeQuery();
@@ -329,7 +323,6 @@ public class Restablecer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblid;
     private javax.swing.JLabel lbltel;
